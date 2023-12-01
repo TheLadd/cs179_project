@@ -1,0 +1,32 @@
+Node: A CargoState, a state of the cargo bay, including:
+    - Ship manifest
+    - Buffer manifest
+    - Offload list
+    - Load list
+    - Cost
+
+Edge: A move that changes on CargoState, somehow denoting:
+    - Origin Area; "Ship", "Buffer", or "Truck"
+    - Origin Coordinates; col, row?
+    - Destination Area; "Ship", "Buffer", or "Truck" 
+    - Destination Coordinates; col, row?
+    - Container that is being moved
+    - Maybe cost of the move?
+
+    - Types of moves:
+        Moving: 
+        - Move some container C that is at the top of a column (of either
+            the Ship or Buffer) and move it to the top of another column
+            (of either the Ship or Buffer)
+
+        Offloading:
+        - You're object is to move some container C from the offload list
+        - If C is at the top of it's column (accesible):
+            - offload it from the ship to a truck
+        - If not, Move container, T, that is at the top of the column that container C is in.
+
+        Loading:
+        - Load some container C from the load list from a truck:
+            - to the top of any column in Ship
+
+    
