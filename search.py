@@ -31,8 +31,7 @@ def printManifest(manifest: List[List[Container]]):
     print(temp)
 
 
-# def bfs(state: CargoState):
-def bfs(tree: Tree):
+def bfs(tree: Tree, isBalance:bool = True):
     frontier: List[CargoState] = [ tree.getRoot() ]
     explored = {}
 
@@ -40,55 +39,60 @@ def bfs(tree: Tree):
     while len(frontier) > 0:
         # 1. Get next node, cur, from frontier
         cur = frontier.pop(0)
-        if str(cur.val) in explored.keys():
+        if str(cur.val) in explored:
             continue
-
         explored[str(cur)] = True
 
         # 2. Check to see if this is goal state
         cnt += 1
-        if cur.val.isBalanced():
+        # print(cur.val)
+        if cur.val.util(isBalance):
             print(f'BFS took {cnt} explored nodes')
             return cur
         
         # 3. Expand node, adding children to frontier only if not explored yet
-        children = cur.val.intraShipMoves()
+        children = cur.val.expand(isBalance)
+        # if len(children[-1].offload) == 0:
+            # print('Result of CargoState.expand() in UCS is safe')
         for child in children:
-            if str(child) not in explored.keys():
-                tree.addNodeFrom(cur.getIndex(), child)
-                temp = tree.getNode(-1)
-                frontier.append(temp)
+            tree.addNodeFrom(cur.getIndex(), child)
+            temp = tree.getNode(-1)
+            frontier.append(temp)
+            # if len(frontier[-1].val.offload) == 0:
+                # print('Child loop in UCS is safe')
     return None
 
 
-def ucs(tree: Tree):
-    frontier = PriorityQueue()
-    explored ={}
+import heapq as hq
+def ucs(tree: Tree, isBalance:bool, h=lambda x: 0):
+    frontier = []
+    explored = {}
 
     root = tree.getRoot()
-    frontier.put( (root.val.cost, root) )
+    hq.heappush(frontier,  (root.val.cost + h(root.val), root) )
 
     cnt = 0
-    while not frontier.empty():
+    # while not frontier.empty():
+    while len(frontier) > 0:
         # Get next node, cur, from frontier
-        cur = frontier.get()[1]
-        if str(cur.val) in explored.keys():
+        cur = hq.heappop(frontier)[1] 
+        if str(cur.val) in explored:
             continue
         explored[str(cur)] = True
 
         # Check if this is a goal state
         cnt += 1
-        if cur.val.isBalanced():
+        # if cur.val.isBalanced():
+        if cur.val.util(isBalance):
             print(f'UCS took {cnt} explored nodes')
             return cur
         
         # Expand, add children to frontier only if they haven't been explored yet
-        children = cur.val.intraShipMoves()
+        children = cur.val.expand(isBalance)
         for child in children:
-            if explored.get(str(child)) == None:
-                tree.addNodeFrom(cur.getIndex(), child)
-                childNode = tree.getNode(-1)
-                frontier.put( (child.cost, childNode) )
+            tree.addNodeFrom(cur.getIndex(), child)
+            childNode = tree.getNode(-1)
+            hq.heappush(frontier,  (child.cost + h(root.val), childNode) )
     
     return None
 

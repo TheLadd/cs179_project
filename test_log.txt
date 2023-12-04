@@ -1,0 +1,37 @@
+Test Case:
+- 1
+    - Load Balancing:
+        - BFS:
+            - Explored: 7
+            - Cost: 5
+            - Depth: 1
+            - Time: 0.25s 
+        - UCS:
+            - Explored: 17
+            - Cost: 4
+            - Depth: 1
+            - Time: 0.94s
+- 2
+    - Load Balancing:
+        - BFS:
+            - Explored: 194
+            - Cost: 13
+            - Depth: 2
+            - Time: 26.8s
+        - UCS:
+            - Explored: 153
+            - Cost: 6
+            - Depth: 2
+            - Time: 23.9s
+- 3
+    - Load Balancing:
+        - BFS:
+            - Explored: 51
+            - Cost: 8
+            - Depth: 2
+            - Time: 5.7s
+        - UCS:
+            - Explored: 844
+            - Cost: 8
+            - Depth: 2
+            - Time: 192.5

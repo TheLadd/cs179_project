@@ -1,17 +1,22 @@
-from typing import List
+from typing import List, Tuple
 from copy import deepcopy
 
 class Container:
     weight: int
-    name: int
+    name: str
 
-    def __init__(self, line: str=None):
+    def __init__(self, line: str=None, info: Tuple | None=None):
             """
             Creates a Container object from a text-line of the manifest.txt
+
+            Let info = (name, weight)
             """
-            if line == None:
+            if line == None and  info == None:
                 self.name = 'UNUSED'
                 self.weight = 0
+            elif line == None:
+                  self.name = info[0]
+                  self.weight = info[1]
             elif line == 'NAN':
                   self.name = 'NAN'
                   self.weight = 0
@@ -66,6 +71,9 @@ class Move:
             self.dst = dst
 
       def cost(self):
+            INTER_PINK_COST = 3
+            TRUCK_PINK_COST = 1
+
             if self.src.area == self.dst.area:  # Intra-area move
                   manhattan = ( abs(self.src.row - self.dst.row) + abs(self.src.col - self.dst.col) )
                   return manhattan 
@@ -75,12 +83,33 @@ class Move:
             if (src.area == 0 or dst.area == 0) and (src.area == 1 or dst.area == 1): # Inter-area move 
                   shp = src if src.area == 0 else dst
                   buf = src if src.area == 1 else dst
-                  pass
+
+                  # Calculate distance from ship-to-pink
+                  pinkRow = 8      # 0-indexed
+                  pinkCol = 0
+                  shipDist =  abs(pinkRow - shp.row) + abs(pinkCol - shp.col)
+
+                  # Calculate distance from buf-to-pink
+                  pinkRow = 4
+                  pinkCol = 24
+                  bufDist = abs(pinkRow - buf.row) + abs(pinkCol - buf.col)
+
+                  return shipDist + bufDist + INTER_PINK_COST
             if src.area == 2 or dst.area == 2:  # onload or offload
                   trk = src if src.area == 2 else dst
                   oth = src if src.area != 2 else dst
+
+                  if oth.area == 0:
+                        pinkRow = 8
+                        pinkCol = 0
+                  else:
+                        pinkRow = 4
+                        pinkCol = 24
+
+                  return abs(pinkRow - oth.row) + abs(pinkCol - oth.col) + TRUCK_PINK_COST
             
-            # Come back to this
+            print('Something went wrong in Move.cost()')
+            print(f'\tSrc: {src}    Dst: {dst}')
             return 0
 
       def __str__(self):
@@ -124,6 +153,12 @@ class CargoState:
                         retval += self.ship[row][col].name
                         retval += '\t'
                   retval += '\n'
+            retval += '\n'
+            for row in range(3, -1, -1):
+                  for col in range(24):
+                        retval += self.buf[row][col].name
+                        retval += '\t'
+                  retval += '\n'
             return retval
       
       def __repr__(self):
@@ -150,20 +185,18 @@ class CargoState:
             """
             ROWS = 8 if isShip else 4
             COLS = 12 if isShip else 24
+            AREA = self.ship if isShip else self.buf
             tops = [None for col in range(COLS)]
-            # tops = [None for col in range(12)]
             for row in range(ROWS-1, -1, -1):
-            # for row in range(7, -1, -1):
                   for col in range(COLS):
-                  # for col in range(12):
                         if tops[col] != None:
                               # We already found the top of this row
                               continue
-                        cell = self.ship[row][col]
+                        cell = AREA[row][col]
                         if cell.name == 'UNUSED' or cell.name == 'NAN':
                               # Is either an empty cell or the 'bottom' of a column has been reached
                               continue
-                        tops[col] = Position(0, row, col, cell)
+                        tops[col] = Position(0 if isShip else 1, row, col, cell)
             return tops
 
       def bottomCells(self, isShip: bool=True) -> List[Position]:
@@ -172,14 +205,16 @@ class CargoState:
             """
             ROWS = 8 if isShip else 4
             COLS = 12 if isShip else 24
+            AREA = self.ship if isShip else self.buf
             bots = [None for col in range(COLS)]
             for row in range(ROWS):
                   for col in range(COLS):
                         if bots[col] != None:   # If you already found the bottom of this col, move on
                               continue
-                        cell = self.ship[row][col]
+                        # cell = self.ship[row][col]
+                        cell = AREA[row][col]
                         if cell.name != 'NAN':
-                              bots[col] = Position(0, row, col, cell)
+                              bots[col] = Position(0 if isShip else 1, row, col, cell)
                   if None not in bots:
                         break
             return bots
@@ -187,7 +222,7 @@ class CargoState:
 
     # ------------------------- The Meat --------------------------------------
 
-      def isBalanced(self) -> True:
+      def isBalanced(self) -> bool:
             left = 0
             right = 0
 
@@ -205,6 +240,14 @@ class CargoState:
                         right += self.ship[row][col].weight
 
             return ( min(left, right)/max(left, right) >= 0.9 )
+
+      def isComplete(self) -> bool:
+            return (len(self.load) == 0 and len(self.offload) == 0)
+
+      def util(self, isBalance: bool) -> bool:
+            if isBalance:
+                  return self.isBalanced()
+            return self.isComplete()
                         
 
       def move(self, mov: Move):
@@ -215,13 +258,18 @@ class CargoState:
             newCargoState.depth += 1
             
             src = mov.src
+            srcArea = (newCargoState.ship if src.area == 0 else newCargoState.buf) if src.area != 2 else 'trk'
             dst = mov.dst
+            dstArea = (newCargoState.ship if dst.area == 0 else newCargoState.buf) if dst.area != 2 else 'trk'
 
-            temp = newCargoState.ship[src.row][src.col]
-            newCargoState.ship[src.row][src.col] = Container()
-            newCargoState.ship[dst.row][dst.col] = temp
+            temp = src.container
+            if srcArea != 'trk':
+                  srcArea[src.row][src.col] = Container()
+            if dstArea != 'trk':
+                  dstArea[dst.row][dst.col] = temp
 
             return newCargoState
+            
 
 
       def intraShipMoves(self):
@@ -256,8 +304,8 @@ class CargoState:
             moves = []
             shipTops: List[Position] = self.topContainers(isShip=True)
             shipBots: List[Position] = self.bottomCells(isShip=True)
-            bufTops = List[Position] = self.topContainers(isShip=False)
-            bufBots = List[Position] = self.bottomCells(isShip=False)
+            bufTops: List[Position] = self.topContainers(isShip=False)
+            bufBots: List[Position] = self.bottomCells(isShip=False)
 
             # Ship to buffer
             for shipTop in shipTops:
@@ -280,7 +328,7 @@ class CargoState:
                         continue
 
                   for col in range(12):   
-                        if shipTop[col] == None:
+                        if shipTops[col] == None:
                               dstRow = shipBots[col].row
                         else:
                               dstRow = shipTops[col].row+1
@@ -288,6 +336,65 @@ class CargoState:
                         shipDst = Position(0, dstRow, col, self.ship[dstRow][col])
                         mov = Move(bufTop, shipDst)
                         moves.append(self.move(mov))
+
+            return moves
+
+
+      def loadMoves(self):
+            if len(self.load) == 0:
+                  return []
+            
+            moves = []
+            shipTops: List[Position] = self.topContainers(isShip=True)
+            shipBots: List[Position] = self.bottomCells(isShip=True)
+            for col in range(12):
+                  if shipTops[col] == None:
+                        dstRow = shipBots[col].row
+                  else:
+                        dstRow = shipTops[col].row+1
+
+                  dst = Position(0, dstRow, col, self.ship[dstRow][col])
+                  for name in self.load:
+                        # TODO: how do we determine the weight of these containers?
+                        weight = 4
+                        con = Container(info=(name, weight))
+                        trk = Position(2, 0, 0, con)
+                        mov = Move(trk, dst)
+                        moves.append(self.move(mov))
+                        moves[-1].load.remove(name)
+
+            return moves
+      
+      def offloadMoves(self):
+            if len(self.offload) == 0:
+                  return []
+            
+            shipTops: List[Position] = self.topContainers(isShip=True)
+            off = []
+            for top in shipTops:    # Check what *can* be offloaded (i.e. is on top)
+                  if top == None:
+                        continue
+                  if top.container.name in self.offload:
+                        off.append(top)
+
+            moves = []
+            for top in off:
+                  con = Container(info=('truck', 0))
+                  trk = Position(2, 0, 0, con)
+                  mov = Move(top, trk)
+                  moves.append(self.move(mov))
+                  moves[-1].offload.remove(top.container.name)
+
+            # NOTE: this function DOES return CargoStates w/ empty offload list; problem is elsewhere
+            return moves
+      
+      def expand(self, isBalance: bool):
+            moves = self.intraShipMoves()
+
+            if not isBalance:
+                  moves.extend(self.offloadMoves())
+                  moves.extend(self.loadMoves())
+                  moves.extend(self.interShipMoves())
 
             return moves
             
