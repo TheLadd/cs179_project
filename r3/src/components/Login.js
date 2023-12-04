@@ -2,36 +2,55 @@ import handleTimestamp from "./timestamp";
 import { useNavigate } from "react-router-dom"; 
 import React, { useState } from 'react'; 
 
-function Login() {
-    const [formData, setFormData] = useState({
-        name: '', 
-        timein: '', 
-        timeout: ''
+
+function Login({cachedState, setCachedState}) {
+    const [user, setCurrentUser] = useState({
+      name: '', 
+      ti: '',
     }); 
 
     const nav = useNavigate(); 
 
-    const handleSubmit = (e) => {
-        e.preventDefault(); 
-        const ti = handleTimestamp(e.nativeEvent.timeStamp); 
-        setFormData({
-            ...formData, 
-            name: e.target.value, 
-            timein: ti
-        }); 
-        console.log(formData); 
-        nav('/home'); 
+    const handleChange = (e) => {
+      e.preventDefault(); 
+      const tim = handleTimestamp(); 
+      setCurrentUser({
+        ...user, 
+        name: e.target.value, 
+        ti: tim, 
+      }); 
+    }
 
+    const handleSubmit = (e) => {
+      e.preventDefault(); 
+      const tim = handleTimestamp(); 
+      setCurrentUser({
+        ...user, 
+        name: e.target.value, 
+        ti: tim, 
+      }); 
+      localStorage.setItem("lastUser", user.name); 
+      localStorage.setItem("lastActivityTime", user.ti); 
+      // logging 
+      nav('/home'); 
+    }; 
+
+    const handleLogout = (e) => {
+      const to = handleTimestamp(); 
+      localStorage.setItem("lastActivityTime", to); 
+      // logging 
+      
     }; 
 
     return (
-    <div>
-      <form id="login-form" onSubmit={handleSubmit}>
-        <label htmlFor="username">Name</label>
-        <input type="text" id="username" name="username" value={formData.username}></input>
-        <button type="submit">Login</button>
-      </form>
-    </div>
+      <div id="main"> 
+        <form id="login-form" onSubmit={handleSubmit}>
+          <label htmlFor="username">Name</label>
+          <input type="text" id="username" name="username" value={cachedState.name} onChange={handleChange}></input>
+          <button type="submit">Login</button>
+        </form>
+      </div>
+
 
     ); 
 }
