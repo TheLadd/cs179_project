@@ -134,19 +134,16 @@ class CargoState:
       # Other
       cost: int       # Cost to get to this state
       lastMove: Move
-      depth: int      # of node in tree
 
 
     # --------------------------- Class Intrinsics -----------------------------
-      def __init__(self, manifest: List[List[Container]], offload: List[str], load: List[Container], cost: int = 0, lastMove: Move = None, lastState = None):
+      def __init__(self, manifest: List[List[Container]], offload: List[str], load: List[Container], cost: int = 0, lastMove: Move = None):
             self.ship = manifest
             self.buf = [[Container() for j in range(24)] for i in range(4)] # Initialized to empty 4x24 empty buffer
             self.offload = offload
             self.load = load
             self.cost = cost
             self.lastMove = lastMove
-            self.lastState = lastState
-            self.depth = 0
 
       def __str__(self):
             retval = ""
@@ -255,9 +252,7 @@ class CargoState:
       def move(self, mov: Move):
             newCargoState = deepcopy(self)
             newCargoState.lastMove = mov
-            newCargoState.lastState = self
             newCargoState.cost += mov.cost()
-            newCargoState.depth += 1
             
             src = mov.src
             srcArea = (newCargoState.ship if src.area == 0 else newCargoState.buf) if src.area != 2 else 'trk'
