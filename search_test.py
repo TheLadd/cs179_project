@@ -23,7 +23,7 @@ if not isBalance:
         if name == 'exit':
             break
         weight = input()
-        load.append(Container(name, weight))
+        load.append(Container(info=(name, weight)))
 
 
     print('Input the containers you want to offload (case sensitive); enter name, then enter weight; enter exit to quit:')

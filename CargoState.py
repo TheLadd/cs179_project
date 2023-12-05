@@ -25,10 +25,14 @@ class Container:
                 self.name = line[18:-1] # ignore newline
 
     def __str__(self):
-            return f"[{self.col}][{self.row}], [{self.weight}], {self.name}"
+            return f"[{self.weight}], {self.name}"
     
     def __repr__(self):
             return self.name
+
+    def __eq__(self, other):
+            return (self.name == other.name and self.weight == other.weight)
+
 
 class Position:
       """
@@ -389,7 +393,7 @@ class CargoState:
             if not isBalance:
                   moves.extend(self.offloadMoves())
                   moves.extend(self.loadMoves())
-                  moves.extend(self.interShipMoves())
+                  # moves.extend(self.interShipMoves())
 
             return moves
             
