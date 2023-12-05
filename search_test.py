@@ -17,20 +17,21 @@ offload = []
 print(isBalance)
 print(op)
 if not isBalance:
-    print('Input the containers you want to load (case sensitive), enter exit to quit:')
+    print('Input the containers you want to load (case sensitive); enter name, then enter weight; enter exit to quit:')
     while True:
-        con = input()
-        if con == 'exit':
+        name = input()
+        if name == 'exit':
             break
-        load.append(con)
+        weight = input()
+        load.append(Container(name, weight))
 
 
-    print('Input the containers you want to load (case sensitive), enter exit to quit:')
+    print('Input the containers you want to offload (case sensitive); enter name, then enter weight; enter exit to quit:')
     while True:
-        con = input()
-        if con == 'exit':
+        name = input()
+        if name == 'exit':
             break
-        offload.append(con)
+        offload.append(name)
 
 # 3.
 print(f'Performing operation {op} on test case {testCase}...')

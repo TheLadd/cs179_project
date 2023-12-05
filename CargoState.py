@@ -125,18 +125,16 @@ class CargoState:
 
       # Transfer List
       offload:    List[str]   # Where each element is a Container.name
-      load:       List[str]   # 
+      load:       List[Container]   # 
 
       # Other
       cost: int       # Cost to get to this state
       lastMove: Move
       depth: int      # of node in tree
-      # lastState: CargoState # this is gonna increase space consumption by A LOT but i'm using to backtrack
-      # NOTE: Could fix by maybe holding an array of all cargostate's explored, having lastState
 
 
     # --------------------------- Class Intrinsics -----------------------------
-      def __init__(self, manifest: List[List[Container]], offload: List[str], load: List[str], cost: int = 0, lastMove: Move = None, lastState = None):
+      def __init__(self, manifest: List[List[Container]], offload: List[str], load: List[Container], cost: int = 0, lastMove: Move = None, lastState = None):
             self.ship = manifest
             self.buf = [[Container() for j in range(24)] for i in range(4)] # Initialized to empty 4x24 empty buffer
             self.offload = offload
@@ -354,14 +352,12 @@ class CargoState:
                         dstRow = shipTops[col].row+1
 
                   dst = Position(0, dstRow, col, self.ship[dstRow][col])
-                  for name in self.load:
-                        # TODO: how do we determine the weight of these containers?
+                  for con in self.load:
                         weight = 4
-                        con = Container(info=(name, weight))
                         trk = Position(2, 0, 0, con)
                         mov = Move(trk, dst)
                         moves.append(self.move(mov))
-                        moves[-1].load.remove(name)
+                        moves[-1].load.remove(con)
 
             return moves
       
@@ -385,7 +381,6 @@ class CargoState:
                   moves.append(self.move(mov))
                   moves[-1].offload.remove(top.container.name)
 
-            # NOTE: this function DOES return CargoStates w/ empty offload list; problem is elsewhere
             return moves
       
       def expand(self, isBalance: bool):
