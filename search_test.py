@@ -62,19 +62,19 @@ print('\n\n')
 
 
 # DO UCS
-root = Node(None, 0, state)
-tree = Tree(root)
+# root = Node(None, 0, state)
+# tree = Tree(root)
 
-ucs_begin = time.time()
-ucs_solution = ucs(tree, isBalance)
-ucs_end = time.time()
+# ucs_begin = time.time()
+# ucs_solution = ucs(tree, isBalance)
+# ucs_end = time.time()
 
-print(f'UCS took {ucs_end-ucs_begin} to find solution of cost {ucs_solution.val.cost} found:')
-for move in backtrace(ucs_solution, tree):
-    print(f'\t{move}')
-print("")
-print(ucs_solution.val)
-print('\n\n')
+# print(f'UCS took {ucs_end-ucs_begin} to find solution of cost {ucs_solution.val.cost} found:')
+# for move in backtrace(ucs_solution, tree):
+#     print(f'\t{move}')
+# print("")
+# print(ucs_solution.val)
+# print('\n\n')
 
 
 # DO A*

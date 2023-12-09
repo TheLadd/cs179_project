@@ -293,6 +293,8 @@ class CargoState:
                         else:                   # Else, put it ontop of the top-most container
                               dstRow = tops[col].row+1
                               
+                        if dstRow > 7:   # I ain't gonnna fw stacking ships past the 7th row
+                              continue
                         dst = Position(0, dstRow, col, self.ship[dstRow][col])
                         mov = Move(top, dst)
                         moves.append(self.move(mov))
@@ -320,6 +322,8 @@ class CargoState:
                         else:                         # Else, put it ontop of the topmost container
                               dstRow = bufTops[col].row+1
 
+                        if dstRow > 7:   # I ain't gonnna fw stacking ships past the 8th row
+                              continue
                         bufDst = Position(1, dstRow, col, self.buf[dstRow][col])
                         mov = Move(shipTop, bufDst)
                         moves.append(self.move(mov))
@@ -335,6 +339,8 @@ class CargoState:
                         else:
                               dstRow = shipTops[col].row+1
 
+                        if dstRow > 3:   # I ain't gonnna fw stacking ships past the 4th row
+                              continue
                         shipDst = Position(0, dstRow, col, self.ship[dstRow][col])
                         mov = Move(bufTop, shipDst)
                         moves.append(self.move(mov))
@@ -355,6 +361,8 @@ class CargoState:
                   else:
                         dstRow = shipTops[col].row+1
 
+                  if dstRow > 7:   # I ain't gonnna fw stacking ships past the 8th row
+                        continue
                   dst = Position(0, dstRow, col, self.ship[dstRow][col])
                   for con in self.load:
                         weight = 4
