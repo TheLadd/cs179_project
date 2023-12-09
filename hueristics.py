@@ -52,21 +52,39 @@ def transferListSize(state: CargoState):
     return (len(state.load) + len(state.offload))
 
 def transferHueristic(state: CargoState):
+    pinkRow = 12    # These are zero-indexed
+    pinkCol = 0     #
+
     # Load Underestimation: 
-        # Assume all containers to be loaded can be loaded onto ship[0][11]
-            # 2 minutes for truck to ship-pink-portal (ship[0][12])
-            # 1 minute for pink-portal to ship[0][11]
-    cost = len(state.load)*3  
+        # Find cost of optimally loading all containers in load
+
+    cost = len(state.load)*2    # Truck to pink portal  
+    candidates = state.topContainers(isShip=True)
+    replacements = state.bottomCells(isShip=True)
+    for i in range(len(candidates)):
+          if candidates[i] == None:
+                candidates[i] = replacements[i]
+                candidates[i].row -= 1  # I know this is weird but trust me
+
+
+    for i in range(len(state.load)):
+            # 'Move' a container to the cheapest spot
+            spot = min(candidates, key=lambda x: (pinkRow-(x.row+1)) + (x.col - pinkCol))
+            cost += (pinkRow-spot.row+1) + (spot.col - pinkCol)  
+            candidates.remove(spot)
+
+            # Update the candidate spots
+            newSpot = spot
+            newSpot.row += 1
+            candidates.append(newSpot)
+
 
     # Offload Underestimation:
         # Calculate manhattan distance from between each offload container and pink-portal
 
     checklist = state.offload.copy()
-    
     ROWS = 8
     COLS = 12
-    pinkRow = 12    # These are zero-indexed
-    pinkCol = 0     #
     for row in range(ROWS):
             if len(checklist) == 0:
                   break

@@ -54,8 +54,8 @@ Test 2:
         - Cost: 9
         - Depth: 1
     - A*
-        - Explored: 38
-        - Cost: 8
+        - Explored: 2
+        - Cost: 9
         - Depth: 1
 Test 3:
     - UCS
@@ -64,5 +64,5 @@ Test 3:
         - Depth: 1
     - A*
         - Explored: 2
-        - Cost: 8
+        - Cost: 9
         - Depth: 1
