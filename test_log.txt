@@ -29,9 +29,40 @@ Test Case:
             - Explored: 51
             - Cost: 8
             - Depth: 2
-            - Time: 5.7s
+            - Time: 2.5s
         - UCS:
             - Explored: 844
             - Cost: 8
             - Depth: 2
-            - Time: 192.5
+            - Time: 43.3s
+
+
+
+Transfer Operation
+Test 1:
+    - UCS:
+        - Explored: 100
+        - Cost: 11
+        - Depth: 1
+    - A*
+        - Explored: 2 
+        - Cost: 11
+        - Depth: 1
+Test 2:
+    - UCS
+        - Explored: 75 
+        - Cost: 9
+        - Depth: 1
+    - A*
+        - Explored: 38
+        - Cost: 8
+        - Depth: 1
+Test 3:
+    - UCS
+        - Explored: 1865
+        - Cost: 9
+        - Depth: 1
+    - A*
+        - Explored: 2
+        - Cost: 8
+        - Depth: 1

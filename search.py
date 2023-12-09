@@ -67,7 +67,6 @@ def ucs(tree: Tree, isBalance:bool, h=lambda x: 0):
     hq.heappush(frontier,  (root.val.cost + h(root.val), root) )
 
     cnt = 0
-    # while not frontier.empty():
     while len(frontier) > 0:
         # Get next node, cur, from frontier
         cur = hq.heappop(frontier)[1] 
@@ -86,7 +85,7 @@ def ucs(tree: Tree, isBalance:bool, h=lambda x: 0):
         for child in children:
             tree.addNodeFrom(cur.getIndex(), child)
             childNode = tree.getNode(-1)
-            hq.heappush(frontier,  (child.cost + h(root.val), childNode) )
+            hq.heappush(frontier,  (child.cost + h(childNode.val), childNode) )
     
     return None
 

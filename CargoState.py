@@ -75,8 +75,8 @@ class Move:
             self.dst = dst
 
       def cost(self):
-            INTER_PINK_COST = 3
-            TRUCK_PINK_COST = 1
+            INTER_PINK_COST = 4
+            TRUCK_PINK_COST = 2
 
             if self.src.area == self.dst.area:  # Intra-area move
                   manhattan = ( abs(self.src.row - self.dst.row) + abs(self.src.col - self.dst.col) )
@@ -117,7 +117,7 @@ class Move:
             return 0
 
       def __str__(self):
-            return f'From: {self.src} To: {self.dst} w/ cost: {self.cost()}'
+            return f'Moved {self.src.container.name} from: {self.src} To: {self.dst} w/ cost: {self.cost()}'
       
       def __repr__(self):
             return self.__str__()
@@ -210,7 +210,6 @@ class CargoState:
                   for col in range(COLS):
                         if bots[col] != None:   # If you already found the bottom of this col, move on
                               continue
-                        # cell = self.ship[row][col]
                         cell = AREA[row][col]
                         if cell.name != 'NAN':
                               bots[col] = Position(0 if isShip else 1, row, col, cell)
@@ -221,15 +220,15 @@ class CargoState:
 
     # ------------------------- The Meat --------------------------------------
 
-      def isBalanced(self) -> bool:
+      def balanceScore(self) -> float:
             left = 0
             right = 0
-
+            
             # Make sure buffer is empty
             for row in range(4):
                   for col in range(24):
                         if self.buf[row][col].name != 'UNUSED':
-                              return False
+                              return -1.0
                         
             # Measure weight on left and right of ship
             for row in range(8):
@@ -238,7 +237,13 @@ class CargoState:
                   for col in range(6, 12):
                         right += self.ship[row][col].weight
 
-            return ( min(left, right)/max(left, right) >= 0.9 )
+            return (min(left, right)/max(left, right))
+
+      def isBalanced(self) -> bool:
+            score = self.balanceScore()
+            if score == -1.0:
+                  return False
+            return score >= 0.9
 
       def isComplete(self) -> bool:
             return (len(self.load) == 0 and len(self.offload) == 0)

@@ -1,6 +1,7 @@
 from CargoState import *
 from Tree import *
 from search import *
+import hueristics
 import time
 
 # 1. Get test case to work with
@@ -45,19 +46,20 @@ print('\n\n')
 
 
 # DO BFS
-root = Node(None, 0, state)
-tree = Tree(root)
+# root = Node(None, 0, state)
+# tree = Tree(root)
 
-bfs_begin = time.time()
-bfs_solution = bfs(tree, isBalance)
-bfs_end = time.time()
+# bfs_begin = time.time()
+# bfs_solution = bfs(tree, isBalance)
+# bfs_end = time.time()
 
-print(f'BFS took {bfs_end-bfs_begin} to find solution of cost {bfs_solution.val.cost} found:')
-for move in backtrace(bfs_solution, tree):
-    print(f'\t{move}')
-print("")
-print(bfs_solution.val)
-print('\n\n')
+# print(f'BFS took {bfs_end-bfs_begin} to find solution of cost {bfs_solution.val.cost} found:')
+# for move in backtrace(bfs_solution, tree):
+#     print(f'\t{move}')
+# print("")
+# print(bfs_solution.val)
+# print('\n\n')
+
 
 # DO UCS
 root = Node(None, 0, state)
@@ -68,6 +70,23 @@ ucs_solution = ucs(tree, isBalance)
 ucs_end = time.time()
 
 print(f'UCS took {ucs_end-ucs_begin} to find solution of cost {ucs_solution.val.cost} found:')
+for move in backtrace(ucs_solution, tree):
+    print(f'\t{move}')
+print("")
+print(ucs_solution.val)
+print('\n\n')
+
+
+# DO A*
+root = Node(None, 0, state)
+tree = Tree(root)
+h = hueristics.balanceScore if isBalance else hueristics.transferHueristic 
+
+ucs_begin = time.time()
+ucs_solution = ucs(tree, isBalance, h)
+ucs_end = time.time()
+
+print(f'A* took {ucs_end-ucs_begin} to find solution of cost {ucs_solution.val.cost} found:')
 for move in backtrace(ucs_solution, tree):
     print(f'\t{move}')
 print("")
