@@ -15,8 +15,6 @@ isBalance = False if op == '1' else True
 # 2.2 If load/offload, get transfer lists
 load = []
 offload = []
-print(isBalance)
-print(op)
 if not isBalance:
     print('Input the containers you want to load (case sensitive); enter name, then enter weight; enter exit to quit:')
     while True:
@@ -43,6 +41,11 @@ state = CargoState(manifest, offload, load)
 print('Original Manifest:')
 printManifest(manifest)
 print('\n\n')
+
+if isBalance:
+    if not state.isBalanceable():
+        print('CargoState is not able to be balanced. Implement SIFT.')
+        exit()
 
 
 # DO BFS

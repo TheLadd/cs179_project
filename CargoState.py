@@ -30,9 +30,20 @@ class Container:
     def __repr__(self):
             return self.name
 
+    def __lt__(self, other):
+          if type(other) == type(self):
+                return self.weight < other.weight
+
     def __eq__(self, other):
             return (self.name == other.name and self.weight == other.weight)
 
+    def __add__(self, other):
+          if type(other) == type(self):
+                return other.weight + self.weight
+          return other + self.weight
+
+    def __radd__(self, other):
+          return other + self.weight
 
 class Position:
       """
@@ -252,7 +263,32 @@ class CargoState:
             if isBalance:
                   return self.isBalanced()
             return self.isComplete()
-                        
+
+      def isBalanceable(self):
+            containers: List[Container] = []
+            for row in range(8):
+                  for col in range(12):
+                        cell = self.ship[row][col]
+                        if cell.name != 'UNUSED' and cell.name != 'NAN':
+                              containers.append(cell)
+            containers.sort(key=lambda x: x.weight, reverse=True)
+
+            left: int = 0
+            right: int = 0
+            while len(containers) > 0:
+                  cur = containers.pop(0).weight
+                  # print(f'Added {cur} to ', end='')
+                  if left <= right:
+                        left += cur
+                        # print(f'left resulting in {left}')
+                  else:
+                        right += cur
+                        # print(f'right resulting in {right}')
+
+            # print(f'left: {left}    right: {right}')
+            return ( min(left, right)/max(left, right) ) >= 0.9
+
+
 
       def move(self, mov: Move):
             newCargoState = deepcopy(self)
