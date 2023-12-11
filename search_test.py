@@ -95,3 +95,24 @@ for move in backtrace(ucs_solution, tree):
 print("")
 print(ucs_solution.val)
 print('\n\n')
+
+ucs_solution.val.toManifest()
+
+def astar(manifest:str, isBalance:bool, offload:List[str]=None, load:List[str]=None):
+    """
+    manifest: the contents of a manifest file
+    isBalance: whether or not the operation is load balancing
+    offload: a list of names of containers to offload (only needed if doing tranfer operation)
+    load: a list of containers (name+weight) to load (only needed if doing transfer operation)
+    """
+    # Initialize problem state and tree
+    state = CargoState(manifest, offload, load)
+    root = Node(None, 0, state)
+    tree = Tree(root)
+
+    # Determine which hueristic to use based on operation
+    h = hueristics.balanceScore if isBalance else hueristics.transferHueristic 
+
+    # Time for the magic
+    solution = ucs(tree, isBalance, h)
+    return solution

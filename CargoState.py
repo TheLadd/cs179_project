@@ -440,4 +440,18 @@ class CargoState:
                   # moves.extend(self.interShipMoves())
 
             return moves
+
+      def toManifest(self, path: str='manifest.txt') -> str:
+            file = open(path, 'w')
+            for row in range(8):
+                  for col in range(12):
+                        fRow = ('0' if (row+1) // 10 == 0 else '') + str(row+1)     # 0-index -> 1-index
+                        fCol = ('0' if (col+1) // 10 == 0 else '') + str(col+1)     # ... and prepend 0 if needed
+
+                        cell = self.ship[row][col]
+                        fWeight = str(cell.weight)
+                        fWeight = ( '0' * (6-len(fWeight)) ) + fWeight  # Prepend 0's if needed
+                        
+                        line = f'[{fRow}][{fCol}], {{{fWeight}}}, {cell.name}' + ('' if (row == 7 and col == 11) else '\n')
+                        file.write(line)
             
