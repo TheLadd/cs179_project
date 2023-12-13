@@ -1,8 +1,8 @@
 from CargoState import Container, CargoState
 from typing import List
-from queue import PriorityQueue
 from dataclasses import dataclass, field
 from Tree import *
+import hueristics
 
 
 def readManifest(filename: str) -> List[List[Container]]:
@@ -88,6 +88,28 @@ def ucs(tree: Tree, isBalance:bool, h=lambda x: 0):
             hq.heappush(frontier,  (child.cost + h(childNode.val), childNode) )
     
     return None
+
+
+def astar(manifest_path:str, isBalance:bool, offload:List[str]=None, load:List[str]=None):
+    """
+    manifest: the contents of a manifest file
+    isBalance: whether or not the operation is load balancing
+    offload: a list of names of containers to offload (only needed if doing tranfer operation)
+    load: a list of containers (name+weight) to load (only needed if doing transfer operation)
+    """
+    # Initialize problem state and tree
+    manifest = readManifest(manifest_path)
+    state = CargoState(manifest, offload, load)
+    root = Node(None, 0, state)
+    tree = Tree(root)
+
+    # Determine which hueristic to use based on operation
+    h = hueristics.balanceScore if isBalance else hueristics.transferHueristic 
+
+    # Time for the magic
+    solution = ucs(tree, isBalance, h)
+    moves = backtrace(solution, tree)
+    return solution, moves
 
 def backtrace(final: Node, tree: Tree):
     moves = []
