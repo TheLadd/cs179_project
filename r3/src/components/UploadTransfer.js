@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
-import { renderMatches } from "react-router-dom";
+//import { renderMatches } from "react-router-dom";
 import { TextField } from "@mui/material";
 import Autocomplete from '@mui/material/Autocomplete'; 
 
 function UploadTransfer({ selectItems }) {
-    const [empty, setEmpty] = useState(false); // no transfer list items have been uploaded
+    //const [empty, setEmpty] = useState(false); // no transfer list items have been uploaded
+    const [currentOp, setCurrentOp] = useState(null);
     const [currentContainer, setCurrentContainer] = useState({
         name: '', 
         quantity: '', 
         operation: ''
     }); 
-    let currentList = []
     const handleSubmit = (e) => { // log 
-        currentOp = {
+        setCurrentOp({
             name: currentContainer.name, 
             quantity: currentContainer.quantity, 
             operation: currentContainer.operation === "offload" ? 0 : 1 
-        }
-        currentList.push(currentOp); 
+        });
+        
     }
 
 
