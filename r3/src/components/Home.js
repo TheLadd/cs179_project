@@ -5,19 +5,28 @@ import { useNavigate } from 'react-router-dom';
 
 function Home({ cachedState, setCachedState }) {
   const nav = useNavigate();
-  const [txtFile, setTxtFile] = cachedState.manifest;
-  const [op, setOp] = cachedState.opType;
 
+  const defaultCachedState = {
+    manifest: null,
+    transferList: null,
+    inProgress: false,
+    lastActivityTime: null,
+    currStep: 0,
+    totalSteps: 0,
+  };
+
+  const currentState = cachedState || defaultCachedState;
+
+  const [txtFile, setTxtFile] = useState(currentState.manifest);
+  const [op, setOp] = useState(currentState.opType);
+
+
+  
   const handleStartOver = () => {
     const activitytime = handleTimestamp();
     setCachedState({
-      ...cachedState,
-      manifest: null,
-      transferList: null,
-      inProgress: false,
-      lastActivityTime: activitytime,
-      currStep: 0,
-      totalSteps: 0,
+        ...defaultCachedState,
+        lastActivityTime: activitytime,
     });
     localStorage.setItem('inProgress', false);
   };
@@ -40,7 +49,7 @@ function Home({ cachedState, setCachedState }) {
     const uploadtime = handleTimestamp();
     e.preventDefault();
     setCachedState({
-      ...cachedState,
+      ...currentState,
       opType: op,
       manifest: txtFile,
       lastActivityTime: uploadtime,
@@ -61,15 +70,15 @@ function Home({ cachedState, setCachedState }) {
   };
 
   useEffect(() => {
-    if (cachedState.inProgress) {
-      showAlert(cachedState.opType, cachedState.lastActivityTime);
+    if (currentState.inProgress) {
+      showAlert(currentState.opType, currentState.lastActivityTime);
     }
-  }, [cachedState.inProgress, cachedState.opType, cachedState.lastActivityTime, showAlert]);
+  }, [currentState.inProgress, currentState.opType, currentState.lastActivityTime, showAlert]);
   
 
   return (
     <div>
-      {cachedState.inProgress ? (
+      {currentState.inProgress ? (
         <div>{/* You may display something specific for in-progress state here */}</div>
       ) : (
         <div>
