@@ -1,8 +1,8 @@
 from CargoState import Container, CargoState
 from typing import List
-from queue import PriorityQueue
 from dataclasses import dataclass, field
 from Tree import *
+import hueristics
 
 
 def readManifest(filename: str) -> List[List[Container]]:
@@ -31,8 +31,7 @@ def printManifest(manifest: List[List[Container]]):
     print(temp)
 
 
-# def bfs(state: CargoState):
-def bfs(tree: Tree):
+def bfs(tree: Tree, isBalance:bool = True):
     frontier: List[CargoState] = [ tree.getRoot() ]
     explored = {}
 
@@ -40,57 +39,83 @@ def bfs(tree: Tree):
     while len(frontier) > 0:
         # 1. Get next node, cur, from frontier
         cur = frontier.pop(0)
-        if str(cur.val) in explored.keys():
+        if str(cur.val) in explored:
             continue
-
         explored[str(cur)] = True
 
         # 2. Check to see if this is goal state
         cnt += 1
-        if cur.val.isBalanced():
+        if cur.val.util(isBalance):
             print(f'BFS took {cnt} explored nodes')
             return cur
         
         # 3. Expand node, adding children to frontier only if not explored yet
-        children = cur.val.intraShipMoves()
+        children = cur.val.expand(isBalance)
         for child in children:
-            if str(child) not in explored.keys():
-                tree.addNodeFrom(cur.getIndex(), child)
-                temp = tree.getNode(-1)
-                frontier.append(temp)
+            tree.addNodeFrom(cur.getIndex(), child)
+            temp = tree.getNode(-1)
+            frontier.append(temp)
     return None
 
 
-def ucs(tree: Tree):
-    frontier = PriorityQueue()
-    explored ={}
+import heapq as hq
+def ucs(tree: Tree, isBalance:bool, h=lambda x: 0):
+    frontier = []
+    explored = {}
 
     root = tree.getRoot()
-    frontier.put( (root.val.cost, root) )
+    hq.heappush(frontier,  (root.val.cost + h(root.val), root) )
 
     cnt = 0
-    while not frontier.empty():
+    while len(frontier) > 0:
         # Get next node, cur, from frontier
-        cur = frontier.get()[1]
-        if str(cur.val) in explored.keys():
+        cur = hq.heappop(frontier)[1] 
+        if str(cur.val) in explored:
             continue
         explored[str(cur)] = True
 
         # Check if this is a goal state
         cnt += 1
-        if cur.val.isBalanced():
+        if cur.val.util(isBalance):
             print(f'UCS took {cnt} explored nodes')
             return cur
         
         # Expand, add children to frontier only if they haven't been explored yet
-        children = cur.val.intraShipMoves()
+        children = cur.val.expand(isBalance)
         for child in children:
-            if explored.get(str(child)) == None:
-                tree.addNodeFrom(cur.getIndex(), child)
-                childNode = tree.getNode(-1)
-                frontier.put( (child.cost, childNode) )
+            tree.addNodeFrom(cur.getIndex(), child)
+            childNode = tree.getNode(-1)
+            hq.heappush(frontier,  (child.cost + h(childNode.val), childNode) )
     
     return None
+
+
+def astar(manifest_path:str, isBalance:bool, offload:List[str]=None, load:List[str]=None):
+    """
+    Parameters:
+        manifest: the contents of a manifest file
+        isBalance: whether or not the operation is load balancing
+        offload: a list of names of containers to offload (only needed if doing tranfer operation)
+        load: a list of containers (name+weight) to load (only needed if doing transfer operation)
+
+    Returns:
+        solution: a Node object where solution.val is the CargoState of the solution
+        moves: a list of Move objects containing the moves taken to get from the origin
+            CargoState to the solution.
+    """
+    # Initialize problem state and tree
+    manifest = readManifest(manifest_path)
+    state = CargoState(manifest, offload, load)
+    root = Node(None, 0, state)
+    tree = Tree(root)
+
+    # Determine which hueristic to use based on operation
+    h = hueristics.balanceScore if isBalance else hueristics.transferHueristic 
+
+    # Time for the magic
+    solution = ucs(tree, isBalance, h)
+    moves = backtrace(solution, tree)
+    return solution, moves
 
 def backtrace(final: Node, tree: Tree):
     moves = []
