@@ -2,6 +2,9 @@ from typing import List, Tuple
 from copy import deepcopy
 
 class Container:
+    """
+    Contains information of a container
+    """
     weight: int
     name: str
 
@@ -47,10 +50,15 @@ class Container:
 
 class Position:
       """
-      Areas:
-        0: Ship
-        1: Buffer
-        2: Truck
+      area: denotes the area in which the Position is located
+            Areas:
+            0: Ship
+            1: Buffer
+            2: Truck
+      row: a zero-indexed row of the position
+      col: a zero-indexed column of the position
+      container: a Container object containing the container present in cell 
+            * Note: container can be an empty (UNUSED) or a NAN  container
       """
 
       area: int
@@ -78,6 +86,11 @@ class Position:
             return self.__str__()
 
 class Move:
+      """ 
+      src: a Position object defining the origin of the move
+      dst: a Position object defining the destination of the move
+      * See Position description
+      """
       src: Position
       dst: Position
 
@@ -134,6 +147,9 @@ class Move:
             return self.__str__()
 
 class CargoState:
+      """
+      Defines the current configuration, transfer list, and cost of a Cargo's state
+      """
       # Manifest
       ship:   List[List[Container]]   # 8x12, row by col
       buf:    List[List[Container]]   # 4x24, row by col
@@ -291,6 +307,10 @@ class CargoState:
 
 
       def move(self, mov: Move):
+            """
+            Returns a CargoState object that represents the current state AFTER taking the move
+            described by the 'mov' parameter
+            """
             newCargoState = deepcopy(self)
             newCargoState.lastMove = mov
             newCargoState.cost += mov.cost()
@@ -442,7 +462,11 @@ class CargoState:
             return moves
 
       def toManifest(self, path: str='manifest.txt') -> str:
+            """
+            Writes the current manifest to a string and returns it
+            """
             file = open(path, 'w')
+            man = ''
             for row in range(8):
                   for col in range(12):
                         fRow = ('0' if (row+1) // 10 == 0 else '') + str(row+1)     # 0-index -> 1-index
@@ -453,5 +477,7 @@ class CargoState:
                         fWeight = ( '0' * (6-len(fWeight)) ) + fWeight  # Prepend 0's if needed
                         
                         line = f'[{fRow}][{fCol}], {{{fWeight}}}, {cell.name}' + ('' if (row == 7 and col == 11) else '\n')
-                        file.write(line)
+                        # file.write(line)
+                        man += line
+            return man
             

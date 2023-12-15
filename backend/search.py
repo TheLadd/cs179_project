@@ -92,10 +92,16 @@ def ucs(tree: Tree, isBalance:bool, h=lambda x: 0):
 
 def astar(manifest_path:str, isBalance:bool, offload:List[str]=None, load:List[str]=None):
     """
-    manifest: the contents of a manifest file
-    isBalance: whether or not the operation is load balancing
-    offload: a list of names of containers to offload (only needed if doing tranfer operation)
-    load: a list of containers (name+weight) to load (only needed if doing transfer operation)
+    Parameters:
+        manifest: the contents of a manifest file
+        isBalance: whether or not the operation is load balancing
+        offload: a list of names of containers to offload (only needed if doing tranfer operation)
+        load: a list of containers (name+weight) to load (only needed if doing transfer operation)
+
+    Returns:
+        solution: a Node object where solution.val is the CargoState of the solution
+        moves: a list of Move objects containing the moves taken to get from the origin
+            CargoState to the solution.
     """
     # Initialize problem state and tree
     manifest = readManifest(manifest_path)
