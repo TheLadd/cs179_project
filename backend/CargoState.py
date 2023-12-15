@@ -421,7 +421,7 @@ class CargoState:
                         continue
                   dst = Position(0, dstRow, col, self.ship[dstRow][col])
                   for con in self.load:
-                        weight = 4
+                        #weight = 4
                         trk = Position(2, 0, 0, con)
                         mov = Move(trk, dst)
                         moves.append(self.move(mov))
