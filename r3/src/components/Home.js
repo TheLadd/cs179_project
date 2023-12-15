@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
-import handleTimestamp from './timestamp';
+import handleTimestamp from './Timestamp';
 import { useNavigate } from 'react-router-dom';
 
 function Home({ cachedState, setCachedState }) {
@@ -48,21 +48,23 @@ function Home({ cachedState, setCachedState }) {
     // logging function goes here
     const uploadtime = handleTimestamp();
     e.preventDefault();
-    setCachedState({
-      ...currentState,
-      opType: op,
-      manifest: txtFile,
-      lastActivityTime: uploadtime,
-    });
-    localStorage.setItem('opType', op);
-    localStorage.setItem('lastActivityTime', uploadtime);
-    localStorage.setItem('manifest', txtFile);
 
     if (op === 'Offloading/Onloading') {
       nav('/upload-transfer');
     } else {
       nav('/ship-view');
     }
+
+    setCachedState({
+        ...currentState,
+        opType: op,
+        manifest: txtFile,
+        lastActivityTime: uploadtime,
+      });
+      
+      localStorage.setItem('opType', op);
+      localStorage.setItem('lastActivityTime', uploadtime);
+      localStorage.setItem('manifest', txtFile);
   };
 
   const handleLogout = () => {

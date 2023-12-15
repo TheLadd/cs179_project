@@ -1,4 +1,4 @@
-import handleTimestamp from "./timestamp"; 
+import handleTimestamp from "./Timestamp"; 
 import { useNavigate } from "react-router-dom"; 
 import React, { useState } from 'react'; 
 

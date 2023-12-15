@@ -24,7 +24,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login cachedState={cachedState} setCachedState={setCachedState}/>} /> 
-        <Route path="/home" element={<Home cache={cachedState} changeCached={setCachedState}/>} /> 
+        <Route path="/home" element={<Home cache={cachedState} setCachedState={setCachedState}/>} /> 
         <Route path="/upload-transfer" element={<UploadTransfer />} />
 
       </Routes>
