@@ -30,15 +30,15 @@ function App() {
   });
   */
   console.log(cachedState);
-  console.log(cachedState.manifest);
+  //console.log(cachedState.manifest);
 
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login cachedState={cachedState} setCachedState={setCachedState}/>} /> 
-        <Route path="/home" element={<Home cache={cachedState} setCachedState={setCachedState}/>} /> 
-        <Route path="/upload-transfer" element={<UploadTransfer cache={cachedState} setCachedState={setCachedState}/>} />
+        <Route path="/home" element={<Home cachedState={cachedState} setCachedState={setCachedState}/>} /> 
+        <Route path="/upload-transfer" element={<UploadTransfer cachedState={cachedState} setCachedState={setCachedState}/>} />
 
       </Routes>
     </BrowserRouter>

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 function Home ({ cachedState, setCachedState }) {
   const nav = useNavigate()
 
+  console.log(cachedState)
   const [txtFile, setTxtFile] = useState(localStorage.getItem("manifest") ? localStorage.getItem("manifest") : null)
   const [op, setOp] = useState(localStorage.getItem("opType") ? localStorage.getItem("opType") : "")
 
