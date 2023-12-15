@@ -7,6 +7,8 @@ import UploadTransfer from "./components/UploadTransfer"
 
 
 function App() {
+  
+  
   const [cachedState, setCachedState] = useState({
     inProgress: localStorage.getItem("inProgress") ? localStorage.getItem("inProgress") : false, 
     opType: localStorage.getItem("opType") ? localStorage.getItem("opType") : "", 
@@ -17,7 +19,18 @@ function App() {
     transferList: localStorage.getItem("transferList") ? localStorage.getItem("transferList") : null 
   });
 
-
+  /*
+  const [cachedState, setCachedState] = useState({
+    manifest: null,
+    transferList: null,
+    inProgress: false,
+    lastActivityTime: null,
+    currStep: 0,
+    totalSteps: 0,
+  });
+  */
+  console.log(cachedState);
+  console.log(cachedState.manifest);
 
 
   return (
@@ -25,7 +38,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login cachedState={cachedState} setCachedState={setCachedState}/>} /> 
         <Route path="/home" element={<Home cache={cachedState} setCachedState={setCachedState}/>} /> 
-        <Route path="/upload-transfer" element={<UploadTransfer />} />
+        <Route path="/upload-transfer" element={<UploadTransfer cache={cachedState} setCachedState={setCachedState}/>} />
 
       </Routes>
     </BrowserRouter>
