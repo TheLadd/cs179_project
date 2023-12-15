@@ -1,8 +1,9 @@
+import React, { useState } from 'react';
 import { renderMatches } from "react-router-dom";
-import { TextField } from "@mui/material/TextField";
+import { TextField } from "@mui/material";
 import Autocomplete from '@mui/material/Autocomplete'; 
 
-export default function uploadTransfer({ selectItems }) {
+function UploadTransfer({ selectItems }) {
     const [empty, setEmpty] = useState(false); // no transfer list items have been uploaded
     const [currentContainer, setCurrentContainer] = useState({
         name: '', 
@@ -44,3 +45,5 @@ export default function uploadTransfer({ selectItems }) {
     ); 
 
 }
+
+export default UploadTransfer; 
