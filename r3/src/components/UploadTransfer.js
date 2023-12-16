@@ -25,7 +25,7 @@ function UploadTransfer({ selectItems, cachedState, setCachedState }) {
                 <label htmlFor="off">Offload</label>
                 <input type="radio" name="optype" id="on" value="onload" onChange={(e) => setCurrentContainer({ ...currentContainer, operation: e.target.value })}></input>
                 <label htmlFor="on">Onload</label>
-                <label htmlFor="cratenm">Type the crate name and hit enter: </label>
+                <label htmlFor="cratenm">Type the container name and hit enter: </label>
                 <Autocomplete id="cratenm"
                     freeSolo
                     options={cachedState.manifest.map((option) => option[2])}
