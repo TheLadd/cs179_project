@@ -26,15 +26,23 @@ function UploadTransfer ({ cachedState, setCachedState }) {
 
     if (currentContainer.operation === 'onload') {
       let curr = [currentContainer.name, currentContainer.weight]
-      setCachedState(prevState => ({
-        ...prevState,
-        loadList: [...prevState.loadList, ...curr]
-      }))
+      setCachedState(prevState => {
+        const newLoadList = [...prevState.loadList, ...curr]
+        localStorage.setItem('loadList', JSON.stringify(newLoadList))
+        return {
+          ...prevState,
+          loadList: newLoadList
+        }
+      })
     } else {
-      setCachedState(prevState => ({
-        ...prevState,
-        offloadList: [...prevState.offloadList, currentContainer.name]
-      }))
+      setCachedState(prevState => {
+        const newOffloadList = [...prevState.offloadList, currentContainer.name]
+        localStorage.setItem('offloadList', JSON.stringify(newOffloadList))
+        return {
+          ...prevState,
+          offloadList: newOffloadList
+        }
+      })
     }
     console.log(currentContainer)
     setCurrentContainer({
