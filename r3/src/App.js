@@ -9,7 +9,7 @@ import UploadTransfer from "./components/UploadTransfer"
 function App() {
 
   const [cachedState, setCachedState] = useState({
-    inProgress: localStorage.getItem("inProgress") === "false",
+    inProgress: localStorage.getItem("inProgress") === "true",
     opType: localStorage.getItem("opType") ? localStorage.getItem("opType") : "", 
     lastActivityTime: localStorage.getItem("lastActivityTime") ? localStorage.getItem("lastActivityTime"): "", 
     currStep: localStorage.getItem("currStep") ? localStorage.getItem("currStep") : 0, 
