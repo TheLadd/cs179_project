@@ -71,6 +71,12 @@ function Home ({ cachedState, setCachedState }) {
     
     //console.log("cachedState after parsed: ", cachedState)
     console.log("parsedData not in cachedState, ", parsedData)
+    console.log("cache state right before nav: ", cachedState);
+    if (op === 'Offloading/Onloading') {
+      nav('/upload-transfer')
+    } else {
+      nav('/ship-view')
+    }
     return parsedData;
   };
   
@@ -99,12 +105,6 @@ function Home ({ cachedState, setCachedState }) {
       //console.log(manifestContent);
       localStorage.setItem('manifest', manifestContent);
       parseManifestFile(manifestContent);
-    }
-    console.log("cache state right before nav: ", cachedState);
-    if (op === 'Offloading/Onloading') {
-      nav('/upload-transfer')
-    } else {
-      nav('/ship-view')
     }
 
     localStorage.setItem('opType', op)
