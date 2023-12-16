@@ -44,20 +44,49 @@ function Home ({ cachedState, setCachedState }) {
         const [, position, weight, name] = match;
         parsedData.push([`[${position}]`, weight, name]);
     }
-    console.log(parsedData)
+
+    //console.log(parsedData)
+    const deepCopyParsedData = JSON.parse(JSON.stringify(parsedData));
     // Call a function to handle the parsed manifest
-    handleParsedManifest(parsedData);
+    //handleParsedManifest(parsedData);
+    /*
+    setCachedState({
+      //...cachedState,
+      opType: op,
+      manifest: parsedData,
+      lastActivityTime: handleTimestamp()
+    })
+    */
+
+    setCachedState(prevState => {
+      const newState = {
+        ...prevState,
+        opType: op,
+        manifest: deepCopyParsedData,
+        lastActivityTime: handleTimestamp()
+      };
+      console.log("cachedState after parsed: ", newState);
+      return newState;
+    });
+    
+    //console.log("cachedState after parsed: ", cachedState)
+    console.log("parsedData not in cachedState, ", parsedData)
+    console.log("cache state right before nav: ", cachedState);
+    if (op === 'Offloading/Onloading') {
+      nav('/upload-transfer')
+    } else {
+      nav('/ship-view')
+    }
     return parsedData;
   };
-
-
+  
   // save data into cached state
   const handleParsedManifest = (manifestData) => {
     //console.log(manifestData);
     setCachedState({
       ...cachedState,
       opType: op,
-      manifest: txtFile,
+      manifest: manifestData,
       lastActivityTime: handleTimestamp()
     })
     
@@ -73,15 +102,9 @@ function Home ({ cachedState, setCachedState }) {
     fileReader.onload = (e) => {
       const manifestContent = e.target.result;
       // Set the manifest content in the state
-      console.log(manifestContent);
+      //console.log(manifestContent);
       localStorage.setItem('manifest', manifestContent);
       parseManifestFile(manifestContent);
-    }
-    console.log(cachedState);
-    if (op === 'Offloading/Onloading') {
-      nav('/upload-transfer')
-    } else {
-      nav('/ship-view')
     }
 
     localStorage.setItem('opType', op)
@@ -114,7 +137,8 @@ function Home ({ cachedState, setCachedState }) {
 
 
   useEffect(() => {
-    console.log(cachedState);
+
+    console.log("cachedState in useEffect: ", cachedState);
     console.log(localStorage);
   }, [cachedState])
 

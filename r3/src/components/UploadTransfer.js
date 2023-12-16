@@ -12,7 +12,7 @@ function UploadTransfer({ selectItems, cachedState, setCachedState }) {
     const [offloadList, setOffloadList] = useState([]); 
     const [onloadList, setOnloadList] = useState([]); 
     
-
+    console.log("cachedState in uploadTRansfer: ", cachedState)
     const handleSubmit = (e) => { // log 
         console.log(currentContainer); 
     }
@@ -28,7 +28,7 @@ function UploadTransfer({ selectItems, cachedState, setCachedState }) {
                 <label htmlFor="cratenm">Type the crate name and hit enter: </label>
                 <Autocomplete id="cratenm"
                     freeSolo
-                    options={selectItems.map((option) => option[2])}
+                    options={cachedState.manifest.map((option) => option[2])}
                     onInputChange={(e) => setCurrentContainer({...currentContainer, name: e.target.value })}
                     renderInput={(params) => <TextField {...params} label="Crate Name" />} 
                 /> 
