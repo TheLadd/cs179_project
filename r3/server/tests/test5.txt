@@ -1,0 +1,10 @@
+5
+1
+Nat
+153
+Rat
+2321
+exit
+Hen
+Pig
+exit

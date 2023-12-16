@@ -1,0 +1,55 @@
+This file contains documentation of Object types or functions that I think will be helpful or necessary
+to implementing the front-end
+
+search.astar():
+    - defined at the end of search.py
+    - Runs A* on a manifest
+    - Must be told if this is a load balance op or a transfer op
+    - Must be told of the transfer list
+    - More formal description:
+        Parameters:
+            manifest: the contents of a manifest file
+            isBalance: whether or not the operation is load balancing
+            offload: a list of names of containers to offload (only needed if doing tranfer operation)
+            load: a list of containers (name+weight) to load (only needed if doing transfer operation)
+                * format: [Name1, Weight1, Name2, Weight2, ... NameN, WeightN]
+
+        Returns:
+            solution: a Node object (see Tree.py) where solution.val is the CargoState of the solution
+            moves: a list of Move objects containing the moves taken to get from the origin
+                CargoState to the solution.
+
+    - USES:
+        - To run the initial problem
+        - If a move must be skipped, run this function with the current CargoState (described below)
+          and an updated transfer list (which can be obtained by getting solution.val.load and
+          solution.val.offload, and updating them based on the skipped move)
+
+Class Container:
+    - Defines/describes a container
+    - Can be one of three things:
+        - An actual container containing a name and weight of a container
+        - an 'UNUSED' container, representing an empty cell, with weight 0
+        - a 'NAN' container, representing a cell of the ship that 'doesn't exist'
+
+Class Position:
+    - Defines/describes a position in the ship, buffer, or truck
+    - holds area, row, column, container in Position
+    - See Position defintion in CargoState.py for more details
+
+Class Move:
+    - Defines/describes a move to get from one CargoState to another
+    - Includes source position and destination position
+
+Class CargoState:
+      - Defines the current configuration, transfer list, and cost of a cargo state    
+      - Methods:
+        - CargoState.move(mov: Move) -> CargoState:
+            -  Returns a CargoState object that represents the current state AFTER taking the move
+               described by the 'mov' parameter
+            - This might be used to keep track of the current cargo state on the frontend. As in,
+              Start with the origin CargoState, and each time an operator presses the 'finished 
+              move' button, use this to update the CargoState
+        - CargoState.toManifest() -> str:
+            - Writes the current *ship* manifest to a string that holds the same format of the  
+              manifest text files. You can write this string to a file and it should be valid  
