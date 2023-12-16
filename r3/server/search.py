@@ -78,6 +78,8 @@ def ucs(tree: Tree, isBalance:bool, h=lambda x: 0):
         cnt += 1
         if cur.val.util(isBalance):
             print(f'UCS took {cnt} explored nodes')
+            #print("cur: ")
+            #print(cur)
             return cur
         
         # Expand, add children to frontier only if they haven't been explored yet
@@ -114,6 +116,8 @@ def astar(manifest_path:str, isBalance:bool, offload:List[str]=None, load:List[s
 
     # Time for the magic
     solution = ucs(tree, isBalance, h)
+    #print("solution in astar")
+    #print(solution)
     moves = backtrace(solution, tree)
     return solution, moves
 
