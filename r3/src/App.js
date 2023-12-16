@@ -9,14 +9,16 @@ import UploadTransfer from "./components/UploadTransfer"
 function App() {
 
   const [cachedState, setCachedState] = useState({
-    inProgress: localStorage.getItem("inProgress") ? Boolean(localStorage.getItem("inProgress")) : false, 
+    //inProgress: localStorage.getItem("inProgress") ? Boolean(localStorage.getItem("inProgress")) : false, 
+    inProgress: localStorage.getItem("inProgress") === "true",
     opType: localStorage.getItem("opType") ? localStorage.getItem("opType") : "", 
     lastActivityTime: localStorage.getItem("lastActivityTime") ? localStorage.getItem("lastActivityTime"): "", 
     currStep: localStorage.getItem("currStep") ? localStorage.getItem("currStep") : 0, 
     totalSteps: localStorage.getItem("totalSteps") ? localStorage.getItem("totalSteps") : 0, 
     lastUser: localStorage.getItem("lastUser") ? localStorage.getItem("lastUser") : "", 
     manifest: localStorage.getItem("manifest") ? localStorage.getItem("manifest") : null, 
-    transferList: localStorage.getItem("transferList") ? localStorage.getItem("transferList") : null 
+    loadList: localStorage.getItem("loadList") ? JSON.parse(localStorage.getItem("loadList")) : [],
+    offloadList: localStorage.getItem("offloadList") ? JSON.parse(localStorage.getItem("offloadList")) : []
   });
 
   console.log("APP.JS CURRENT CACHE STATE\n", cachedState);

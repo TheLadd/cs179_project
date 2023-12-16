@@ -21,7 +21,7 @@ function Home ({ cachedState, setCachedState }) {
       inProgress: false, 
       lastActivityTime: handleTimestamp()
     })
-    localStorage.removeItem('inProgress'); 
+    //localStorage.removeItem('inProgress'); 
     localStorage.removeItem('manifest'); 
     localStorage.setItem('inProgress', false); 
 
