@@ -2,7 +2,7 @@ from CargoState import Container, CargoState
 from typing import List
 from dataclasses import dataclass, field
 from Tree import *
-import r3.server.heuristics as heuristics
+import heuristics
 
 
 def readManifest(filename: str) -> List[List[Container]]:
