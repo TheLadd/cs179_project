@@ -35,7 +35,6 @@ function Home ({ cachedState, setCachedState }) {
     setCachedState(defaultState)
 
     Object.keys(defaultState).forEach(key => {
-      //localStorage.setItem(key, JSON.stringify(defaultState[key]))
       localStorage.setItem(key, defaultState[key])
     })
     console.log(localStorage)
@@ -63,7 +62,6 @@ function Home ({ cachedState, setCachedState }) {
     }
 
     //console.log(parsedData)
-    //const deepCopyParsedData = JSON.stringify(parsedData)
 
     setCachedState({
       ...cachedState,

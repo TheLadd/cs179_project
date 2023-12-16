@@ -3,19 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
 
 
-
-
 function Login ({ cachedState, setCachedState }) {
   const [user, setCurrentUser] = useState({
     name: '',
     ti: ''
   })
 
-const nav = useNavigate()
-
-
-
-
+  const nav = useNavigate()
+  
   const handleChange = e => {
     e.preventDefault()
     const tim = handleTimestamp()

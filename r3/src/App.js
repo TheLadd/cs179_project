@@ -38,7 +38,6 @@ useEffect(() => {
     setCachedState(defaultState)
 
     Object.keys(defaultState).forEach(key => {
-      //localStorage.setItem(key, JSON.stringify(defaultState[key]))
       localStorage.setItem(key, (defaultState[key]))
 
     })
