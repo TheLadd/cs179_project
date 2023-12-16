@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import handleTimestamp from './Timestamp'
 import { useNavigate } from 'react-router-dom'
-import { Alert, Stack } from '@mui/material'
+import { Alert, Button } from '@mui/material'
 
 // cached state is passed in the event of a crash. 
 // nav is used for route switching between different link paths 
@@ -14,48 +14,23 @@ function Home ({ cachedState, setCachedState }) {
   const [txtFile, setTxtFile] = useState(localStorage.getItem("manifest") ? localStorage.getItem("manifest") : null)
   const [op, setOp] = useState(localStorage.getItem("opType") ? localStorage.getItem("opType") : "")
 
-  //const [txtFile, setTxtFile] = useState(null)
-  //const [op, setOp] = useState(null)
-
-  const handleStartOver = () => { // 
+  // in the event if there is an operation in progress and we want to start over
+  const handleStartOver = () => { 
     const activitytime = handleTimestamp()
     setCachedState({
       ...cachedState,
+      inProgress: false, 
       lastActivityTime: activitytime
     })
     localStorage.setItem('inProgress', false)
   }
 
   const handleContinue = () => {
-    // do something here with cachedState
-  }
-
-  const showAlert = (currOp, recentActivity) => {
-    const title = `There is already a "${currOp}" in progress from ${recentActivity}!`
-    if (window.confirm(`${title}\n\nWould you like to continue?`)) {
-      handleContinue()
-    } else {
-      handleStartOver()
-    }
-  }
-
-  const testBackend = async () => {
-    try {
-      const response = await fetch('http://127.0.0.1:5000/solve');
-      const data = await response.json();
-      if (response.ok) {
-        console.log(data);
-        console.log('Backend is running and responsive!');
-      } else {
-        console.error('Backend is not responsive. Status:', response.status);
-      }
-    } catch (error) {
-      console.error('Error while trying to reach the backend:', error.message);
-    }
-  };
-
-  testBackend();
+    const activitytime = handleTimestamp()
   
+  }
+  
+  // parse manigest list 
   const handleManifestFile = (manifestText) => {
     const lines = manifestText.split('\n');
 
@@ -78,7 +53,7 @@ function Home ({ cachedState, setCachedState }) {
   };
 
 
-  // upload manifest list and parse 
+  // save data into cached state 
   const handleManipulatedManifest = (manifestData) => {
     console.log(manifestData);
     localStorage.setItem('manifest', manifestData)
@@ -100,7 +75,6 @@ function Home ({ cachedState, setCachedState }) {
     const fileReader = new FileReader();
     fileReader.onload = (e) => {
       const manifestContent = e.target.result;
-
       // Set the manifest content in the state
       handleManifestFile(manifestContent);
     }
@@ -111,16 +85,33 @@ function Home ({ cachedState, setCachedState }) {
       nav('/ship-view')
     }
 
-
     localStorage.setItem('opType', op)
     localStorage.setItem('lastActivityTime', uploadtime)
-
     fileReader.readAsText(txtFile);
   }
 
   const handleLogout = () => {
-    nav('/login')
+    const logouttime = handleTimestamp()
+    localStorage.setItem('lastActivityTime', logouttime)
+    nav('/')
   }
+  
+  const testBackend = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/solve');
+      const data = await response.json();
+      if (response.ok) {
+        console.log(data);
+        console.log('Backend is running and responsive!');
+      } else {
+        console.error('Backend is not responsive. Status:', response.status);
+      }
+    } catch (error) {
+      console.error('Error while trying to reach the backend:', error.message);
+    }
+  };
+
+  testBackend();
 
 
   useEffect(() => {
@@ -129,12 +120,12 @@ function Home ({ cachedState, setCachedState }) {
 
   return (
     <div>
-      {true ? (
-        <Stack sx={{ width: '100%' }} spacing={2}>
-          <Alert> 
-            This is a success alert — check it out!
-          </Alert>
-    </Stack>
+      {cachedState.inProgress ? (
+        <Alert>
+            This is currently an operation in progress. would you like to continue? 
+            <Button color="success"  onClick={handleContinue}>Yes</Button>
+            <Button color="warning" onClick={handleStartOver}>No</Button>
+        </Alert>
       
       ) : (
         <div>
