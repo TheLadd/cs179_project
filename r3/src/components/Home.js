@@ -32,7 +32,7 @@ function Home ({ cachedState, setCachedState }) {
   
   // parse manigest list 
   function parseManifestFile  (manifestTxt) {
-    const regexPattern = /\[(\d{2},\d{2})\],\s\{(\d{5})\},\s([^\r]+)/g;
+    const regexPattern = /\[(\d{2},\d{2})\],\s\{(\d{5})\},\s([^\r\n]+)/g;
 
     // Initialize an array to store the parsed data
     const parsedData = [];
