@@ -2,18 +2,22 @@
 import React, { useEffect, useState } from 'react'
 import handleTimestamp from './Timestamp'
 import { useNavigate } from 'react-router-dom'
+import { Alert, Stack } from '@mui/material'
 
-function Home ({ cachedState, setCachedState }) {
-  const nav = useNavigate()
+// cached state is passed in the event of a crash. 
+// nav is used for route switching between different link paths 
 
-  console.log(cachedState)
+function Home ({ cachedState, setCachedState }) { 
+  const nav = useNavigate() 
+
+  // checks if there is a file present to see if we're in the middle of an operation, if not, takes you to home page 
   const [txtFile, setTxtFile] = useState(localStorage.getItem("manifest") ? localStorage.getItem("manifest") : null)
   const [op, setOp] = useState(localStorage.getItem("opType") ? localStorage.getItem("opType") : "")
 
   //const [txtFile, setTxtFile] = useState(null)
   //const [op, setOp] = useState(null)
 
-  const handleStartOver = () => {
+  const handleStartOver = () => { // 
     const activitytime = handleTimestamp()
     setCachedState({
       ...cachedState,
@@ -56,24 +60,18 @@ function Home ({ cachedState, setCachedState }) {
     handleManipulatedManifest(manifestData);
   };
 
+
+  // upload manifest list and parse 
   const handleManipulatedManifest = (manifestData) => {
     console.log(manifestData);
-    /*
-    setCachedState({
-        ...cachedState,
-        manifest: manifestData,
-      });
-      */
     localStorage.setItem('manifest', manifestData)
     setCachedState({
-      inProgress: localStorage.getItem("inProgress") ? localStorage.getItem("inProgress") : false, 
-      opType: localStorage.getItem("opType") ? localStorage.getItem("opType") : "", 
-      lastActivityTime: localStorage.getItem("lastActivityTime") ? localStorage.getItem("lastActivityTime"): "", 
-      currStep: localStorage.getItem("currStep") ? localStorage.getItem("currStep") : 0, 
-      totalSteps: localStorage.getItem("totalSteps") ? localStorage.getItem("totalSteps") : 0, 
-      manifest: localStorage.getItem("manifest") ? localStorage.getItem("manifest") : null, 
-      transferList: localStorage.getItem("transferList") ? localStorage.getItem("transferList") : null 
-    });
+      ...cachedState,
+      opType: op,
+      manifest: txtFile,
+      lastActivityTime: handleTimestamp()
+    })
+    
     // You can now pass `manifestData` to your backend or perform other operations.
   };
 
@@ -82,14 +80,6 @@ function Home ({ cachedState, setCachedState }) {
     const uploadtime = handleTimestamp()
     e.preventDefault()
 
-    /*
-    setCachedState({
-      ...cachedState,
-      opType: op,
-      manifest: txtFile,
-      lastActivityTime: uploadtime
-    })
-    */
     const fileReader = new FileReader();
     fileReader.onload = (e) => {
       const manifestContent = e.target.result;
@@ -104,47 +94,31 @@ function Home ({ cachedState, setCachedState }) {
       nav('/ship-view')
     }
 
-    /*
-    setCachedState({
-        ...currentState,
-        opType: op,
-        manifest: txtFile,
-        lastActivityTime: uploadtime,
-      });
-    */
+
     localStorage.setItem('opType', op)
     localStorage.setItem('lastActivityTime', uploadtime)
 
     fileReader.readAsText(txtFile);
-    //console.log(cachedState);
   }
 
   const handleLogout = () => {
     nav('/login')
   }
 
-  /*
-  useEffect(() => {
-    if (cachedState.inProgress) {
-      showAlert(cachedState.opType, cachedState.lastActivityTime)
-    }
-    console.log(cachedState)
-  }, [cachedState,
-    cachedState.inProgress,
-    cachedState.opType,
-    cachedState.lastActivityTime
-  ])
-  */
+
   useEffect(() => {
     console.log(cachedState)
   }, [cachedState])
 
   return (
     <div>
-      {/*cachedState.inProgress*/false ? (
-        <div>
-          {/* You may display something specific for in-progress state here */}
-        </div>
+      {true ? (
+        <Stack sx={{ width: '100%' }} spacing={2}>
+          <Alert> 
+            This is a success alert — check it out!
+          </Alert>
+    </Stack>
+      
       ) : (
         <div>
           <button type='button' onClick={handleLogout}>
