@@ -75,7 +75,6 @@ function Home ({ cachedState, setCachedState }) {
     const fileReader = new FileReader();
     fileReader.onload = (e) => {
       const manifestContent = e.target.result;
-
       // Set the manifest content in the state
       handleManifestFile(manifestContent);
     }
@@ -85,7 +84,6 @@ function Home ({ cachedState, setCachedState }) {
     } else {
       nav('/ship-view')
     }
-
 
     localStorage.setItem('opType', op)
     localStorage.setItem('lastActivityTime', uploadtime)
