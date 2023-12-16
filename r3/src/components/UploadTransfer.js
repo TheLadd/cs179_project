@@ -25,12 +25,12 @@ function UploadTransfer({ selectItems, cachedState, setCachedState }) {
                 <label htmlFor="off">Offload</label>
                 <input type="radio" name="optype" id="on" value="onload" onChange={(e) => setCurrentContainer({ ...currentContainer, operation: e.target.value })}></input>
                 <label htmlFor="on">Onload</label>
-                <label htmlFor="cratenm">Type the container name and hit enter: </label>
-                <Autocomplete id="cratenm"
+                <label htmlFor="containernm">Type the container name and hit enter: </label>
+                <Autocomplete id="containernm"
                     freeSolo
                     options={cachedState.manifest.map((option) => option[2])}
                     onInputChange={(e) => setCurrentContainer({...currentContainer, name: e.target.value })}
-                    renderInput={(params) => <TextField {...params} label="Crate Name" />} 
+                    renderInput={(params) => <TextField {...params} label="Container Name" />} 
                 /> 
                 <label htmlFor="weight">Weight (only input if onloading):</label>
                 <NumberInput onChange={e => setCurrentContainer({...currentContainer, weight: e.target.value})}/> 
