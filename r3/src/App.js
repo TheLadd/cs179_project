@@ -9,7 +9,7 @@ import UploadTransfer from "./components/UploadTransfer"
 function App() {
 
   const [cachedState, setCachedState] = useState({
-    inProgress: localStorage.getItem("inProgress") ? localStorage.getItem("inProgress") : false, 
+    inProgress: localStorage.getItem("inProgress") ? Boolean(localStorage.getItem("inProgress")) : false, 
     opType: localStorage.getItem("opType") ? localStorage.getItem("opType") : "", 
     lastActivityTime: localStorage.getItem("lastActivityTime") ? localStorage.getItem("lastActivityTime"): "", 
     currStep: localStorage.getItem("currStep") ? localStorage.getItem("currStep") : 0, 
@@ -18,7 +18,7 @@ function App() {
     transferList: localStorage.getItem("transferList") ? localStorage.getItem("transferList") : null 
   });
 
-  console.log("APP.JS\n", cachedState);
+  console.log("APP.JS CURRENT CACHE STATE\n", cachedState);
 
   return (
     <BrowserRouter>
