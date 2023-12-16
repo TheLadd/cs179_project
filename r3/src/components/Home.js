@@ -44,10 +44,19 @@ function Home ({ cachedState, setCachedState }) {
         const [, position, weight, name] = match;
         parsedData.push([`[${position}]`, weight, name]);
     }
+
     console.log(parsedData)
     // Call a function to handle the parsed manifest
-    handleParsedManifest(parsedData);
-    return parsedData;
+    //handleParsedManifest(parsedData);
+    setCachedState({
+      ...cachedState,
+      opType: op,
+      manifest: parsedData,
+      lastActivityTime: handleTimestamp()
+    })
+    console.log("cachedState after parsed: ", cachedState)
+    console.log("parsedData not in cachedState, ", parsedData)
+    //return parsedData;
   };
 
 
@@ -57,7 +66,7 @@ function Home ({ cachedState, setCachedState }) {
     setCachedState({
       ...cachedState,
       opType: op,
-      manifest: txtFile,
+      manifest: manifestData,
       lastActivityTime: handleTimestamp()
     })
     
@@ -77,7 +86,7 @@ function Home ({ cachedState, setCachedState }) {
       localStorage.setItem('manifest', manifestContent);
       parseManifestFile(manifestContent);
     }
-    console.log(cachedState);
+    console.log("cache state right before nav: ", cachedState);
     if (op === 'Offloading/Onloading') {
       nav('/upload-transfer')
     } else {
