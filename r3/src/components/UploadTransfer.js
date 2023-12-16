@@ -1,28 +1,21 @@
 import React, { useState } from 'react';
-//import { renderMatches } from "react-router-dom";
-import { TextField } from "@mui/material";
-import Autocomplete from '@mui/material/Autocomplete';
+import { TextField, Autocomplete } from "@mui/material";
+import { Unstable_NumberInput as NumberInput } from '@mui/base'; 
 
 function UploadTransfer({ selectItems, cachedState, setCachedState }) {
     //const [empty, setEmpty] = useState(false); // no transfer list items have been uploaded
-    const [currentOp, setCurrentOp] = useState(null);
     const [currentContainer, setCurrentContainer] = useState({
         name: '',
-        quantity: '',
+        weight: 0,
         operation: ''
     });
+    const [offloadList, setOffloadList] = useState([]); 
+    const [onloadList, setOnloadList] = useState([]); 
+    
+
     const handleSubmit = (e) => { // log 
-        setCurrentOp({
-            name: currentContainer.name,
-            quantity: currentContainer.quantity,
-            operation: currentContainer.operation === "offload" ? 0 : 1
-        });
-
+        console.log(currentContainer); 
     }
-    console.log(cachedState);
-
-
-
     return (
         <div>
             <form>
@@ -31,19 +24,23 @@ function UploadTransfer({ selectItems, cachedState, setCachedState }) {
                 <label htmlFor="off">Offload</label>
                 <input type="radio" name="optype" id="on" value="onload" onChange={(e) => setCurrentContainer({ ...currentContainer, operation: e.target.value })}></input>
                 <label htmlFor="on">Onload</label>
-                <label htmlFor="cratenm">Select the crate name: </label>
-                <Autocomplete disablePortal id="name" options={selectItems} onChange={(event, value) => setCurrentContainer({ ...currentContainer, name: value })} renderInput={(p) => <TextField {...p} label="Name" />}></Autocomplete>
-                <label htmlFor="q">Select the quantity of these container(s) you wish to perform this operation for: </label>
-                <input type="number" id="q" min="1" max="96" onChange={(e) => setCurrentContainer({ ...currentContainer, quantity: e.target.value })}></input>
+                <label htmlFor="cratenm">Type the crate name and hit enter: </label>
+                <Autocomplete id="cratenm"
+                    freeSolo
+                    options={selectItems.map((option) => option[2])}
+                    onInputChange={(e) => setCurrentContainer({...currentContainer, name: e.target.value })}
+                    renderInput={(params) => <TextField {...params} label="Crate Name" />} 
+                /> 
+                <label htmlFor="weight">Weight (only input if onloading):</label>
+                <NumberInput onChange={e => setCurrentContainer({...currentContainer, weight: e.target.value})}/> 
                 <button type="submit" onSubmit={handleSubmit}>Submit</button>
+        
             </form>
-
-
-
         </div>
 
     );
 
 }
 
-export default UploadTransfer; 
+
+export default UploadTransfer;
