@@ -1,7 +1,7 @@
 from CargoState import *
 from Tree import *
 from search import *
-import hueristics
+import heuristics
 import time
 
 # 1. Get test case to work with

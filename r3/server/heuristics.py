@@ -50,7 +50,7 @@ def balanceScore(state: CargoState) -> float:
 def transferListSize(state: CargoState):
     return (len(state.load) + len(state.offload))
 
-def transferHueristic(state: CargoState):
+def transferHeuristic(state: CargoState):
     pinkRow = 12    # These are zero-indexed
     pinkCol = 0     #
 

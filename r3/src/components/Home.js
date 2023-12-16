@@ -31,32 +31,29 @@ function Home ({ cachedState, setCachedState }) {
   }
   
   // parse manigest list 
-  const handleManifestFile = (manifestText) => {
-    const lines = manifestText.split('\n');
+  function parseManifestFile  (manifestTxt) {
+    const regexPattern = /\[(\d{2},\d{2})\],\s\{(\d{5})\},\s([^\r\n]+)/g;
 
-    const manifestData = lines.map((line) => {
-      const matches = line.match(/\[(\d+,\d+)\], \{(\d+)\}, (.+)/);
+    // Initialize an array to store the parsed data
+    const parsedData = [];
 
-      if (matches) {
-        const coordinates = matches[1].split(',').map(Number);
-        const id = Number(matches[2]);
-        const name = matches[3].trim();
-
-        return { coordinates, id, name };
-      }
-
-      return null; // Skip lines that don't match the expected format
-    }).filter(Boolean);
-
-    // Call a function to handle the manipulated manifestData
-    handleManipulatedManifest(manifestData);
+    // Use a loop to match and extract data from the input string
+    let match;
+    while ((match = regexPattern.exec(manifestTxt)) !== null) {
+        // Extract matched groups and push them to the result array
+        const [, position, weight, name] = match;
+        parsedData.push([`[${position}]`, weight, name]);
+    }
+    console.log(parsedData)
+    // Call a function to handle the parsed manifest
+    handleParsedManifest(parsedData);
+    return parsedData;
   };
 
 
-  // save data into cached state 
-  const handleManipulatedManifest = (manifestData) => {
-    console.log(manifestData);
-    localStorage.setItem('manifest', manifestData)
+  // save data into cached state
+  const handleParsedManifest = (manifestData) => {
+    //console.log(manifestData);
     setCachedState({
       ...cachedState,
       opType: op,
@@ -76,7 +73,9 @@ function Home ({ cachedState, setCachedState }) {
     fileReader.onload = (e) => {
       const manifestContent = e.target.result;
       // Set the manifest content in the state
-      handleManifestFile(manifestContent);
+      console.log(manifestContent);
+      localStorage.setItem('manifest', manifestContent);
+      parseManifestFile(manifestContent);
     }
     console.log(cachedState);
     if (op === 'Offloading/Onloading') {
@@ -111,16 +110,17 @@ function Home ({ cachedState, setCachedState }) {
     }
   };
 
-  testBackend();
+  //testBackend();
 
 
   useEffect(() => {
-    console.log(cachedState)
+    console.log(cachedState);
+    console.log(localStorage);
   }, [cachedState])
 
   return (
     <div>
-      {cachedState.inProgress ? (
+      {cachedState.inProgress == "true" ? (
         <Alert>
             This is currently an operation in progress. would you like to continue? 
             <Button color="success"  onClick={handleContinue}>Yes</Button>

@@ -16,6 +16,7 @@ function UploadTransfer({ selectItems, cachedState, setCachedState }) {
     const handleSubmit = (e) => { // log 
         console.log(currentContainer); 
     }
+    
     return (
         <div>
             <form>
