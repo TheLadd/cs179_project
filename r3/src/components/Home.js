@@ -16,21 +16,25 @@ function Home ({ cachedState, setCachedState }) {
 
   // in the event if there is an operation in progress and we want to start over
   const handleStartOver = () => { 
-    const activitytime = handleTimestamp()
     setCachedState({
       ...cachedState,
       inProgress: false, 
-      lastActivityTime: activitytime
+      lastActivityTime: handleTimestamp()
     })
-    localStorage.setItem('inProgress', false)
+    localStorage.removeItem('inProgress'); 
+    localStorage.removeItem('manifest'); 
+    localStorage.setItem('inProgress', false); 
+
   }
 
   const handleContinue = () => {
-    const activitytime = handleTimestamp()
+    // const activitytime = handleTimestamp()
+    console.log("continue")
+    // do something here with reloading everything from local storage 
   
   }
   
-  // parse manigest list 
+  // parse manifest list 
   function parseManifestFile  (manifestTxt) {
     const regexPattern = /\[(\d{2},\d{2})\],\s\{(\d{5})\},\s([^\r\n]+)/g;
 
@@ -46,52 +50,24 @@ function Home ({ cachedState, setCachedState }) {
     }
 
     //console.log(parsedData)
-    const deepCopyParsedData = JSON.parse(JSON.stringify(parsedData));
-    // Call a function to handle the parsed manifest
-    //handleParsedManifest(parsedData);
-    /*
-    setCachedState({
-      //...cachedState,
-      opType: op,
-      manifest: parsedData,
-      lastActivityTime: handleTimestamp()
-    })
-    */
+    const deepCopyParsedData = JSON.stringify(parsedData);
 
-    setCachedState(prevState => {
-      const newState = {
-        ...prevState,
-        opType: op,
-        manifest: deepCopyParsedData,
-        lastActivityTime: handleTimestamp()
-      };
-      console.log("cachedState after parsed: ", newState);
-      return newState;
+    setCachedState({
+      ...cachedState, 
+      manifest: deepCopyParsedData
     });
-    
-    //console.log("cachedState after parsed: ", cachedState)
-    console.log("parsedData not in cachedState, ", parsedData)
-    console.log("cache state right before nav: ", cachedState);
+    localStorage.removeItem('manifest'); 
+    localStorage.setItem('manifest', deepCopyParsedData); 
+
     if (op === 'Offloading/Onloading') {
       nav('/upload-transfer')
     } else {
       nav('/ship-view')
     }
-    return parsedData;
+
+
   };
   
-  // save data into cached state
-  const handleParsedManifest = (manifestData) => {
-    //console.log(manifestData);
-    setCachedState({
-      ...cachedState,
-      opType: op,
-      manifest: manifestData,
-      lastActivityTime: handleTimestamp()
-    })
-    
-    // You can now pass `manifestData` to your backend or perform other operations.
-  };
 
   const handleSubmit = e => {
     // logging function goes here
@@ -113,8 +89,8 @@ function Home ({ cachedState, setCachedState }) {
   }
 
   const handleLogout = () => {
-    const logouttime = handleTimestamp()
-    localStorage.setItem('lastActivityTime', logouttime)
+    localStorage.setItem('lastActivityTime', handleTimestamp())
+    localStorage.setItem('lastUser', '')
     nav('/')
   }
   
@@ -135,16 +111,11 @@ function Home ({ cachedState, setCachedState }) {
 
   //testBackend();
 
-
-  useEffect(() => {
-
-    console.log("cachedState in useEffect: ", cachedState);
-    console.log(localStorage);
-  }, [cachedState])
+  // refreshes every single time CachedState is changed.  async function 
 
   return (
     <div>
-      {cachedState.inProgress == "true" ? (
+      {cachedState.inProgress ? (
         <Alert>
             This is currently an operation in progress. would you like to continue? 
             <Button color="success"  onClick={handleContinue}>Yes</Button>
@@ -167,7 +138,7 @@ function Home ({ cachedState, setCachedState }) {
               required={true}
             />
             <label htmlFor='op-type'>
-              Please select the type of operation:{' '}
+              Please select the type of operation:
             </label>
             <br />
             <input
