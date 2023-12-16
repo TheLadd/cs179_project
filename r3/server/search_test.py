@@ -25,7 +25,7 @@ if not isBalance:
         load.append(Container(info=(name, weight)))
 
 
-    print('Input the containers you want to offload (case sensitive); enter name, then enter weight; enter exit to quit:')
+    print('Input the containers you want to offload (case sensitive); enter name; enter exit to quit:')
     while True:
         name = input()
         if name == 'exit':
@@ -53,4 +53,5 @@ solution, moves = astar(file, isBalance, offload=offload, load=load)
 for move in moves:
     print(move)
 print('\n')
+print("solution: ")
 print(solution)
