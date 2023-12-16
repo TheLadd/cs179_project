@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "server": "python server/app.py",
+    "server": "python3 server/app.py",
     "dev": "run-p server start",
     "build": "react-scripts build",
     "test": "react-scripts test",

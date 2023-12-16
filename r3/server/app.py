@@ -9,7 +9,7 @@ CORS(app)
 
 @app.route('/solve', methods=['GET'])
 def solve():
-    print("hi")
+    #print("hi")
     return jsonify({"message": "hi"})
     #todo implement backend lol
 

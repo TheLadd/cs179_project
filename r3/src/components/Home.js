@@ -111,7 +111,7 @@ function Home ({ cachedState, setCachedState }) {
     }
   };
 
-  testBackend();
+  //testBackend();
 
 
   useEffect(() => {
