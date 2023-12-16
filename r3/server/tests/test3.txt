@@ -1,0 +1,9 @@
+3
+1
+Bat
+532
+Rat
+6317
+exit
+Cow
+exit

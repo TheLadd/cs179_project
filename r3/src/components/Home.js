@@ -29,7 +29,7 @@ function Home ({ cachedState, setCachedState }) {
     const activitytime = handleTimestamp()
   
   }
-
+  
   // parse manigest list 
   const handleManifestFile = (manifestText) => {
     const lines = manifestText.split('\n');
@@ -95,6 +95,23 @@ function Home ({ cachedState, setCachedState }) {
     localStorage.setItem('lastActivityTime', logouttime)
     nav('/')
   }
+  
+  const testBackend = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/solve');
+      const data = await response.json();
+      if (response.ok) {
+        console.log(data);
+        console.log('Backend is running and responsive!');
+      } else {
+        console.error('Backend is not responsive. Status:', response.status);
+      }
+    } catch (error) {
+      console.error('Error while trying to reach the backend:', error.message);
+    }
+  };
+
+  testBackend();
 
 
   useEffect(() => {
