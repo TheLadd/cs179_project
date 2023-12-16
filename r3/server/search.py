@@ -2,7 +2,7 @@ from CargoState import Container, CargoState
 from typing import List
 from dataclasses import dataclass, field
 from Tree import *
-import hueristics
+import r3.server.heuristics as heuristics
 
 
 def readManifest(filename: str) -> List[List[Container]]:
@@ -109,8 +109,8 @@ def astar(manifest_path:str, isBalance:bool, offload:List[str]=None, load:List[s
     root = Node(None, 0, state)
     tree = Tree(root)
 
-    # Determine which hueristic to use based on operation
-    h = hueristics.balanceScore if isBalance else hueristics.transferHueristic 
+    # Determine which heuristic to use based on operation
+    h = heuristics.balanceScore if isBalance else heuristics.transferHeuristic 
 
     # Time for the magic
     solution = ucs(tree, isBalance, h)

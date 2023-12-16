@@ -19,7 +19,7 @@ function UploadTransfer({ selectItems, cachedState, setCachedState }) {
         });
 
     }
-    console.log(cachedState);
+    //console.log(cachedState);
 
 
 
