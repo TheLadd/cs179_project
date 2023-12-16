@@ -5,7 +5,9 @@ import { Unstable_NumberInput as NumberInput } from '@mui/base'
 
 function UploadTransfer ({ cachedState, setCachedState }) {
   //const [empty, setEmpty] = useState(false); // no transfer list items have been uploaded
-  const MANIFEST = JSON.parse(cachedState.manifest)
+
+  const MANIFEST = cachedState.manifest
+
   const nav = useNavigate()
   // items that we have already selected
   const selected = {}
@@ -28,7 +30,8 @@ function UploadTransfer ({ cachedState, setCachedState }) {
       let curr = [currentContainer.name, currentContainer.weight]
       setCachedState(prevState => {
         const newLoadList = [...prevState.loadList, ...curr]
-        localStorage.setItem('loadList', JSON.stringify(newLoadList))
+        localStorage.setItem('loadList', newLoadList)
+
         return {
           ...prevState,
           loadList: newLoadList
@@ -37,7 +40,8 @@ function UploadTransfer ({ cachedState, setCachedState }) {
     } else {
       setCachedState(prevState => {
         const newOffloadList = [...prevState.offloadList, currentContainer.name]
-        localStorage.setItem('offloadList', JSON.stringify(newOffloadList))
+        localStorage.setItem('offloadList', newOffloadList)
+
         return {
           ...prevState,
           offloadList: newOffloadList
