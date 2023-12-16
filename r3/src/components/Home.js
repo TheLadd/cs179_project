@@ -45,21 +45,35 @@ function Home ({ cachedState, setCachedState }) {
         parsedData.push([`[${position}]`, weight, name]);
     }
 
-    console.log(parsedData)
+    //console.log(parsedData)
+    const deepCopyParsedData = JSON.parse(JSON.stringify(parsedData));
     // Call a function to handle the parsed manifest
     //handleParsedManifest(parsedData);
+    /*
     setCachedState({
-      ...cachedState,
+      //...cachedState,
       opType: op,
       manifest: parsedData,
       lastActivityTime: handleTimestamp()
     })
-    console.log("cachedState after parsed: ", cachedState)
+    */
+
+    setCachedState(prevState => {
+      const newState = {
+        ...prevState,
+        opType: op,
+        manifest: deepCopyParsedData,
+        lastActivityTime: handleTimestamp()
+      };
+      console.log("cachedState after parsed: ", newState);
+      return newState;
+    });
+    
+    //console.log("cachedState after parsed: ", cachedState)
     console.log("parsedData not in cachedState, ", parsedData)
-    //return parsedData;
+    return parsedData;
   };
-
-
+  
   // save data into cached state
   const handleParsedManifest = (manifestData) => {
     //console.log(manifestData);
@@ -82,7 +96,7 @@ function Home ({ cachedState, setCachedState }) {
     fileReader.onload = (e) => {
       const manifestContent = e.target.result;
       // Set the manifest content in the state
-      console.log(manifestContent);
+      //console.log(manifestContent);
       localStorage.setItem('manifest', manifestContent);
       parseManifestFile(manifestContent);
     }
@@ -123,7 +137,8 @@ function Home ({ cachedState, setCachedState }) {
 
 
   useEffect(() => {
-    console.log(cachedState);
+
+    console.log("cachedState in useEffect: ", cachedState);
     console.log(localStorage);
   }, [cachedState])
 

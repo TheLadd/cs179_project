@@ -12,7 +12,7 @@ function UploadTransfer({ selectItems, cachedState, setCachedState }) {
     const [offloadList, setOffloadList] = useState([]); 
     const [onloadList, setOnloadList] = useState([]); 
     
-
+    console.log("cachedState in uploadTRansfer: ", cachedState)
     const handleSubmit = (e) => { // log 
         console.log(currentContainer); 
     }
