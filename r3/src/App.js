@@ -1,6 +1,7 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { useState } from 'react'; 
+import { useState, useEffect } from 'react'
+
 import Login from "./components/Login"
 import Home from "./components/Home"
 import UploadTransfer from "./components/UploadTransfer"
@@ -14,11 +15,35 @@ function App() {
     lastActivityTime: localStorage.getItem("lastActivityTime") ? localStorage.getItem("lastActivityTime"): "", 
     currStep: localStorage.getItem("currStep") ? localStorage.getItem("currStep") : 0, 
     totalSteps: localStorage.getItem("totalSteps") ? localStorage.getItem("totalSteps") : 0, 
-    lastUser: localStorage.getItem("lastUser") ? localStorage.getItem("lastUser") : "", 
+    user: "", 
     manifest: localStorage.getItem("manifest") ? localStorage.getItem("manifest") : null, 
-    loadList: localStorage.getItem("loadList") ? JSON.parse(localStorage.getItem("loadList")) : [],
-    offloadList: localStorage.getItem("offloadList") ? JSON.parse(localStorage.getItem("offloadList")) : []
+    loadList: localStorage.getItem("loadList") ? (localStorage.getItem("loadList")) : [],
+    offloadList: localStorage.getItem("offloadList") ? (localStorage.getItem("offloadList")) : []
   });
+
+useEffect(() => {
+  if (!cachedState.inProgress) {
+    const defaultState = {
+      inProgress: false,
+      opType: '',
+      lastActivityTime: cachedState.lastActivityTime,
+      currStep: 0,
+      totalSteps: 0,
+      user: '',
+      manifest: null,
+      loadList: [],
+      offloadList: []
+    }
+
+    setCachedState(defaultState)
+
+    Object.keys(defaultState).forEach(key => {
+      //localStorage.setItem(key, JSON.stringify(defaultState[key]))
+      localStorage.setItem(key, (defaultState[key]))
+
+    })
+  }
+}, [cachedState.inProgress])
 
   console.log("APP.JS CURRENT CACHE STATE\n", cachedState);
 
