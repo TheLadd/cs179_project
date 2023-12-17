@@ -130,7 +130,7 @@ const handleLogMessage = async (message) => {
 const handleGetCurrentCargoState = async () => {
   try {
     // Make a GET request to the backend
-    const response = await fetch('http://127.0.0.1:5000/get-current-cargo-state', {
+    const response = await fetch('http://127.0.0.1:5000/get-cargo-state-dict', {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -156,7 +156,8 @@ export { handleCreateCargoState,
   handleRunMove,
   handleGetManifest,
   handleLogMessage,
-handleGetCurrentCargoState}
+  handleGetCurrentCargoState
+}
 
 
 
