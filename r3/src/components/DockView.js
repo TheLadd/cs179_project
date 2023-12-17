@@ -11,9 +11,9 @@ export default function DockView({ cachedState, setCachedState }) {
     const BUFFER = "buffer"; 
     const SHIP = "ship"; 
     // some back end stuff 
-    const renderNextInstruction = (e) => {
+    // const renderNextInstruction = (e) => {
 
-    }; 
+    // }; 
 
 
 
