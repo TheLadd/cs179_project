@@ -457,13 +457,13 @@ class CargoState:
             if not isBalance:
                   moves.extend(self.offloadMoves())
                   moves.extend(self.loadMoves())
-                  # moves.extend(self.interShipMoves())
+                  moves.extend(self.interShipMoves())
 
             return moves
 
       def toManifest(self, path: str='manifest.txt') -> str:
             """
-            Writes the current manifest to a string and returns it
+            Writes the current manifest to a file-like string and returns it
             """
             file = open(path, 'w')
             man = ''
@@ -480,4 +480,20 @@ class CargoState:
                         # file.write(line)
                         man += line
             return man
+
+      def toBuffer(self) -> List[List[str]]:
+            """
+            Returns the buffer as a single dimensional array where 
+            each element is a triplet of [[x,y], weight, name]
+
+            NOTE: [x,y] are *not* zero-indexed
+            NOTE: each element (including [x,y]) is a string
+            """
+            buf = []
+            for row in range(4):
+                  for col in range(24):
+                        cell: Container = self.buf[row][col]
+                        item = [f'[{row+1}, {col+1}]', str(cell.weight), cell.name]
+                        buf.append(item)
+            return buf
             
