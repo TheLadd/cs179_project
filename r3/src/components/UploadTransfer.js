@@ -1,15 +1,14 @@
-import React, { useState } from 'react'
-import { TextField, Autocomplete } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { TextField, Autocomplete, useColorScheme, colors } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import handleTimestamp from './Timestamp'
-import { Unstable_NumberInput as NumberInput } from '@mui/base'
 import { AgGridReact } from 'ag-grid-react'; // React Grid Logic
 import "ag-grid-community/styles/ag-grid.css"; // Core CSS
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Theme
 
 function UploadTransfer ({ cachedState, setCachedState }) {
-  //const [empty, setEmpty] = useState(false); // no transfer list items have been uploaded
-
+  const [onload, setOnload] = useState(false); // switches to read-only in form if the operation is true or is onload operation 
+  const [rowData, setRowData] = useState([]); 
   const MANIFEST = cachedState.manifest
 
   const nav = useNavigate()
@@ -30,28 +29,37 @@ function UploadTransfer ({ cachedState, setCachedState }) {
   const handleSubmitContainer = e => {
     // log
     e.preventDefault(); 
+    let container = {}; 
 
-    if (currentContainer.operation === 'onload') {
+    if (onload) {
 
         const currLoad = [...cachedState.loadList, [currentContainer.name, currentContainer.weight.toString()]]; 
+        container = { 
+          ...currentContainer, 
+          operation: 'Onload'
+        }
         setCachedState({
             ...cachedState, 
             loadList: currLoad
         }); 
         
     } else {
-        const currOffload = [...cachedState.offloadList, currentContainer.name]
+        const currOffload = [...cachedState.offloadList, currentContainer.name]; 
+        container = {
+          ...currentContainer, 
+          operation: 'Offload'
+        }
         setCachedState({
             ...cachedState, 
             offloadList: currOffload
         }); 
     }
-    rowData.push(currentContainer); 
-    console.log(currentContainer); 
+    setRowData([...rowData, container]); 
+    // console.log(container, rowData); 
     setCurrentContainer({
-      name: '',
-      weight: 0,
+      name: '', 
       operation: '', 
+      weight: 0
     }); 
     document.getElementById('container-form').reset(); 
   }
@@ -67,20 +75,16 @@ function UploadTransfer ({ cachedState, setCachedState }) {
 
   const columns = [
     {
-        headerName: '#', 
+        field: '#', 
         valueGetter: 'node.rowIndex + 1', 
-        maxWidth: 80, 
     }, 
     {
-        headerName: 'Operation', 
         field: 'operation', 
     }, 
     {
-        headerName: 'Container Name', 
         field: 'name', 
     }, 
     {
-        headerName: 'Weight',
         field: 'weight', 
         cellRenderer: (params) => {
             if (params.value === 0) {
@@ -91,8 +95,6 @@ function UploadTransfer ({ cachedState, setCachedState }) {
         }
     }, 
   ]; 
-
-  const rowData = [];   
 
   // start onloading and offloading 
   const handleOperationSubmission = e => {
@@ -116,8 +118,16 @@ function UploadTransfer ({ cachedState, setCachedState }) {
 
   }
 
+  useEffect(() => {
+    console.log(rowData); 
+
+
+  }, [rowData])
+
   return (
     <div>
+      <h1>Upload Transfer Items</h1>
+      <div className="form-wrapper">
       <form id='container-form' onSubmit={handleSubmitContainer}>
         <span>Select the operation: </span> <br />
         <input
@@ -125,30 +135,22 @@ function UploadTransfer ({ cachedState, setCachedState }) {
           name='optype'
           id='off'
           value='offload'
-          onChange={e =>
-            setCurrentContainer({
-              ...currentContainer,
-              operation: e.target.value
-            })
-          }
+          onChange={e => setOnload(false)}
         />
-        <label htmlFor='off'>Offload</label> <br/> 
-        
+        <label htmlFor='off'>Offload</label> <br/>
         <input
           type='radio'
           name='optype'
           id='on'
           value='onload'
-          onChange={e =>
-            setCurrentContainer({
-              ...currentContainer,
-              operation: e.target.value
-            })
-          }
+          onChange={e => setOnload(true)}
        /><label htmlFor='on'>Onload</label><br/> 
-        <label htmlFor='cratenm'>Type the crate name and hit enter: </label>
+        <span>Type the crate name and hit enter:</span><br/>
         <Autocomplete
           id='cratenm'
+          sx={{
+            marginTop: 1
+          }}
           freeSolo
           options={MANIFEST.filter(filterOptions).map(opt => opt[2])}
           onInputChange={e =>
@@ -159,31 +161,21 @@ function UploadTransfer ({ cachedState, setCachedState }) {
           }
           renderInput={params => <TextField {...params} label='Container Name' required={true}/>}
         />
-        <label htmlFor='weight'>Weight (only input if onloading):</label>
-        <NumberInput
-          onChange={e => setCurrentContainer({ ...currentContainer, weight: e.target.value })}
-          min={0}
-          max={9999}
-          type="number"
-          required={currentContainer.operation === "onload" ? true : false}
-          id='weight'
-        //   slots={{
-        //     incrementButton: Button, 
-        //     decrementButton: Button, 
-        //   }}
-        //   slotProps={{
-        //     incrementButton: {
-        //         children: <span className="arrow">▴</span>,
-        //     }, 
-        //     decrementButton: {
-        //         children: <span className="arrow">▾</span>,
-        //     }, 
-        //   }}
-        />
-        <button type='submit'>Submit</button>
+        <span>Weight (only input if onloading): </span><br/>
+        <input type="number" className="input-weight" min="0" max="9999" readOnly={onload ? false : true} 
+        onChange={e => setCurrentContainer({...currentContainer, weight: e.target.value})}/> 
+        <button type='submit' className="secondary-submit-btn">Submit</button>
       </form>
-      <button onClick={handleOperationSubmission}>Finish</button>
-      <AgGridReact columnDefs={columns} rowData={rowData}/> 
+      <button onClick={handleOperationSubmission} className="primary-submit-btn">Finish</button>
+    </div> 
+    {/* <div
+      className={ "ag-theme-quartz-dark" }
+      style={{ width: '100%', height: '100%' }}
+    >
+      <AgGridReact columnDefs={columns} 
+      rowData={rowData}/> 
+    </div> */}
+      
     </div>
   )
 
