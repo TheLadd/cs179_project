@@ -68,16 +68,31 @@ def get_manifest():
     global current_cargo_state
     return jsonify({"manifest": current_cargo_state.toManifest()})
 
+@app.route('/get-current-cargo-state', methods=['GET'])
+def get_current_cargo_state():
+    global current_cargo_state
+
+    # Check if current_cargo_state is not None
+    if current_cargo_state:
+        # Return the current_cargo_state as JSON
+        return jsonify(current_cargo_state.toManifest())
+    else:
+        return jsonify({"error": "CargoState not initialized."}), 404
+
 @app.route('/solve', methods=['GET'])
 def solve():
     #print("hi")
     return jsonify({"message": "hi"})
     #todo implement backend lol
 
-@app.route('/')
-def index():
-    app.logger.info('info msg')
-    return 'msg'
+@app.route('/log', methods=['POST'])
+def log():
+    data = request.get_json()
+    if data and 'message' in data:
+        app.logger.info(data['message'])
+        return jsonify({"result": "Message logged successfully"})
+    else:
+        return jsonify({"error": "Invalid request. 'message' parameter is missing."}), 400
 
 if __name__ == '__main__':
     app.run(debug=False)
