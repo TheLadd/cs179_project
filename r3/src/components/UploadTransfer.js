@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { TextField, Autocomplete } from '@mui/material'
+import { TextField, Autocomplete, useColorScheme, colors } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import handleTimestamp from './Timestamp'
 import { AgGridReact } from 'ag-grid-react'; // React Grid Logic
@@ -29,14 +29,15 @@ function UploadTransfer ({ cachedState, setCachedState }) {
   const handleSubmitContainer = e => {
     // log
     e.preventDefault(); 
+    let container = {}; 
 
     if (onload) {
 
         const currLoad = [...cachedState.loadList, [currentContainer.name, currentContainer.weight.toString()]]; 
-        setCurrentContainer({
+        container = { 
           ...currentContainer, 
-          operation: "Onload"
-        }); 
+          operation: 'Onload'
+        }
         setCachedState({
             ...cachedState, 
             loadList: currLoad
@@ -44,17 +45,17 @@ function UploadTransfer ({ cachedState, setCachedState }) {
         
     } else {
         const currOffload = [...cachedState.offloadList, currentContainer.name]; 
-        setCurrentContainer({
+        container = {
           ...currentContainer, 
-          operation: "Offload"
-        }); 
+          operation: 'Offload'
+        }
         setCachedState({
             ...cachedState, 
             offloadList: currOffload
         }); 
     }
-setRowData([...rowData, currentContainer]); 
-    console.log(currentContainer, rowData); 
+    setRowData([...rowData, container]); 
+    // console.log(container, rowData); 
     setCurrentContainer({
       name: '', 
       operation: '', 
@@ -74,20 +75,16 @@ setRowData([...rowData, currentContainer]);
 
   const columns = [
     {
-        headerName: '#', 
+        field: '#', 
         valueGetter: 'node.rowIndex + 1', 
-        maxWidth: 80, 
     }, 
     {
-        headerName: 'Operation', 
         field: 'operation', 
     }, 
     {
-        headerName: 'Container Name', 
         field: 'name', 
     }, 
     {
-        headerName: 'Weight',
         field: 'weight', 
         cellRenderer: (params) => {
             if (params.value === 0) {
@@ -122,9 +119,10 @@ setRowData([...rowData, currentContainer]);
   }
 
   useEffect(() => {
+    console.log(rowData); 
 
 
-  }, [currentContainer.operation])
+  }, [rowData])
 
   return (
     <div>
@@ -139,8 +137,7 @@ setRowData([...rowData, currentContainer]);
           value='offload'
           onChange={e => setOnload(false)}
         />
-        <label htmlFor='off'>Offload</label> <br/> 
-        
+        <label htmlFor='off'>Offload</label> <br/>
         <input
           type='radio'
           name='optype'
@@ -171,7 +168,14 @@ setRowData([...rowData, currentContainer]);
       </form>
       <button onClick={handleOperationSubmission} className="primary-submit-btn">Finish</button>
     </div> 
-      <AgGridReact columnDefs={columns} rowData={rowData}/> 
+    {/* <div
+      className={ "ag-theme-quartz-dark" }
+      style={{ width: '100%', height: '100%' }}
+    >
+      <AgGridReact columnDefs={columns} 
+      rowData={rowData}/> 
+    </div> */}
+      
     </div>
   )
 

@@ -13,23 +13,23 @@
 }
 
 .secondary-submit-btn { 
-    background-color: coral; 
+    background-color: pink; 
     width: 30%; 
     font-family: 'Raleway'; 
     font-weight: bolder; 
     border: 2px solid black; 
+    border-radius: 4px; 
 }
 
 .primary-submit-btn { 
-    background-color: pink; 
-    width: 80px; 
-    margin-top: 10px; 
+    background-color: coral; 
+    width: 20%;  
+    margin-top: 1px; 
     padding: 2px; 
     font-family: 'Raleway'; 
     font-weight: bolder; 
-    border: 10px solid solid black; 
+    border: 2px solid black; 
     border-radius: 4px; 
-
 }
 
 span override { 
