@@ -1,8 +1,9 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from CargoState import CargoState, Move
+from CargoState import CargoState, Move, Container
 import logging
 import search
+from typing import List
 
 app = Flask(__name__)
 CORS(app)
@@ -25,21 +26,35 @@ def create_cargo_state():
     #print("data in create cargo state: ", data)
     # Create CargoState
     manifest=data.get('manifest', []),
-    #print("manifest in create cargo state: ", manifest)
+    manifest_8x12 = convert_manifest_to_8x12(manifest),
+    print("manifest in create cargo state: ", manifest)
     offload=data.get('offload', []),
     load=data.get('load', []),
     cost=data.get('cost', 0)
     last_move=None
 
 
+    #print("manifest in create cargo state edited: ", man)
     # Set the current_cargo_state after receiving data from frontend    
     global current_cargo_state
-    current_cargo_state = CargoState(manifest, offload, load, cost, last_move)
+    current_cargo_state = CargoState(manifest_8x12, offload, load, cost, last_move)
     #print("ABOUT TO PRINT CURRENT CARGO STATE: ")
 
     #print(current_cargo_state.toManifestFixed())
 
     return jsonify({"message": "CargoState created successfully"})
+
+def convert_manifest_to_8x12(manifest_data: List[str]) -> List[List[Container]]:
+    # Implement your logic to convert manifest_data to 8x12 List[List[Container]]
+    # For example, split the manifest_data and create Container objects accordingly
+    # Make sure the resulting structure is an 8x12 grid
+
+    # Sample logic (modify as needed)
+    containers = [Container(line) for line in manifest_data]
+    manifest_8x12 = [containers[i:i+12] for i in range(0, len(containers), 12)]
+
+    print(manifest_8x12)
+    return manifest_8x12
 
 @app.route('/run-astar', methods=['POST'])
 def run_astar():
@@ -71,7 +86,7 @@ def run_move():
 @app.route('/getManifest', methods=['GET'])
 def get_manifest():
     global current_cargo_state
-    return jsonify({"manifest": current_cargo_state.toManifestFixed()})
+    return jsonify({"manifest": current_cargo_state.toManifest()})
 
 @app.route('/get-current-cargo-state', methods=['GET'])
 def get_current_cargo_state():

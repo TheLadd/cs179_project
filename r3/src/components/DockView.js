@@ -26,6 +26,28 @@ export default function DockView ({ cachedState, setCachedState }) {
     fetchData()
   }, [cachedState.manifest, cachedState.offloadList, cachedState.loadList])
 
+  useEffect(() => {
+    const runAstar = async () => {
+      const isBalance =
+        cachedState.opType === 'Offloading/Onloading' ? false : true
+
+      const astarResult = await handleRunAstar(
+        cachedState.manifest,
+        isBalance,
+        cachedState.offloadList, 
+        cachedState.loadList
+
+        // provide other required parameters here
+      )
+      // Perform any actions based on the response from handleRunAstar
+      console.log('A* Algorithm solution:', astarResult.solution.val)
+      console.log('A* Algorithm moves:', astarResult.moves)
+    }
+
+    // Call the runAstar function when the component mounts or when specific dependencies change
+    runAstar()
+  }, [cachedState.manifest, cachedState.opType, cachedState.offloadList, cachedState.loadList])
+
   return (
     <div id='dock-view-wrapper'>
       <div>
@@ -34,5 +56,3 @@ export default function DockView ({ cachedState, setCachedState }) {
     </div>
   )
 }
-
-//handleCreateCargoState(manifestData, offloadListData, loadListData);

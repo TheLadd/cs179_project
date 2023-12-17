@@ -50,6 +50,7 @@ const handleRunAstar = async (manifest, isBalance, offload, load) => {
     if (response.ok) {
       const result = await response.json();
       console.log(result);  // Log the response from the backend
+      return (result);
       // Perform any additional actions based on the response
     } else {
       console.error('Failed to run A* algorithm. Status:', response.status);
