@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
 import { TextField, Autocomplete } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import handleTimestamp from './Timestamp'
 import { Unstable_NumberInput as NumberInput } from '@mui/base'
+import { AgGridReact } from 'ag-grid-react'; // React Grid Logic
+import "ag-grid-community/styles/ag-grid.css"; // Core CSS
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Theme
 
 function UploadTransfer ({ cachedState, setCachedState }) {
   //const [empty, setEmpty] = useState(false); // no transfer list items have been uploaded
@@ -10,51 +14,46 @@ function UploadTransfer ({ cachedState, setCachedState }) {
 
   const nav = useNavigate()
   // items that we have already selected
-  const selected = {}
-  const container_names = new Set()
+  const selected = {}; 
+  const container_names = new Set(); 
   // items that repeat in table
 
   const [currentContainer, setCurrentContainer] = useState({
     name: '',
     weight: 0,
-    operation: ''
+    operation: '', 
   })
 
   console.log('cachedState in uploadTransfer: ', cachedState)
 
+  // save to our cached state 
   const handleSubmitContainer = e => {
     // log
-    e.preventDefault()
+    e.preventDefault(); 
 
     if (currentContainer.operation === 'onload') {
-      let curr = [currentContainer.name, currentContainer.weight]
-      setCachedState(prevState => {
-        const newLoadList = [...prevState.loadList, ...curr]
-        localStorage.setItem('loadList', newLoadList)
 
-        return {
-          ...prevState,
-          loadList: newLoadList
-        }
-      })
+        const currLoad = [...cachedState.loadList, [currentContainer.name, currentContainer.weight.toString()]]; 
+        setCachedState({
+            ...cachedState, 
+            loadList: currLoad
+        }); 
+        
     } else {
-      setCachedState(prevState => {
-        const newOffloadList = [...prevState.offloadList, currentContainer.name]
-        localStorage.setItem('offloadList', newOffloadList)
-
-        return {
-          ...prevState,
-          offloadList: newOffloadList
-        }
-      })
+        const currOffload = [...cachedState.offloadList, currentContainer.name]
+        setCachedState({
+            ...cachedState, 
+            offloadList: currOffload
+        }); 
     }
-    console.log(currentContainer)
+    rowData.push(currentContainer); 
+    console.log(currentContainer); 
     setCurrentContainer({
       name: '',
       weight: 0,
-      operation: ''
-    })
-    document.getElementById('container-form').reset()
+      operation: '', 
+    }); 
+    document.getElementById('container-form').reset(); 
   }
 
   // ensuring the options autocomplete doesnt have any repeats in dropdown, or unused slots
@@ -66,10 +65,61 @@ function UploadTransfer ({ cachedState, setCachedState }) {
     return true
   }
 
+  const columns = [
+    {
+        headerName: '#', 
+        valueGetter: 'node.rowIndex + 1', 
+        maxWidth: 80, 
+    }, 
+    {
+        headerName: 'Operation', 
+        field: 'operation', 
+    }, 
+    {
+        headerName: 'Container Name', 
+        field: 'name', 
+    }, 
+    {
+        headerName: 'Weight',
+        field: 'weight', 
+        cellRenderer: (params) => {
+            if (params.value === 0) {
+                return <p>-</p>
+            } else {
+                return <span>{params.value} kg</span>
+            }
+        }
+    }, 
+  ]; 
+
+  const rowData = [];   
+
+  // start onloading and offloading 
+  const handleOperationSubmission = e => {
+    e.preventDefault(); 
+    setCachedState({
+        ...cachedState, 
+        inProgress: true, 
+        opType: 'Offloading/Onloading', 
+        lastActivityTime: handleTimestamp()
+    }); 
+    localStorage.removeItem("inProgress"); 
+    localStorage.removeItem("lastActivityTime"); 
+    localStorage.removeItem("offloadList"); 
+    localStorage.removeItem("loadList"); 
+
+    localStorage.setItem("offloadList", JSON.stringify(cachedState.offloadList)); 
+    localStorage.setItem("loadList", JSON.stringify(cachedState.loadList)); 
+    localStorage.setItem("inProgress", true); 
+    localStorage.setItem("lastActivityTime", cachedState.lastActivityTime); 
+    nav('/ship-view'); 
+
+  }
+
   return (
     <div>
       <form id='container-form' onSubmit={handleSubmitContainer}>
-        <label htmlFor='optype'>Select the operation: </label> <br />
+        <span>Select the operation: </span> <br />
         <input
           type='radio'
           name='optype'
@@ -81,8 +131,9 @@ function UploadTransfer ({ cachedState, setCachedState }) {
               operation: e.target.value
             })
           }
-        ></input>
-        <label htmlFor='off'>Offload</label>
+        />
+        <label htmlFor='off'>Offload</label> <br/> 
+        
         <input
           type='radio'
           name='optype'
@@ -94,8 +145,7 @@ function UploadTransfer ({ cachedState, setCachedState }) {
               operation: e.target.value
             })
           }
-        ></input>
-        <label htmlFor='on'>Onload</label>
+       /><label htmlFor='on'>Onload</label><br/> 
         <label htmlFor='cratenm'>Type the crate name and hit enter: </label>
         <Autocomplete
           id='cratenm'
@@ -104,22 +154,39 @@ function UploadTransfer ({ cachedState, setCachedState }) {
           onInputChange={e =>
             setCurrentContainer({ ...currentContainer, name: e.target.value })
           }
-          onChange={e =>
-            setCurrentContainer({ ...currentContainer, name: e.target.value })
+          onChange={(event, value) =>
+            setCurrentContainer({ ...currentContainer, name: value })
           }
-          renderInput={params => <TextField {...params} label='Crate Name' />}
+          renderInput={params => <TextField {...params} label='Container Name' required={true}/>}
         />
         <label htmlFor='weight'>Weight (only input if onloading):</label>
         <NumberInput
-          onChange={e =>
-            setCurrentContainer({ ...currentContainer, weight: e.target.value })
-          }
+          onChange={e => setCurrentContainer({ ...currentContainer, weight: e.target.value })}
+          min={0}
+          max={9999}
+          type="number"
+          required={currentContainer.operation === "onload" ? true : false}
           id='weight'
+        //   slots={{
+        //     incrementButton: Button, 
+        //     decrementButton: Button, 
+        //   }}
+        //   slotProps={{
+        //     incrementButton: {
+        //         children: <span className="arrow">▴</span>,
+        //     }, 
+        //     decrementButton: {
+        //         children: <span className="arrow">▾</span>,
+        //     }, 
+        //   }}
         />
         <button type='submit'>Submit</button>
       </form>
+      <button onClick={handleOperationSubmission}>Finish</button>
+      <AgGridReact columnDefs={columns} rowData={rowData}/> 
     </div>
   )
+
 }
 
-export default UploadTransfer
+export default UploadTransfer; 

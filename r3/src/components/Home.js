@@ -147,7 +147,7 @@ function Home ({ cachedState, setCachedState }) {
               id='upload-manifest'
               accept='.txt'
               onChange={e => setTxtFile(e.target.files[0])}
-              required={true}
+              required
             />
             <label htmlFor='op-type'>
               Please select the type of operation:
@@ -159,6 +159,7 @@ function Home ({ cachedState, setCachedState }) {
               name='op-type'
               value='Offloading/Onloading'
               onChange={e => setOp(e.target.value)}
+              required 
             />
             <label htmlFor='loadbalancing'>Offloading/Onloading</label>
             <input
@@ -167,6 +168,7 @@ function Home ({ cachedState, setCachedState }) {
               name='op-type'
               value='Load-Balancing'
               onChange={e => setOp(e.target.value)}
+              required 
             />
             <label htmlFor='loadbalancing'>Load-Balancing</label>
             <button type='submit'>Submit</button>
