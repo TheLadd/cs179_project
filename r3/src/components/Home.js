@@ -74,7 +74,7 @@ function Home ({ cachedState, setCachedState }) {
     if (op === 'Offloading/Onloading') {
       nav('/upload-transfer')
     } else {
-      nav('/ship-view')
+      nav('/dock-view')
     }
   }
 
