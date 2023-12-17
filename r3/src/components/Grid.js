@@ -1,13 +1,10 @@
 import '../css/Grid.css'; 
 import Container from './Container'; 
 
-
-
-
-
 export default function Grid(props) {
     let items = props.items; 
 
+    // implemented for testing - no access to buffer yet 
     if (props.type === "buffer") {
         items = []
         for (let i = 1; i <= 4; i++) {
@@ -17,10 +14,8 @@ export default function Grid(props) {
             }
         }
     }
-
-
-
-    console.log(items.length); 
+    
+    // console.log(items.length); 
 
     return (
         <div className={props.type}>
