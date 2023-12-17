@@ -112,7 +112,7 @@ function UploadTransfer ({ cachedState, setCachedState }) {
     localStorage.setItem("loadList", JSON.stringify(cachedState.loadList)); 
     localStorage.setItem("inProgress", true); 
     localStorage.setItem("lastActivityTime", cachedState.lastActivityTime); 
-    nav('/ship-view'); 
+    nav('/dock-view'); 
 
   }
 

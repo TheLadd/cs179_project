@@ -117,7 +117,7 @@ function Home ({ cachedState, setCachedState }) {
     }
   }
 
-  testBackend();
+  //testBackend();
 
   // refreshes every single time CachedState is changed.  async function
 

@@ -1,28 +1,35 @@
-import { useEffect } from 'react'; 
-import { handleCreateCargoState,
+import { useEffect } from 'react'
+import {
+  handleCreateCargoState,
   handleRunAstar,
   handleRunMove,
-    handleGetManifest,
-    handleLogMessage,
-handleGetCurrentCargoState} from './BackendRoutes'; 
+  handleGetManifest,
+  handleLogMessage,
+  handleGetCurrentCargoState
+} from './BackendRoutes'
 
-export default function DockView({cachedState, setCachedState}) {
-    
-    handleCreateCargoState(cachedState.manfest, cachedState.offloadList, cachedState.loadList); 
+export default function DockView ({ cachedState, setCachedState }) {
+  useEffect(() => {
+    const fetchData = async () => {
+      await handleCreateCargoState(
+        cachedState.manifest,
+        cachedState.offloadList,
+        cachedState.loadList
+      )
+      const currentCargoState = await handleGetCurrentCargoState()
+      console.log('Current Cargo State:', currentCargoState)
+    }
 
-    console.log(handleGetCurrentCargoState()); 
+    fetchData()
+  }, [cachedState.manifest, cachedState.offloadList, cachedState.loadList])
 
-
-    return (
-        <div id ="dock-view-wrapper">
-            <div>
-                <button>Log something</button>
-
-            </div>
-        </div>
-    ); 
-
-
-}; 
+  return (
+    <div id='dock-view-wrapper'>
+      <div>
+        <button>Log something</button>
+      </div>
+    </div>
+  )
+}
 
 //handleCreateCargoState(manifestData, offloadListData, loadListData);
