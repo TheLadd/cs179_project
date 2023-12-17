@@ -48,18 +48,23 @@ setCachedState({
   }
   return (
 <div id='main'>
+  <h1>R³ Solutions</h1>
+  <div className='form-wrapper'>
+    <h2><em>sign in</em></h2>
   <form id='login-form' onSubmit={handleSubmit}>
-    <label htmlFor='username'>Name</label>
+    <label htmlFor='username'>Name:   </label>
     <input
       type='text'
       id='username'
       name='username'
+      autoComplete='off'
       value={cachedState.name}
       onChange={handleChange}
-    ></input>
-
-    <button type='submit'>Login</button>
+      className='input-text'
+    ></input><br/>
+    <button type='submit' className='primary-submit-btn'>Login</button>
   </form>
+  </div> 
 </div>
 
 
