@@ -7,6 +7,9 @@ import search
 app = Flask(__name__)
 CORS(app)
 
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
 logging.basicConfig(filename='server/log.txt', level=logging.INFO)
 
 current_cargo_state = None
@@ -73,4 +76,4 @@ def index():
     return 'msg'
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
