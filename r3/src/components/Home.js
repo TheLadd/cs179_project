@@ -4,153 +4,136 @@ import handleTimestamp from './Timestamp'
 import { useNavigate } from 'react-router-dom'
 import { Alert, Button } from '@mui/material'
 
-// cached state is passed in the event of a crash. 
-// nav is used for route switching between different link paths 
+// cached state is passed in the event of a crash.
+// nav is used for route switching between different link paths
 
-function Home ({ cachedState, setCachedState }) { 
-  const nav = useNavigate() 
+function Home ({ cachedState, setCachedState }) {
+  const nav = useNavigate()
 
-  // checks if there is a file present to see if we're in the middle of an operation, if not, takes you to home page 
-  const [txtFile, setTxtFile] = useState(localStorage.getItem("manifest") ? localStorage.getItem("manifest") : null)
-  const [op, setOp] = useState(localStorage.getItem("opType") ? localStorage.getItem("opType") : "")
+  // checks if there is a file present to see if we're in the middle of an operation, if not, takes you to home page
+  const [txtFile, setTxtFile] = useState(
+    localStorage.getItem('manifest') ? localStorage.getItem('manifest') : null
+  )
+  const [op, setOp] = useState(
+    localStorage.getItem('opType') ? localStorage.getItem('opType') : ''
+  )
 
   // in the event if there is an operation in progress and we want to start over
-  const handleStartOver = () => { 
-    const activitytime = handleTimestamp()
-    setCachedState({
-      ...cachedState,
-      inProgress: false, 
-      lastActivityTime: activitytime
+  const handleStartOver = () => {
+    const defaultState = {
+      inProgress: false,
+      opType: '',
+      lastActivityTime: cachedState.lastActivityTime,
+      currStep: 0,
+      totalSteps: 0,
+      lastUser: cachedState.lastUser,
+      manifest: null,
+      loadList: [],
+      offloadList: []
+    }
+
+    setCachedState(defaultState)
+
+    Object.keys(defaultState).forEach(key => {
+      localStorage.setItem(key, defaultState[key])
     })
-    localStorage.setItem('inProgress', false)
+    console.log(localStorage)
   }
 
   const handleContinue = () => {
-    const activitytime = handleTimestamp()
-  
+    // const activitytime = handleTimestamp()
+    console.log('continue')
+    // do something here with reloading everything from local storage
   }
-  
-  // parse manigest list 
-  function parseManifestFile  (manifestTxt) {
-    const regexPattern = /\[(\d{2},\d{2})\],\s\{(\d{5})\},\s([^\r\n]+)/g;
+
+  // parse manifest list
+  function parseManifestFile (manifestTxt) {
+    const regexPattern = /\[(\d{2},\d{2})\],\s\{(\d{5})\},\s([^\r\n]+)/g
 
     // Initialize an array to store the parsed data
-    const parsedData = [];
+    const parsedData = []
 
     // Use a loop to match and extract data from the input string
-    let match;
+    let match
     while ((match = regexPattern.exec(manifestTxt)) !== null) {
-        // Extract matched groups and push them to the result array
-        const [, position, weight, name] = match;
-        parsedData.push([`[${position}]`, weight, name]);
+      // Extract matched groups and push them to the result array
+      const [, position, weight, name] = match
+      parsedData.push([`[${position}]`, weight, name])
     }
 
     //console.log(parsedData)
-    const deepCopyParsedData = JSON.parse(JSON.stringify(parsedData));
-    // Call a function to handle the parsed manifest
-    //handleParsedManifest(parsedData);
-    /*
-    setCachedState({
-      //...cachedState,
-      opType: op,
-      manifest: parsedData,
-      lastActivityTime: handleTimestamp()
-    })
-    */
 
-    setCachedState(prevState => {
-      const newState = {
-        ...prevState,
-        opType: op,
-        manifest: deepCopyParsedData,
-        lastActivityTime: handleTimestamp()
-      };
-      console.log("cachedState after parsed: ", newState);
-      return newState;
-    });
-    
-    //console.log("cachedState after parsed: ", cachedState)
-    console.log("parsedData not in cachedState, ", parsedData)
-    console.log("cache state right before nav: ", cachedState);
+    setCachedState({
+      ...cachedState,
+      manifest: parsedData
+    })
+    localStorage.removeItem('manifest')
+    localStorage.setItem('manifest', parsedData)
+
     if (op === 'Offloading/Onloading') {
       nav('/upload-transfer')
     } else {
       nav('/ship-view')
     }
-    return parsedData;
-  };
-  
-  // save data into cached state
-  const handleParsedManifest = (manifestData) => {
-    //console.log(manifestData);
-    setCachedState({
-      ...cachedState,
-      opType: op,
-      manifest: manifestData,
-      lastActivityTime: handleTimestamp()
-    })
-    
-    // You can now pass `manifestData` to your backend or perform other operations.
-  };
+  }
 
   const handleSubmit = e => {
     // logging function goes here
     const uploadtime = handleTimestamp()
     e.preventDefault()
 
-    const fileReader = new FileReader();
-    fileReader.onload = (e) => {
-      const manifestContent = e.target.result;
+    const fileReader = new FileReader()
+    fileReader.onload = e => {
+      const manifestContent = e.target.result
       // Set the manifest content in the state
       //console.log(manifestContent);
-      localStorage.setItem('manifest', manifestContent);
-      parseManifestFile(manifestContent);
+      localStorage.setItem('manifest', manifestContent)
+      parseManifestFile(manifestContent)
     }
 
     localStorage.setItem('opType', op)
     localStorage.setItem('lastActivityTime', uploadtime)
-    fileReader.readAsText(txtFile);
+    fileReader.readAsText(txtFile)
   }
 
   const handleLogout = () => {
-    const logouttime = handleTimestamp()
-    localStorage.setItem('lastActivityTime', logouttime)
+    localStorage.setItem('lastActivityTime', handleTimestamp())
+    localStorage.setItem('lastUser', '')
     nav('/')
   }
-  
+
   const testBackend = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/solve');
-      const data = await response.json();
+      const response = await fetch('http://127.0.0.1:5000/solve')
+      const data = await response.json()
       if (response.ok) {
-        console.log(data);
-        console.log('Backend is running and responsive!');
+        console.log(data)
+        console.log('Backend is running and responsive!')
       } else {
-        console.error('Backend is not responsive. Status:', response.status);
+        console.error('Backend is not responsive. Status:', response.status)
       }
     } catch (error) {
-      console.error('Error while trying to reach the backend:', error.message);
+      console.error('Error while trying to reach the backend:', error.message)
     }
-  };
+  }
 
   //testBackend();
 
-
-  useEffect(() => {
-
-    console.log("cachedState in useEffect: ", cachedState);
-    console.log(localStorage);
-  }, [cachedState])
+  // refreshes every single time CachedState is changed.  async function
 
   return (
     <div>
-      {cachedState.inProgress == "true" ? (
+      {cachedState.inProgress ? (
         <Alert>
-            This is currently an operation in progress. would you like to continue? 
-            <Button color="success"  onClick={handleContinue}>Yes</Button>
-            <Button color="warning" onClick={handleStartOver}>No</Button>
+          This is currently an operation in progress. would you like to
+          continue?
+          <Button color='success' onClick={handleContinue}>
+            Yes
+          </Button>
+          <Button color='warning' onClick={handleStartOver}>
+            No
+          </Button>
         </Alert>
-      
       ) : (
         <div>
           <button type='button' onClick={handleLogout}>
@@ -164,10 +147,10 @@ function Home ({ cachedState, setCachedState }) {
               id='upload-manifest'
               accept='.txt'
               onChange={e => setTxtFile(e.target.files[0])}
-              required={true}
+              required
             />
             <label htmlFor='op-type'>
-              Please select the type of operation:{' '}
+              Please select the type of operation:
             </label>
             <br />
             <input
@@ -176,6 +159,7 @@ function Home ({ cachedState, setCachedState }) {
               name='op-type'
               value='Offloading/Onloading'
               onChange={e => setOp(e.target.value)}
+              required 
             />
             <label htmlFor='loadbalancing'>Offloading/Onloading</label>
             <input
@@ -184,6 +168,7 @@ function Home ({ cachedState, setCachedState }) {
               name='op-type'
               value='Load-Balancing'
               onChange={e => setOp(e.target.value)}
+              required 
             />
             <label htmlFor='loadbalancing'>Load-Balancing</label>
             <button type='submit'>Submit</button>
@@ -194,4 +179,4 @@ function Home ({ cachedState, setCachedState }) {
   )
 }
 
-export default Home;
+export default Home
