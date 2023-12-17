@@ -26,11 +26,11 @@ def create_cargo_state():
 
     # Create CargoState
     manifest=data.get('manifest', [])
-    print("MANIFEST WE START OUT WITH AFTER CALLING CREATE CARGO STATE ROUTE")
-    print(manifest)
+    #print("MANIFEST WE START OUT WITH AFTER CALLING CREATE CARGO STATE ROUTE")
+    #print(manifest)
     manifest_8x12 = convert_manifest_to_8x12(manifest)
-    print("MANIFEST WE PASS INTO CARGOSTATE")
-    print(manifest_8x12)
+    #print("MANIFEST WE PASS INTO CARGOSTATE")
+    #print(manifest_8x12)
     offload=data.get('offload', [])
     load=data.get('load', [])
     cost=data.get('cost', 0)
@@ -47,18 +47,12 @@ def create_cargo_state():
 
     return jsonify({"message": "CargoState created successfully"})
 
-def convert_manifest_to_8x122(manifest_data: List[List[str]]) -> List[List[Container]]:
-    extracted_data = [[single_line[18:] for single_line in row] for row in manifest_data]
-    manifest_8x12 = [extracted_data[i:i+12] for i in range(0, len(extracted_data), 12)]
-
-    return manifest_8x12
-
 def convert_manifest_to_8x12(manifest_data: List[List[str]]) -> List[List[Container]]:
-    print("GOING THROUGH CONVERT_MANIFEST")
+    #print("GOING THROUGH CONVERT_MANIFEST")
     
-    for line in manifest_data.splitlines():
-        print("PRINT EACH INDIVDUAL LINE IN MANIFEST TEST: ")
-        print(line)
+    #for line in manifest_data.splitlines():
+        #print("PRINT EACH INDIVDUAL LINE IN MANIFEST TEST: ")
+        #print(line)
     containers = [Container(line) for line in manifest_data.splitlines()]
     #print("CONTAINERS PRINTED: ")
     #print(containers)
