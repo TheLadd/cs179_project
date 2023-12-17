@@ -59,8 +59,16 @@ print(solution)
 
 
 
-# Testing CargoState.toBuffer()
+# Testing CargoState.toDict()
 # solution.val.buf[0][0] = Container(info=('owen test!', 99999))
 # solution.val.buf[0][4] = Container(info=('owen test 2?', 777))
-# for bufItem in solution.val.toBuffer():
-#     print(bufItem)
+
+# dictRepr = solution.val.toDict()
+# print('{')
+# for key,val in dictRepr.items():
+#     print(f'\t\'{key}\':\n\t\t[')
+#     for item in val:
+#         print(f'\t\t\t\t{item},')
+#     print(f'\t\t\t],\n')
+# print('}')
+
