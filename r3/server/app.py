@@ -26,13 +26,13 @@ def create_cargo_state():
     manifest=data.get('manifest', []),
     offload=data.get('offload', []),
     load=data.get('load'),
-    cost=data.get('cost', 0)
-    last_move=None
+    #cost=data.get('cost', 0)
+    #last_move=None
 
 
     # Set the current_cargo_state after receiving data from frontend    
     global current_cargo_state
-    current_cargo_state = CargoState(manifest, offload, load, cost, last_move)
+    current_cargo_state = CargoState(manifest, offload, load)
 
     return jsonify({"message": "CargoState created successfully"})
 
