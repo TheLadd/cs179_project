@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Dict, Tuple
 from copy import deepcopy
 
 class Container:
@@ -496,4 +496,25 @@ class CargoState:
                         item = [f'[{row+1}, {col+1}]', str(cell.weight), cell.name]
                         buf.append(item)
             return buf
-            
+
+      def toShip(self) -> List[List[str]]:
+            """
+            Returns the ship as a single dimensional array where 
+            each element is a triplet of [[x,y], weight, name]
+
+            NOTE: [x,y] are *not* zero-indexed
+            NOTE: each element (including [x,y]) is a string
+            """ 
+            ship = []
+            for row in range(8):
+                  for col in range(12):
+                        cell: Container = self.ship[row][col]
+                        item = [f'{row+1}, {col+1}', str(cell.weight), cell.name]
+                        ship.append(item)
+            return ship
+      
+      def toDict(self) -> Dict[str, List[List[str]]]:
+            dic = {}
+            dic['ship'] = self.toShip()
+            dic['buffer'] = self.toBuffer()
+            return dic

@@ -53,3 +53,9 @@ Class CargoState:
         - CargoState.toManifest() -> str:
             - Writes the current *ship* manifest to a string that holds the same format of the  
               manifest text files. You can write this string to a file and it should be valid  
+        - CargoState.toDict() -> List[List[str]]:
+            - Returns the current state of the a dicitonary, where the key is the area (all lower 
+                case) and the value is a list of triplets where each triplet is the value of a cell.
+            - Format of triple:
+                [ '[row,col]', '<weight as an int>', 'name' ]
+
