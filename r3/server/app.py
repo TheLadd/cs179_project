@@ -131,6 +131,18 @@ def log():
         return jsonify({"result": "Message logged successfully"})
     else:
         return jsonify({"error": "Invalid request. 'message' parameter is missing."}), 400
+    
+@app.route('/get-cargo-state-dict', methods=['GET'])
+def get_cargo_state_dict():
+    global current_cargo_state
+
+    # Check if current_cargo_state is not None
+    if current_cargo_state:
+        # Return the current_cargo_state as a dictionary
+        cargo_state_dict = current_cargo_state.toDict()
+        return jsonify(cargo_state_dict)
+    else:
+        return jsonify({"error": "CargoState not initialized."}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
