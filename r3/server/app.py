@@ -59,12 +59,18 @@ def convert_manifest_to_8x12(manifest_data: List[List[str]]) -> List[List[Contai
         container_info = f'{row[0]}, {{{row[1]}}}, {row[2]}\n'
         converted_manifest.append(container_info)
     converted_manifest = ''.join(converted_manifest)
-    print("converted_manifest DATA")
+    print("converted_manifest DATA, about to turn them into containers: ")
     print(converted_manifest)
 
-    containers = [Container(line) for line in converted_manifest]
+    for line in converted_manifest.splitlines():
+        print("PRINT EACH LINE IN CONVERTED MANIFEST TEST: ")
+        print(line)
+    containers = [Container(line) for line in converted_manifest.splitlines()]
+    print("CONTAINERS PRINTED: ")
+    print(containers)
     manifest_8x12 = [containers[i:i+12] for i in range(0, len(containers), 12)]
 
+    print("manifest_8x12 PRINTED: ")
     print(manifest_8x12)
     return manifest_8x12
 
@@ -98,7 +104,12 @@ def run_move():
 @app.route('/getManifest', methods=['GET'])
 def get_manifest():
     global current_cargo_state
-    return jsonify({"manifest": current_cargo_state.toManifest()})
+    # Check if current_cargo_state is not None
+    if current_cargo_state:
+        # Return the current_cargo_state as JSON
+        return jsonify(current_cargo_state.toManifestFixed())
+    else:
+        return jsonify({"error": "CargoState not initialized."}), 404
 
 @app.route('/get-current-cargo-state', methods=['GET'])
 def get_current_cargo_state():

@@ -14,6 +14,8 @@ class Container:
 
             Let info = (name, weight)
             """
+            #print("LINE; ")
+            #print(line)
             if line == None and  info == None:
                 self.name = 'UNUSED'
                 self.weight = 0
@@ -25,7 +27,7 @@ class Container:
                   self.weight = 0
             else:
                 self.weight = int(line[10:15])
-                self.name = line[18:-1] # ignore newline
+                self.name = line[18:] # ignore newline
 
     def __str__(self):
             return f"[{self.weight}], {self.name}"
@@ -165,7 +167,9 @@ class CargoState:
 
     # --------------------------- Class Intrinsics -----------------------------
       def __init__(self, manifest: List[List[Container]], offload: List[str], load: List[Container], cost: int = 0, lastMove: Move = None):
+            #print("SHIP PRINT IN CARGO STATE: ")
             self.ship = manifest
+            #print(self.ship)
             self.buf = [[Container() for j in range(24)] for i in range(4)] # Initialized to empty 4x24 empty buffer
             self.offload = offload
             self.load = load
@@ -218,7 +222,11 @@ class CargoState:
                         if tops[col] != None:
                               # We already found the top of this row
                               continue
+                        #print("AREA PRINTED: ")
+                        #print(AREA)
                         cell = AREA[row][col]
+                        print("CELL PRINTED IN CARGOSTATE: ")
+                        print(cell)
                         if cell.name == 'UNUSED' or cell.name == 'NAN':
                               # Is either an empty cell or the 'bottom' of a column has been reached
                               continue
