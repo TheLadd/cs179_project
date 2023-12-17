@@ -1,10 +1,20 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from CargoState import CargoState, Move
+import logging
 import search
 
 app = Flask(__name__)
 CORS(app)
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
+log_format = '%(asctime)s %(message)s'
+date_format = '%B %dth %Y: %H:%M'
+formatter = logging.Formatter(log_format, datefmt=date_format)
+
+logging.basicConfig(filename='server/log.txt', level=logging.INFO, format=log_format, datefmt=date_format)
 
 current_cargo_state = None
 
@@ -64,5 +74,10 @@ def solve():
     return jsonify({"message": "hi"})
     #todo implement backend lol
 
+@app.route('/')
+def index():
+    app.logger.info('info msg')
+    return 'msg'
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

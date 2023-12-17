@@ -104,10 +104,10 @@ function Home ({ cachedState, setCachedState }) {
 
   const testBackend = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/solve')
-      const data = await response.json()
+      const response = await fetch('http://127.0.0.1:5000/')
+      //const data = await response.json()
       if (response.ok) {
-        console.log(data)
+        //console.log(data)
         console.log('Backend is running and responsive!')
       } else {
         console.error('Backend is not responsive. Status:', response.status)
@@ -117,7 +117,7 @@ function Home ({ cachedState, setCachedState }) {
     }
   }
 
-  //testBackend();
+  testBackend();
 
   // refreshes every single time CachedState is changed.  async function
 
