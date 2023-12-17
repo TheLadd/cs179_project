@@ -467,17 +467,57 @@ class CargoState:
             """
             file = open(path, 'w')
             man = ''
+            #print("PRINT SELF.SHIP")
+            #print(len(self.ship), " x ", len(self.ship[0]))
+            #print(self.ship)
             for row in range(8):
                   for col in range(12):
                         fRow = ('0' if (row+1) // 10 == 0 else '') + str(row+1)     # 0-index -> 1-index
                         fCol = ('0' if (col+1) // 10 == 0 else '') + str(col+1)     # ... and prepend 0 if needed
 
+                        #print("ROW: ", row, " COL: ", col)
                         cell = self.ship[row][col]
-                        fWeight = str(cell.weight)
+                        #print("ABOUT TO PRINT CELL: ")
+                        #print(cell)
+                        fWeight = str(cell[1])
                         fWeight = ( '0' * (6-len(fWeight)) ) + fWeight  # Prepend 0's if needed
                         
-                        line = f'[{fRow}][{fCol}], {{{fWeight}}}, {cell.name}' + ('' if (row == 7 and col == 11) else '\n')
+                        line = f'[{fRow}][{fCol}], {{{fWeight}}}, {cell[2]}' + ('' if (row == 7 and col == 11) else '\n')
                         # file.write(line)
                         man += line
+            return man
+      
+      def toManifestFixed(self, path: str='manifest.txt') -> str:
+            """
+            Writes the current manifest to a string and returns it
+            """
+            file = open(path, 'w')
+            man = ''
+            #print("PRINT SELF.SHIP")
+            #print(len(self.ship), " x ", len(self.ship[0]))
+            #print(self.ship)
+            #print("cells")
+            #for cell in self.ship[0]:
+             #     print(cell)
+            for idx, cell in enumerate(self.ship[0]):
+                  row = idx // 12
+                  col = idx % 12
+
+                  fRow = ('0' if (row+1) // 10 == 0 else '') + str(row+1)     # 0-index -> 1-index
+                  fCol = ('0' if (col+1) // 10 == 0 else '') + str(col+1)     # ... and prepend 0 if needed
+
+                  #print("ROW: ", row, " COL: ", col)
+                  #print("ABOUT TO PRINT CELL: ")
+                  #print(cell)
+
+                  fWeight = str(cell[1])
+                  #print("fWeight: ", fWeight)
+                  fWeight = ( '0' * (6-len(fWeight)) ) + fWeight  # Prepend 0's if needed  
+                  line = f'[{fRow},{fCol}], {{{fWeight}}}, {cell[2]}' + ('' if (row == 7 and col == 11) else '\n')
+                  #print("EACH INVIDIDUAL LINE: ")
+                  #print(line)
+                  man += line
+            #print("RETURNED MANIFEST: ")
+            #print(man)
             return man
             

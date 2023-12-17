@@ -16,8 +16,11 @@ export default function DockView ({ cachedState, setCachedState }) {
         cachedState.offloadList,
         cachedState.loadList
       )
-      const currentCargoState = await handleGetCurrentCargoState()
-      console.log('Current Cargo State:', currentCargoState)
+      //const currentCargoState = await handleGetCurrentCargoState()
+      //console.log('Current Cargo State:', currentCargoState)
+
+      const currentCargoState = await handleGetManifest()
+      console.log('Current Cargo manifest:', currentCargoState)
     }
 
     fetchData()

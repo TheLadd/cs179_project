@@ -6,6 +6,7 @@ import search
 
 app = Flask(__name__)
 CORS(app)
+CORS(app, origins="*")
 
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
@@ -21,18 +22,22 @@ current_cargo_state = None
 @app.route('/create-cargo-state', methods=['POST'])
 def create_cargo_state():
     data = request.get_json()
-
+    #print("data in create cargo state: ", data)
     # Create CargoState
     manifest=data.get('manifest', []),
+    #print("manifest in create cargo state: ", manifest)
     offload=data.get('offload', []),
     load=data.get('load', []),
-    #cost=data.get('cost', 0)
-    #last_move=None
+    cost=data.get('cost', 0)
+    last_move=None
 
 
     # Set the current_cargo_state after receiving data from frontend    
     global current_cargo_state
-    current_cargo_state = CargoState(manifest, offload, load)
+    current_cargo_state = CargoState(manifest, offload, load, cost, last_move)
+    #print("ABOUT TO PRINT CURRENT CARGO STATE: ")
+
+    #print(current_cargo_state.toManifestFixed())
 
     return jsonify({"message": "CargoState created successfully"})
 
@@ -66,7 +71,7 @@ def run_move():
 @app.route('/getManifest', methods=['GET'])
 def get_manifest():
     global current_cargo_state
-    return jsonify({"manifest": current_cargo_state.toManifest()})
+    return jsonify({"manifest": current_cargo_state.toManifestFixed()})
 
 @app.route('/get-current-cargo-state', methods=['GET'])
 def get_current_cargo_state():
@@ -75,7 +80,7 @@ def get_current_cargo_state():
     # Check if current_cargo_state is not None
     if current_cargo_state:
         # Return the current_cargo_state as JSON
-        return jsonify(current_cargo_state.toManifest())
+        return jsonify(current_cargo_state.toManifestFixed())
     else:
         return jsonify({"error": "CargoState not initialized."}), 404
 
@@ -95,4 +100,4 @@ def log():
         return jsonify({"error": "Invalid request. 'message' parameter is missing."}), 400
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)

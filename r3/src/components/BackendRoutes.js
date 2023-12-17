@@ -90,6 +90,7 @@ const handleGetManifest = async () => {
     if (response.ok) {
       const result = await response.json();
       console.log(result);  // Log the response from the backend
+      return(result)
       // Perform any additional actions based on the response
     } else {
       console.error('Failed to get manifest. Status:', response.status);
@@ -131,7 +132,8 @@ const handleGetCurrentCargoState = async () => {
     const response = await fetch('http://127.0.0.1:5000/get-current-cargo-state', {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        
       },
     });
 
