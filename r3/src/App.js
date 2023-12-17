@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 
 import Login from "./components/Login"
 import Home from "./components/Home"
+import DockView from "./components/DockView"
 import UploadTransfer from "./components/UploadTransfer"
 
 
@@ -52,7 +53,7 @@ useEffect(() => {
         <Route path="/" element={<Login cachedState={cachedState} setCachedState={setCachedState}/>} /> 
         <Route path="/home" element={<Home cachedState={cachedState} setCachedState={setCachedState}/>} /> 
         <Route path="/upload-transfer" element={<UploadTransfer cachedState={cachedState} setCachedState={setCachedState}/>} />
-
+        <Route path="/dock-view" element={<DockView cachedState={cachedState} setCachedState={setCachedState}/>} /> 
       </Routes>
     </BrowserRouter>
 
