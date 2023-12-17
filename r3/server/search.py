@@ -108,6 +108,8 @@ def astar(manifest_path:str, isBalance:bool, offload:List[str]=None, load:List[s
     # Initialize problem state and tree
     #manifest = readManifest(manifest_path)
     manifest = (manifest_path)
+    #print("MANIFEST FROM SEARCH.PY ASTAR CALLED, WILL BE PASSING INTO CARGOSTATE")
+    #print(manifest)
     state = CargoState(manifest, offload, load)
     root = Node(None, 0, state)
     tree = Tree(root)

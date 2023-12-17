@@ -38,6 +38,7 @@ useEffect(() => {
 
     setCachedState(defaultState)
 
+    console.log("reset cachedstate and localstorage to default")
     Object.keys(defaultState).forEach(key => {
       localStorage.setItem(key, (defaultState[key]))
 
@@ -46,6 +47,8 @@ useEffect(() => {
 }, [cachedState.inProgress])
 
   console.log("APP.JS CURRENT CACHE STATE\n", cachedState);
+  console.log('CURRENT LOCALSTORAGE\n', localStorage)
+
 
   return (
     <BrowserRouter>

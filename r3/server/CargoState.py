@@ -14,7 +14,7 @@ class Container:
 
             Let info = (name, weight)
             """
-            #print("LINE; ")
+            #print("LINE has length; ", len(line))
             #print(line)
             if line == None and  info == None:
                 self.name = 'UNUSED'
@@ -167,7 +167,7 @@ class CargoState:
 
     # --------------------------- Class Intrinsics -----------------------------
       def __init__(self, manifest: List[List[Container]], offload: List[str], load: List[Container], cost: int = 0, lastMove: Move = None):
-            #print("SHIP PRINT IN CARGO STATE: ")
+            #print("MANIFEST FROM CARGOSTATE.PY INITIALIZE CARGOSTATE: ")
             self.ship = manifest
             #print(self.ship)
             self.buf = [[Container() for j in range(24)] for i in range(4)] # Initialized to empty 4x24 empty buffer
@@ -225,8 +225,8 @@ class CargoState:
                         #print("AREA PRINTED: ")
                         #print(AREA)
                         cell = AREA[row][col]
-                        print("CELL PRINTED IN CARGOSTATE: ")
-                        print(cell)
+                        #print("CELL PRINTED IN CARGOSTATE: ")
+                        #print(cell)
                         if cell.name == 'UNUSED' or cell.name == 'NAN':
                               # Is either an empty cell or the 'bottom' of a column has been reached
                               continue
@@ -487,10 +487,10 @@ class CargoState:
                         cell = self.ship[row][col]
                         #print("ABOUT TO PRINT CELL: ")
                         #print(cell)
-                        fWeight = str(cell[1])
+                        fWeight = str(cell.weight)
                         fWeight = ( '0' * (6-len(fWeight)) ) + fWeight  # Prepend 0's if needed
                         
-                        line = f'[{fRow}][{fCol}], {{{fWeight}}}, {cell[2]}' + ('' if (row == 7 and col == 11) else '\n')
+                        line = f'[{fRow}][{fCol}], {{{fWeight}}}, {cell.name}' + ('' if (row == 7 and col == 11) else '\n')
                         # file.write(line)
                         man += line
             return man

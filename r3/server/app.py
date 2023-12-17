@@ -23,13 +23,16 @@ current_cargo_state = None
 @app.route('/create-cargo-state', methods=['POST'])
 def create_cargo_state():
     data = request.get_json()
-    #print("data in create cargo state: ", data)
+
     # Create CargoState
-    manifest=data.get('manifest', []),
-    manifest_8x12 = convert_manifest_to_8x12(manifest),
-    print("manifest in create cargo state: ", manifest)
-    offload=data.get('offload', []),
-    load=data.get('load', []),
+    manifest=data.get('manifest', [])
+    print("MANIFEST WE START OUT WITH AFTER CALLING CREATE CARGO STATE ROUTE")
+    print(manifest)
+    manifest_8x12 = convert_manifest_to_8x12(manifest)
+    print("MANIFEST WE PASS INTO CARGOSTATE")
+    print(manifest_8x12)
+    offload=data.get('offload', [])
+    load=data.get('load', [])
     cost=data.get('cost', 0)
     last_move=None
 
@@ -44,34 +47,27 @@ def create_cargo_state():
 
     return jsonify({"message": "CargoState created successfully"})
 
+def convert_manifest_to_8x122(manifest_data: List[List[str]]) -> List[List[Container]]:
+    extracted_data = [[single_line[18:] for single_line in row] for row in manifest_data]
+    manifest_8x12 = [extracted_data[i:i+12] for i in range(0, len(extracted_data), 12)]
+
+    return manifest_8x12
+
 def convert_manifest_to_8x12(manifest_data: List[List[str]]) -> List[List[Container]]:
-    # Implement your logic to convert manifest_data to 8x12 List[List[Container]]
-    # For example, split the manifest_data and create Container objects accordingly
-    # Make sure the resulting structure is an 8x12 grid
-
-    # Sample logic (modify as needed)
-    print("MANIFEST DATA")
-    print(manifest_data)
-
-    converted_manifest = []
-
-    for row in manifest_data[0]:
-        container_info = f'{row[0]}, {{{row[1]}}}, {row[2]}\n'
-        converted_manifest.append(container_info)
-    converted_manifest = ''.join(converted_manifest)
-    print("converted_manifest DATA, about to turn them into containers: ")
-    print(converted_manifest)
-
-    for line in converted_manifest.splitlines():
-        print("PRINT EACH LINE IN CONVERTED MANIFEST TEST: ")
+    print("GOING THROUGH CONVERT_MANIFEST")
+    
+    for line in manifest_data.splitlines():
+        print("PRINT EACH INDIVDUAL LINE IN MANIFEST TEST: ")
         print(line)
-    containers = [Container(line) for line in converted_manifest.splitlines()]
-    print("CONTAINERS PRINTED: ")
-    print(containers)
+    containers = [Container(line) for line in manifest_data.splitlines()]
+    #print("CONTAINERS PRINTED: ")
+    #print(containers)
     manifest_8x12 = [containers[i:i+12] for i in range(0, len(containers), 12)]
 
-    print("manifest_8x12 PRINTED: ")
-    print(manifest_8x12)
+    #print("TRANSFORMED MANIFEST: ")
+    #print(manifest_8x12)
+    #for row in manifest_8x12:
+     #   print(row)
     return manifest_8x12
 
 @app.route('/run-astar', methods=['POST'])
@@ -79,12 +75,17 @@ def run_astar():
     data = request.json
     # Extract data from request
     manifest = data.get("manifest")
+    print("MANIFEST WE START OUT WITH AFTER CALLING RUN A STAR ROUTE")
+    print(manifest)
+    manifest_8x12 = convert_manifest_to_8x12(manifest)
+    print("MANIFEST WE PASS INTO SEARCH.ASTAR")
+    print(manifest_8x12)
     is_balance = data.get("isBalance")
     offload = data.get("offload", [])
     load = data.get("load", [])
     
     # Call search.astar
-    solution, moves = search.astar(manifest, is_balance, offload, load)
+    solution, moves = search.astar(manifest_8x12, is_balance, offload, load)
     
     # return moves to frontend
     return jsonify({"solution": solution, "moves": moves})
@@ -107,7 +108,7 @@ def get_manifest():
     # Check if current_cargo_state is not None
     if current_cargo_state:
         # Return the current_cargo_state as JSON
-        return jsonify(current_cargo_state.toManifestFixed())
+        return jsonify(current_cargo_state.toManifest())
     else:
         return jsonify({"error": "CargoState not initialized."}), 404
 
@@ -118,7 +119,7 @@ def get_current_cargo_state():
     # Check if current_cargo_state is not None
     if current_cargo_state:
         # Return the current_cargo_state as JSON
-        return jsonify(current_cargo_state.toManifestFixed())
+        return jsonify(current_cargo_state.toManifest())
     else:
         return jsonify({"error": "CargoState not initialized."}), 404
 
