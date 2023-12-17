@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import handleTimestamp from './Timestamp'
 import { useNavigate } from 'react-router-dom'
 import { Alert, Button } from '@mui/material'
+import '../css/Form.css'; 
 
 // cached state is passed in the event of a crash.
 // nav is used for route switching between different link paths
@@ -73,7 +74,7 @@ function Home ({ cachedState, setCachedState }) {
     if (op === 'Offloading/Onloading') {
       nav('/upload-transfer')
     } else {
-      nav('/ship-view')
+      nav('/dock-view')
     }
   }
 
@@ -123,6 +124,8 @@ function Home ({ cachedState, setCachedState }) {
 
   return (
     <div>
+       <button onClick={handleLogout} className="primary-submit-btn">Logout</button>
+      <h1>R³ Solutions</h1>
       {cachedState.inProgress ? (
         <Alert>
           This is currently an operation in progress. would you like to
@@ -135,24 +138,19 @@ function Home ({ cachedState, setCachedState }) {
           </Button>
         </Alert>
       ) : (
-        <div>
-          <button type='button' onClick={handleLogout}>
-            Logout
-          </button>
-
+        <div className="form-wrapper"> 
           <form onSubmit={handleSubmit}>
-            <label htmlFor='upload-manifest'>Upload Manifest List</label>
+            <label htmlFor='upload-manifest'>Upload Manifest List  </label>
             <input
               type='file'
               id='upload-manifest'
               accept='.txt'
               onChange={e => setTxtFile(e.target.files[0])}
               required
-            />
-            <label htmlFor='op-type'>
+            /><br/>
+            <span>
               Please select the type of operation:
-            </label>
-            <br />
+            </span><br/> 
             <input
               type='radio'
               id='onoff'
@@ -170,8 +168,8 @@ function Home ({ cachedState, setCachedState }) {
               onChange={e => setOp(e.target.value)}
               required 
             />
-            <label htmlFor='loadbalancing'>Load-Balancing</label>
-            <button type='submit'>Submit</button>
+            <label htmlFor='loadbalancing'>Load-Balancing</label><br/> 
+            <button type='submit' className='primary-submit-btn'>Submit</button>
           </form>
         </div>
       )}

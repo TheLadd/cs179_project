@@ -1,35 +1,29 @@
 import '../css/Grid.css'; 
+import Container from './Container'; 
 
+export default function Grid(props) {
+    let items = props.items; 
 
-export default function Grid({type, items}) {
-
-    // render containers based on whether it's buffer or ship 
-    if (items.length === 0)  {
-        items =  Array.from({ length: 12 }, () => Array(8).fill(null));
-    }
-
-    const getGridItemClass = value => {
-        switch (value) {
-          case 'NAN':
-            return 'nan-grid';
-          case 'UNDEFINED':
-            return 'undef-grid';
-          default:
-            return 'item-grid';
+    // implemented for testing - no access to buffer yet 
+    if (props.type === "buffer") {
+        items = []
+        for (let i = 1; i <= 4; i++) {
+            for (let j = 1; j <= 24; j++) {
+                const pos = String([i, j]); 
+                items.push([pos, 0, "UNUSED"]); 
+            }
         }
-    };
+    }
+    
+    // console.log(items.length); 
 
-
-    return(
-        <div className={type}>
-            {items.map((name, idx) => 
-                <div className={getGridItemClass} id={idx}>
-                    <p>{name ? name : null}</p>
-                </div> 
+    return (
+        <div className={props.type}>
+            <div className={props.type === "buffer" ? "buffer-header" : "grid-header"}>{props.type}</div>
+            {items.map((arr, index) => 
+                <Container key={index} position={arr[0]} weight={arr[1]} name={arr[2]} /> 
             )}
         </div>
-
-
     ); 
 }; 
 
