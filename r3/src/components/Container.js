@@ -5,7 +5,7 @@ const Container = (props) => {
     const [anchor, setAnchor] = useState(null); 
     let name = props.name; 
     const weight = parseInt(props.weight); 
-    let position = props.position; 
+    let position = useState(JSON.parse(props.position)); 
 
     let classes = ''; 
     
@@ -15,8 +15,9 @@ const Container = (props) => {
         classes = 'undefined-grid'; 
     } else {
         classes = 'item-grid'; 
-
     }
+
+    console.log(position); 
 
     const handleClick = (e) => {
         setAnchor(e.currentTarget); 

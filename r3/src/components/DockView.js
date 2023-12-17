@@ -7,20 +7,20 @@ export default function DockView({ cachedState, setCachedState }) {
         ...cachedState, 
         inProgress: true
     }); 
+
+    
     const [hoveredItem, setHoveredItem] = useState(null); 
     const BUFFER = "buffer"; 
     const SHIP = "ship"; 
-    // some back end stuff 
-    // const renderNextInstruction = (e) => {
+    const renderNextInstruction = (prev, prevLocation, next, nextLocation) {
+        
 
-    // }; 
-
-
+    }; 
 
     return (
         <div className='dock-view-container'>
-            <Grid type={SHIP} items={cachedState.manifest} /> 
-            <Grid type={BUFFER} items={[]} /> 
+            <Grid type={SHIP} items={cachedState.manifest} id='ship-view'/> 
+            <Grid type={BUFFER} items={[]} id='buffer-view'/> 
             <div className='instruction-box'>
                 <h1>Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}</h1>
                 <h2 className='instruction'></h2>
@@ -28,7 +28,5 @@ export default function DockView({ cachedState, setCachedState }) {
         </div>
         
     ); 
-
-
 
 }; 
