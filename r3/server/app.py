@@ -25,7 +25,7 @@ def create_cargo_state():
     # Create CargoState
     manifest=data.get('manifest', []),
     offload=data.get('offload', []),
-    load=data.get('load'),
+    load=data.get('load', []),
     #cost=data.get('cost', 0)
     #last_move=None
 

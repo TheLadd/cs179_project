@@ -1,13 +1,10 @@
 
-export default function BackendRoutes (props) {
-  // Assuming you have the necessary state and functions in your component
-
-const handleCreateCargoState = async () => {
+const handleCreateCargoState = async (manifest, offloadList, loadList) => {
   // Prepare the data to send in the request
   const cargoStateData = {
-    manifest: props.manifest,
-    offload: props.offloadList,
-    load: props.loadList,
+    manifest: manifest,
+    offload: offloadList,
+    load: loadList,
   };
 
   try {
@@ -33,11 +30,7 @@ const handleCreateCargoState = async () => {
   }
 };
 
-// ...
+export { handleCreateCargoState }
 
-// Trigger the cargo state creation when needed
-handleCreateCargoState();
-
-}
 
 
