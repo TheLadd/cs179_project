@@ -38,9 +38,11 @@ print(f'Performing operation {op} on test case {testCase}...')
 manifest = readManifest(file)
 state = CargoState(manifest, offload, load)
 
-print('Original Manifest:')
-printManifest(manifest)
-print('\n\n')
+#print('Original Manifest:')
+#printManifest(manifest)
+#print('\n')
+#print(manifest)
+#print('\n')
 
 if isBalance:
     if not state.isBalanceable():

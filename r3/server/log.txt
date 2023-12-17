@@ -1,21 +1,3 @@
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
-INFO:app:info msg
 2023-12-16 16:21:54,923 - INFO - info msg
 2023-12-16 16:21:54,929 - INFO - info msg
 2023-12-16 16:21:57,481 - INFO - info msg
@@ -299,4 +281,4 @@ December 17th 2023: 12:25 info msg
 December 17th 2023: 12:25 info msg
 December 17th 2023: 12:25 info msg
 December 17th 2023: 12:25 info msg
-December 17th 2023: 12:25 info msg
+

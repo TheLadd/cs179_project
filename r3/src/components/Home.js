@@ -64,12 +64,43 @@ function Home ({ cachedState, setCachedState }) {
 
     //console.log(parsedData)
 
+    /*
     setCachedState({
       ...cachedState,
       manifest: parsedData
     })
-    localStorage.removeItem('manifest')
-    localStorage.setItem('manifest', parsedData)
+    localStorage.setItem(
+      'manifest',
+      cachedState.manifest
+        ?.map(
+          (innerArray, rowIndex, array) =>
+            innerArray
+              .map((str, index) => (index === 1 ? `{${str}}` : str))
+              .join(', ') + (rowIndex === array.length - 1 ? '' : '\n')
+        )
+        .join('')
+    )
+    */
+        
+    setCachedState(prevCachedState => {
+      const updatedManifest = parsedData
+        .map(
+          (innerArray, rowIndex, array) =>
+            innerArray
+              .map((str, index) => (index === 1 ? `{${str}}` : str))
+              .join(', ') + (rowIndex === array.length - 1 ? '' : '\n')
+        )
+        .join('')
+
+      // Set the updated manifest in localStorage
+      localStorage.setItem('manifest', updatedManifest)
+
+      // Return the updated state
+      return {
+        ...prevCachedState,
+        manifest: parsedData
+      }
+    })
 
     if (op === 'Offloading/Onloading') {
       nav('/upload-transfer')
@@ -87,8 +118,7 @@ function Home ({ cachedState, setCachedState }) {
     fileReader.onload = e => {
       const manifestContent = e.target.result
       // Set the manifest content in the state
-      //console.log(manifestContent);
-      localStorage.setItem('manifest', manifestContent)
+      //console.log('MANIFEST CONTENT READ IN FROM FILE:\n', manifestContent)
       parseManifestFile(manifestContent)
     }
 
@@ -118,7 +148,7 @@ function Home ({ cachedState, setCachedState }) {
     }
   }
 
-  testBackend();
+  //testBackend();
 
   // refreshes every single time CachedState is changed.  async function
 
@@ -157,7 +187,7 @@ function Home ({ cachedState, setCachedState }) {
               name='op-type'
               value='Offloading/Onloading'
               onChange={e => setOp(e.target.value)}
-              required 
+              required
             />
             <label htmlFor='loadbalancing'>Offloading/Onloading</label>
             <input
@@ -166,7 +196,7 @@ function Home ({ cachedState, setCachedState }) {
               name='op-type'
               value='Load-Balancing'
               onChange={e => setOp(e.target.value)}
-              required 
+              required
             />
             <label htmlFor='loadbalancing'>Load-Balancing</label><br/> 
             <button type='submit' className='primary-submit-btn'>Submit</button>
