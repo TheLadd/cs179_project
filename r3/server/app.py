@@ -10,7 +10,11 @@ CORS(app)
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
-logging.basicConfig(filename='server/log.txt', level=logging.INFO)
+log_format = '%(asctime)s %(message)s'
+date_format = '%B %dth %Y: %H:%M'
+formatter = logging.Formatter(log_format, datefmt=date_format)
+
+logging.basicConfig(filename='server/log.txt', level=logging.INFO, format=log_format, datefmt=date_format)
 
 current_cargo_state = None
 
