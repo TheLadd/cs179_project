@@ -1,6 +1,7 @@
 import handleTimestamp from './Timestamp'
 import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
+import { handleLogMessage } from './BackendRoutes'
 
 
 
@@ -50,6 +51,8 @@ function Login ({ cachedState, setCachedState }) {
 
     localStorage.setItem('lastActivityTime', user.ti); 
     // logging
+    handleLogMessage(user.name + ' signs in')
+
     nav('/home'); 
   }
 
