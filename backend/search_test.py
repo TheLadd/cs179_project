@@ -54,3 +54,13 @@ for move in moves:
     print(move)
 print('\n')
 print(solution)
+
+
+
+
+
+# Testing CargoState.toBuffer()
+# solution.val.buf[0][0] = Container(info=('owen test!', 99999))
+# solution.val.buf[0][4] = Container(info=('owen test 2?', 777))
+# for bufItem in solution.val.toBuffer():
+#     print(bufItem)

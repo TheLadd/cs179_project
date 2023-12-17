@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway&family=Roboto:wght@100;300&display=swap'); 
+
+.form-wrapper { 
+    font-family: 'Raleway'; 
+    font-weight: bold;
+    justify-content: center;
+    margin: 40px; 
+    width: 60%; 
+    padding: 20px; 
+    border: 4px solid black; 
+    border-radius: 10px; 
+    background-color: greenyellow;
+}
+
+.secondary-submit-btn { 
+    background-color: pink; 
+    width: 30%; 
+    font-family: 'Raleway'; 
+    font-weight: bolder; 
+    border: 2px solid black; 
+    border-radius: 4px; 
+}
+
+.primary-submit-btn { 
+    background-color: coral; 
+    width: 20%;  
+    margin-top: 1px; 
+    padding: 2px; 
+    font-family: 'Raleway'; 
+    font-weight: bolder; 
+    border: 2px solid black; 
+    border-radius: 4px; 
+}
+
+span override { 
+    font-size: 140px;
+    font-weight: 900;
+    width: 100%; 
+    margin-bottom: 4fr; 
+
+}
+
+h1 {
+    font-family: 'Raleway'; 
+    margin: 40px;
+}
+
+.input-weight { 
+    margin-top: 3px;
+    margin-right: 10px; 
+    margin-bottom: 10px; 
+}
+
+#cratenm { 
+    background-color: white;
+}
+
+#upload-manifest { 
+    font-family: inherit; 
+    display: inline-block;
+}
+
+.input-txt { 
+    width: 60%; 
+    display: fill; 
+}
+
+
