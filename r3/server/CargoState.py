@@ -465,7 +465,7 @@ class CargoState:
             """
             Writes the current manifest to a string and returns it
             """
-            file = open(path, 'w')
+            #file = open(path, 'w')
             man = ''
             #print("PRINT SELF.SHIP")
             #print(len(self.ship), " x ", len(self.ship[0]))
