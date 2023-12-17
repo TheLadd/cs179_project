@@ -44,13 +44,25 @@ def create_cargo_state():
 
     return jsonify({"message": "CargoState created successfully"})
 
-def convert_manifest_to_8x12(manifest_data: List[str]) -> List[List[Container]]:
+def convert_manifest_to_8x12(manifest_data: List[List[str]]) -> List[List[Container]]:
     # Implement your logic to convert manifest_data to 8x12 List[List[Container]]
     # For example, split the manifest_data and create Container objects accordingly
     # Make sure the resulting structure is an 8x12 grid
 
     # Sample logic (modify as needed)
-    containers = [Container(line) for line in manifest_data]
+    print("MANIFEST DATA")
+    print(manifest_data)
+
+    converted_manifest = []
+
+    for row in manifest_data[0]:
+        container_info = f'{row[0]}, {{{row[1]}}}, {row[2]}\n'
+        converted_manifest.append(container_info)
+    converted_manifest = ''.join(converted_manifest)
+    print("converted_manifest DATA")
+    print(converted_manifest)
+
+    containers = [Container(line) for line in converted_manifest]
     manifest_8x12 = [containers[i:i+12] for i in range(0, len(containers), 12)]
 
     print(manifest_8x12)

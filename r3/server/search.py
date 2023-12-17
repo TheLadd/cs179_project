@@ -106,7 +106,8 @@ def astar(manifest_path:str, isBalance:bool, offload:List[str]=None, load:List[s
             CargoState to the solution.
     """
     # Initialize problem state and tree
-    manifest = readManifest(manifest_path)
+    #manifest = readManifest(manifest_path)
+    manifest = (manifest_path)
     state = CargoState(manifest, offload, load)
     root = Node(None, 0, state)
     tree = Tree(root)
