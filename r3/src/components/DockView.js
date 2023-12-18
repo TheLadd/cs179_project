@@ -9,34 +9,34 @@ import {
 } from "./BackendRoutes";
 import Grid from "./Grid";
 
-export default function DockView({ cachedState, setCachedState }) {
-  const [customMessage, setCustomMessage] = useState("");
+// function DockView({ cachedState, setCachedState }) {
+//   const [customMessage, setCustomMessage] = useState("");
 
-  const logCustomMessage = () => {
-    const userInput = window.prompt("Enter your custom message:");
-    if (userInput !== null) {
-      handleLogMessage(userInput);
-      // You can log the message or perform other actions here
-      console.log("Custom message logged:", userInput);
-    }
-  };
-
-// 
+//   const logCustomMessage = () => {
+//     const userInput = window.prompt("Enter your custom message:");
+//     if (userInput !== null) {
+//       handleLogMessage(userInput);
+//       // You can log the message or perform other actions here
+//       console.log("Custom message logged:", userInput);
+//     }
+//   };
+// }
+// // 
 export default function DockView ({ cachedState, setCachedState }) {
   const cargoState = useRef(false); 
   const goalCargoState = useRef([]); 
   const currMove = useRef({
     'cost': -1, 
-    'current-area': '', 
+    'current-area': -1, 
     'name': '', 
     'current-grid-position': [], 
-    'next-area': '', 
+    'next-area': -1, 
     'next-grid-position': []
   }); 
   const moveList = useRef([]); 
 
   // ------------------------------ flask backend functions -------------------------------------
-
+  // initializes cargo state 
   const createCargoState = async () => {
     console.log("DOCKVIEW.JS createcargostate");
       let state = await handleCreateCargoState(
@@ -46,12 +46,12 @@ export default function DockView ({ cachedState, setCachedState }) {
       ).catch(err => console.log(err))
       .then((response) => {
         cargoState.current = true
-        console.log("DOCKVIEW current cargo state initialized: ", goalCargoState.current)}
-      ); 
+        console.log("DOCKVIEW current cargo state initialized: ", goalCargoState.current)
+      }); 
       console.log('successfully created Cargo state'); 
   };  
 
-
+  // runs astar - only to be called at the beginning of ops or when the move is skipped 
   const runAstar = async () => {
     const isBalance = cachedState.opType === 'Offloading/Onloading' ? false : true; 
       const aStarRes = await handleRunAstar(
@@ -67,22 +67,34 @@ export default function DockView ({ cachedState, setCachedState }) {
       console.log("DOCKVIEW.JS: result ", moveList.current); 
       if (moveList.current.length !== 0) {
         let mvs = moveList.current; 
+
+        // local storage 
+        localStorage.setItem('moves', mvs)
+        localStorage.setItem('totalSteps', mvs.length)
+        localStorage.setItem('currStep', 1)
+
+        // save in ref - we set here so we don't have to refresh as much 
         const nextMove = mvs.shift(); 
         currMove.current = nextMove; 
         moveList.current = mvs; 
-        const currarea = mapArea(nextMove['current-area']); 
-        const nextarea = mapArea(nextMove['next-area']); 
-        currMove.current = {
-          ...currMove.current, 
-          'current-area': currarea, 
-          'next-area': nextarea
-        }
+        // const currarea = mapArea(nextMove['current-area']); 
+        // const nextarea = mapArea(nextMove['next-area']); 
+        // currMove.current = {
+        //   ...currMove.current, 
+        //   'current-area': currarea, 
+        //   'next-area': nextarea
+        // }
         console.log("CURRMOVE: ", currMove.current); 
+
+        //sanity check 
         setCachedState({
           ...cachedState, 
           inProgress: true, 
-          moves: mvs
+          moves: mvs, 
+          totalSteps: mvs.length+1 
         }); 
+       
+
       }
       // Perform any actions based on the response from handleRunAstar
       // console.log('A* Algorithm solution:', astarResult.solution)
@@ -90,6 +102,8 @@ export default function DockView ({ cachedState, setCachedState }) {
   }; 
 
   const runMove = async moveData => {
+
+
     await handleRunMove(moveData).catch(err => console.log(err))
     .then((response) => {
       console.log("DOCKVIEW.JS: handleRunMove completed")
@@ -97,19 +111,22 @@ export default function DockView ({ cachedState, setCachedState }) {
     }); 
   }; 
   // ------------------------------ end flask backend functions -------------------------------------
-
-
-  const mapArea = num => {
-    if (num === 0) {
-      return "ship"
-    } else if (num === 1) {
-      return "buffer"
-    } else if (num === 2) {
-      return "truck"
-    } else {
-      return ""
-    }
+  const area_keys = {
+    0: 'Ship', 
+    1: 'Buffer', 
+    2: 'Truck'
   }; 
+
+  const mapArea = st => {
+    const curr = currMove.current[st]
+    console.log("MAPAREA: ", curr)
+    return area_keys[curr]
+  }
+
+  const makeMove = () => {
+    console.log("makemove"); 
+  }
+
 
   const BUFFER = "buffer";
   const SHIP = "ship";
@@ -143,7 +160,6 @@ export default function DockView ({ cachedState, setCachedState }) {
 
   return (
     <div className='dock-view-container'>
-      {cachedState.moves ? (
         <div>
         <Grid type={SHIP} items={cachedState.manifest} id='ship-dock' />
         <Grid type={BUFFER} items={[]} id='buffer-dock' />
@@ -152,14 +168,13 @@ export default function DockView ({ cachedState, setCachedState }) {
             Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}: 
           </h1>
           <h2 className='instruction' value={currMove.current}>
-            Move {currMove.current['name']} in {currMove.current['current-area']} from slot {String(currMove.current['current-grid-position'])} to slot {String(currMove.current['next-position'])} in {currMove.current['next-area']}
+            Move {currMove.current['name']} in {mapArea('current-area')} from slot {String(currMove.current['current-grid-position'])} to slot {area_keys[currMove.current['next-grid-position']]} in {mapArea('next-area')}
           </h2>
-          <button>Make Move</button>
+          <button onClick={makeMove}>Make Move</button>
           <button>Skip Move</button>
           <button>Log something</button>
         </div>
-        </div> 
-      ) : ( null )}
+        </div>
     </div>
   );
-} 
+}
