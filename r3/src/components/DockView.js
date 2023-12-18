@@ -12,17 +12,12 @@ import Grid from "./Grid";
 // function DockView({ cachedState, setCachedState }) {
 //   const [customMessage, setCustomMessage] = useState("");
 
-//   const logCustomMessage = () => {
-//     const userInput = window.prompt("Enter your custom message:");
-//     if (userInput !== null) {
-//       handleLogMessage(userInput);
-//       // You can log the message or perform other actions here
-//       console.log("Custom message logged:", userInput);
-//     }
+
 //   };
 // }
 // // 
 export default function DockView ({ cachedState, setCachedState }) {
+  const logMessage = useRef(""); 
   const cargoState = useRef(false); 
   const goalCargoState = useRef([]); 
   const currMove = useRef({
@@ -101,9 +96,8 @@ export default function DockView ({ cachedState, setCachedState }) {
       // console.log('A* Algorithm moves:', astarResult.moves)
   }; 
 
-  const runMove = async currMove => {
-    
-    await handleRunMove(moveData).catch(err => console.log(err))
+  const runMove = async move => {
+    await handleRunMove(move).catch(err => console.log(err))
     .then((response) => {
       console.log("DOCKVIEW.JS: handleRunMove completed")
       console.log(response.message)
@@ -166,7 +160,7 @@ export default function DockView ({ cachedState, setCachedState }) {
           <h2 className='instruction' value={currMove.current}>
             Move {currMove.current['name']} in {mapArea('current-area')} from slot {String(currMove.current['current-grid-position'])} to slot {String(currMove.current['next-grid-position'])} in {mapArea('next-area')}
           </h2>
-          <button onClick={runMove}>Make Move</button>
+          <button onClick={() => runMove(currMove.current)}>Make Move</button>
           <button>Skip Move</button>
           <button>Log something</button>
         </div>
