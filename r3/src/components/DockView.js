@@ -55,7 +55,6 @@ export default function DockView ({ cachedState, setCachedState }) {
     }
   }
 
-  const [hoveredItem, setHoveredItem] = useState(null)
   const BUFFER = 'buffer'
   const SHIP = 'ship'
 
