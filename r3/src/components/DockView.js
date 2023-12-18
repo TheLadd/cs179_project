@@ -70,7 +70,7 @@ export default function DockView ({ cachedState, setCachedState }) {
 
         // local storage 
         localStorage.setItem('moves', mvs)
-        localStorage.setItem('totalSteps', mvs.length)
+        localStorage.setItem('totalSteps', mvs.length-1)
         localStorage.setItem('currStep', 1)
 
         // save in ref - we set here so we don't have to refresh as much 
@@ -119,12 +119,15 @@ export default function DockView ({ cachedState, setCachedState }) {
 
   const mapArea = st => {
     const curr = currMove.current[st]
-    console.log("MAPAREA: ", curr)
     return area_keys[curr]
   }
 
-  const makeMove = () => {
-    console.log("makemove"); 
+
+
+  const makeMove = e => {
+    console.log("DOCKVIEW.JS MAKEMOVE")
+
+    
   }
 
 
