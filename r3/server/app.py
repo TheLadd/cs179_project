@@ -41,8 +41,8 @@ def create_cargo_state():
     # Set the current_cargo_state after receiving data from frontend    
     global current_cargo_state
     current_cargo_state = CargoState(manifest_8x12, offload, load, cost, last_move)
-    #print("ABOUT TO PRINT CURRENT CARGO STATE: ")
-
+    print("ABOUT TO PRINT CURRENT CARGO STATE: ")
+    print("current_cargo_state when it was created: ", current_cargo_state)
     #print(current_cargo_state.toManifestFixed())
 
     return jsonify({"message": "CargoState created successfully"})
@@ -114,7 +114,8 @@ def run_move():
 
     # Init src
     src_pos = move_data['current-grid-position']
-    src_con = Container(info=(move_data['name'], move_data['weight'])) 
+    #src_con = Container(info=(move_data['name'], move_data['weight'])) 
+    src_con = Container(info=(move_data['name'])) 
     src = Position(move_data['current-area'], src_pos[0], src_pos[1], container=src_con)    
 
     # Init dst
@@ -125,8 +126,10 @@ def run_move():
     # move = Move(**move_data)
 
     global current_cargo_state
+    print("current_cargo_state first: ", current_cargo_state)
+    if (current_cargo_state): print("current_cargo_state middle evaluated to not none: ", current_cargo_state)
     current_cargo_state = current_cargo_state.move(move)
-
+    if (current_cargo_state): print("current_cargo_state end evaluated to not none: ", current_cargo_state)
     return jsonify({"message": "Move executed successfully"})
 
 @app.route('/getManifest', methods=['GET'])
