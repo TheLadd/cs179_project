@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   handleCreateCargoState,
   handleRunAstar,
@@ -17,6 +18,7 @@ import Grid from "./Grid";
 
 // // 
 export default function DockView ({ cachedState, setCachedState }) {
+  const nav = useNavigate(); 
   const logMessage = useRef(""); 
   const cargoState = useRef(false); 
   const currentCargoState = useRef(cachedState.manifest); 
@@ -150,12 +152,15 @@ export default function DockView ({ cachedState, setCachedState }) {
         moves: mvs, // saves as an object?  
         currStep: cachedState.currStep + 1
       }); 
-  }; 
+  } else { // we're done with moves. fin 
+    nav('/home'); 
+
+  }
 
 }; 
 
   // assumption: current cargo state is being updated with every call to make move. 
-  const skipMove = async (move) => {
+  const skipMove = async move => {
     if (cachedState.opType === "Offloading/Onloading") {
       if (move['current-area'] < move['next-area']) { // offload operation - we check offload list
         let name = move['name']
@@ -177,12 +182,25 @@ export default function DockView ({ cachedState, setCachedState }) {
         }
         setCachedState({
           ...cachedState, 
-          loadList: newOnload
+          loadList: newOnload, 
+          currStep: cachedState.currStep + 1
         }); 
+        if (cachedState.currStep === cachedState.totalSteps) {
+          nav('/home')
+        }
+
       }
     }
 
-    handleRunAstar(); 
+    await handleGetManifest().catch(e => console.log(e))
+    .then(async (response) => {
+      localStorage.setItem('manifest', response)
+      await runAstar().catch(e => console.log(e)).then(() => {
+        console.log("handleGetManifest: astar successfully fetched")
+      }); 
+    })
+
+    
   }; 
 
 
@@ -245,25 +263,27 @@ export default function DockView ({ cachedState, setCachedState }) {
                 Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}:
               </h1>
               <h2 className="instruction" value={currMove.current}>
-                Move {currMove.current["name"]} in {mapArea("current-area")}{" "}
+                Move {currMove.current["name"]} in {mapArea("current-area")}<br/> 
                 from slot {String(currMove.current["current-grid-position"])} to
                 slot {String(currMove.current["next-grid-position"])} in{" "}
                 {mapArea("next-area")}
               </h2>
-              <button onClick={() => runMove(currMove.current)}>
+              <div className="btn-grp">
+              <button onClick={() => runMove(currMove.current)} className="primary-submit-btn">
                 Make Move
               </button>
-              <button onClick={() => skipMove(currMove.current)}>
+              <button onClick={() => skipMove(currMove.current)} className="primary-submit-btn">
                 Skip Move
               </button>
-              <button onClick={logCustomMessage}>
+              <button onClick={logCustomMessage} className="primary-submit-btn">
                 Write a comment in the log
               </button>
               {customMessage && <p>Custom Message: {customMessage}</p>}
+              </div>
             </div>
           </>
         ) : (
-          <p>Calculating Moves</p>
+          <div class="lds-dual-ring"><div></div></div>
         )}
       </div>
     </div>
