@@ -3,7 +3,7 @@ from flask_cors import CORS
 from CargoState import CargoState, Move, Container
 import logging
 import search
-from typing import List
+from typing import List, Dict
 
 app = Flask(__name__)
 CORS(app)
@@ -66,23 +66,44 @@ def convert_manifest_to_8x12(manifest_data: List[List[str]]) -> List[List[Contai
 
 @app.route('/run-astar', methods=['POST'])
 def run_astar():
+    # 1. Extract data from request
     data = request.json
-    # Extract data from request
     manifest = data.get("manifest")
-    print("MANIFEST WE START OUT WITH AFTER CALLING RUN A STAR ROUTE")
-    print(manifest)
     manifest_8x12 = convert_manifest_to_8x12(manifest)
-    print("MANIFEST WE PASS INTO SEARCH.ASTAR")
-    print(manifest_8x12)
     is_balance = data.get("isBalance")
-    offload = data.get("offload", [])
+    offload = data.get("offload", [])   # This is in format of [name1, weight1, name2, weight2, ..., nameN, weightN]
     load = data.get("load", [])
-    
-    # Call search.astar
-    solution, moves = search.astar(manifest_8x12, is_balance, offload, load)
-    
-    # return moves to frontend
-    return jsonify({"solution": solution, "moves": moves})
+
+    # 1.2 Reformat from list of strings to list of Containers
+    loadReformat: List[Container] = []
+    print(f'load before formatting: {load}')
+    for i in range(0, len(offload), 2):
+        loadReformat.append( Container(info=(load[i], load[i+1])) )
+    load = loadReformat
+
+    print(f'Offload before astar: {offload}')
+
+    # 2. Run astar
+    solution, moves = search.astar(manifest_8x12, is_balance, offload=offload, load=load)
+
+    # 2.2 Reformat moves from list of Move objects to list of Move-like dictionaries
+    movesReformat: List[Dict[str, List[int]|int]] = []
+    print(f'moves before formatting: {moves}')
+    for move in moves:
+        temp = {
+            'current grid position': [move.src.row+1, move.src.col+1],
+            'current area': move.src.area,
+            'next grid position': [move.dst.row+1, move.dst.col+1],
+            'next area': move.dst.area,
+            'cost': move.cost()
+        }
+        movesReformat.append(temp)
+    moves = movesReformat
+    print("MOVES PRINTED: ")
+    print(moves)
+
+    # 3. return moves to frontend
+    return jsonify({"solution": str(solution), "moves": str(moves)})
 
 @app.route('/runMove', methods=['POST'])
 def run_move():
