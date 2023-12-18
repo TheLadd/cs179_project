@@ -77,7 +77,7 @@ def run_astar():
     is_balance = data.get("isBalance")
     offload = data.get("offload", [])
     load = data.get("load", [])
-    
+    # make it so that load is a list of containers instead of a list of strings
     # Call search.astar
     solution, moves = search.astar(manifest_8x12, is_balance, offload=offload, load=load)
     print("MOVES PRINTED: ")

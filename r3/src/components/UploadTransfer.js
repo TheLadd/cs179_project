@@ -33,7 +33,7 @@ function UploadTransfer ({ cachedState, setCachedState }) {
 
     if (onload) {
 
-        const currLoad = [...cachedState.loadList, [currentContainer.name, currentContainer.weight.toString()]]; 
+        const currLoad = [...cachedState.loadList, currentContainer.name, currentContainer.weight.toString()]; 
         container = { 
           ...currentContainer, 
           operation: 'Onload'
