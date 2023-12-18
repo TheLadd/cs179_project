@@ -91,10 +91,10 @@ def run_astar():
     print(f'moves before formatting: {moves}')
     for move in moves:
         temp = {
-            'current grid position': [move.src.row+1, move.src.col+1],
-            'current area': move.src.area,
-            'next grid position': [move.dst.row+1, move.dst.col+1],
-            'next area': move.dst.area,
+            'current-grid-position': [move.src.row+1, move.src.col+1],
+            'current-area': move.src.area,
+            'next-grid-position': [move.dst.row+1, move.dst.col+1],
+            'next-area': move.dst.area,
             'cost': move.cost()
         }
         movesReformat.append(temp)
