@@ -70,6 +70,12 @@ export default function DockView ({ cachedState, setCachedState }) {
       console.log("DOCKVIEW.JS: result ", moveList.current); 
       if (moveList.current.length !== 0) {
         let mvs = moveList.current; 
+        setCachedState({
+          ...cachedState, 
+          inProgress: true, 
+          moves: mvs, // saves as an object?  
+          totalSteps: mvs.length
+        }); 
 
         // local storage 
         localStorage.setItem('moves', mvs)
@@ -90,12 +96,6 @@ export default function DockView ({ cachedState, setCachedState }) {
         console.log("CURRMOVE: ", currMove.current); 
 
         //sanity check 
-        setCachedState({
-          ...cachedState, 
-          inProgress: true, 
-          moves: mvs, // saves as an object?  
-          totalSteps: mvs.length+1
-        }); 
         localStorage.setItem("inProgress", "true");
        
 
@@ -138,7 +138,7 @@ export default function DockView ({ cachedState, setCachedState }) {
         ...cachedState, 
         inProgress: true, 
         moves: mvs, // saves as an object?  
-        totalSteps: mvs.length+1
+        currStep: cachedState.currStep + 1
       }); 
   }; 
 
@@ -170,7 +170,6 @@ export default function DockView ({ cachedState, setCachedState }) {
           loadList: newOnload
         }); 
       }
-
     }
 
     handleRunAstar(); 
