@@ -19,6 +19,8 @@ import Grid from "./Grid";
 export default function DockView ({ cachedState, setCachedState }) {
   const logMessage = useRef(""); 
   const cargoState = useRef(false); 
+  const currentCargoState = useRef(null); 
+  const currentBufferState = useRef(null); 
   const goalCargoState = useRef([]); 
   const currMove = useRef({
     'cost': -1, 
@@ -103,6 +105,38 @@ export default function DockView ({ cachedState, setCachedState }) {
       console.log(response.message)
     }); 
   }; 
+
+
+
+
+
+  // delete it 
+
+  // assumption: current cargo state is being updated with every call to make move. 
+  const skipMove = async (move) => {
+    if (cachedState.opType === "Load-Balancing") { 
+      handleRunAstar(); 
+    } else { 
+      if (currMove.current['current-area'] < currMove.current['next-area']) { // offload operation - we check offload list
+        let name = currMove.current['name']
+        let newOffload = cachedState.offloadList
+        let idx = cachedState.offloadList.indexOf(name); 
+        newOffload.splice(idx, 1)
+        setCachedState({
+          ...cachedState, 
+          offloadList: newOffload
+        }); 
+        handleRunAstar(); 
+      } else { // we check onload list - onload includes weight 
+        const name = currMove.current['name']
+        let newOnload = cachedState.loadList; 
+        // const weight = currMove.current['weight']
+      }
+
+
+    }
+  }; 
+
   // ------------------------------ end flask backend functions -------------------------------------
   const area_keys = {
     0: 'Ship', 
@@ -161,7 +195,7 @@ export default function DockView ({ cachedState, setCachedState }) {
             Move {currMove.current['name']} in {mapArea('current-area')} from slot {String(currMove.current['current-grid-position'])} to slot {String(currMove.current['next-grid-position'])} in {mapArea('next-area')}
           </h2>
           <button onClick={() => runMove(currMove.current)}>Make Move</button>
-          <button>Skip Move</button>
+          <button onClick={() => skipMove(currMove.current)}>Skip Move</button>
           <button>Log something</button>
         </div>
         </div>
