@@ -69,20 +69,21 @@ def run_astar():
     data = request.json
     # Extract data from request
     manifest = data.get("manifest")
-    print("MANIFEST WE START OUT WITH AFTER CALLING RUN A STAR ROUTE")
-    print(manifest)
+    #print("MANIFEST WE START OUT WITH AFTER CALLING RUN A STAR ROUTE")
+    #print(manifest)
     manifest_8x12 = convert_manifest_to_8x12(manifest)
-    print("MANIFEST WE PASS INTO SEARCH.ASTAR")
-    print(manifest_8x12)
+    #print("MANIFEST WE PASS INTO SEARCH.ASTAR")
+    #print(manifest_8x12)
     is_balance = data.get("isBalance")
     offload = data.get("offload", [])
     load = data.get("load", [])
     
     # Call search.astar
-    solution, moves = search.astar(manifest_8x12, is_balance, offload, load)
-    
+    solution, moves = search.astar(manifest_8x12, is_balance, offload=offload, load=load)
+    print("MOVES PRINTED: ")
+    print(moves)
     # return moves to frontend
-    return jsonify({"solution": solution, "moves": moves})
+    return jsonify({"solution": str(solution), "moves": str(moves)})
 
 @app.route('/runMove', methods=['POST'])
 def run_move():
