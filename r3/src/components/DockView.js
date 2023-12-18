@@ -1,84 +1,94 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 import {
   handleCreateCargoState,
   handleRunAstar,
   handleRunMove,
   handleGetManifest,
   handleLogMessage,
-  handleGetCurrentCargoState
-} from './BackendRoutes'
-import Grid from './Grid'
+  handleGetCurrentCargoState,
+} from "./BackendRoutes";
+import Grid from "./Grid";
 
-export default function DockView ({ cachedState, setCachedState }) {
+export default function DockView({ cachedState, setCachedState }) {
+  const [customMessage, setCustomMessage] = useState("");
+
+  const logCustomMessage = () => {
+    const userInput = window.prompt("Enter your custom message:");
+    if (userInput !== null) {
+      handleLogMessage(userInput);
+      // You can log the message or perform other actions here
+      console.log("Custom message logged:", userInput);
+    }
+  };
+
   const createCargoState = async () => {
     try {
       await handleCreateCargoState(
-        localStorage.getItem('manifest'),
+        localStorage.getItem("manifest"),
         cachedState.offloadList,
         cachedState.loadList
-      )
-      console.log('successfully created Cargo state:')
+      );
+      console.log("successfully created Cargo state:");
     } catch (error) {
-      console.error('Error creating cargo state:', error)
+      console.error("Error creating cargo state:", error);
     }
-  }
+  };
 
   const runAstar = async () => {
     const isBalance =
-      cachedState.opType === 'Offloading/Onloading' ? false : true
+      cachedState.opType === "Offloading/Onloading" ? false : true;
 
     try {
       const astarResult = await handleRunAstar(
-        localStorage.getItem('manifest'),
+        localStorage.getItem("manifest"),
         isBalance,
         cachedState.offloadList,
         cachedState.loadList
 
         // provide other required parameters here
-      )
+      );
       // Perform any actions based on the response from handleRunAstar
-      console.log('A* Algorithm solution:', astarResult.solution.val)
-      console.log('A* Algorithm moves:', astarResult.moves)
+      console.log("A* Algorithm solution:", astarResult.solution.val);
+      console.log("A* Algorithm moves:", astarResult.moves);
     } catch (error) {
-      console.error('Error creating cargo state:', error)
+      console.error("Error creating cargo state:", error);
     }
-  }
+  };
   createCargoState()
-  .then(() => {
-    // After cargo state is initialized, call runAstar
-    runAstar()
-  })
-  .catch(error => {
-    console.error('Error in initialization:', error)
-  })
-
-
+    .then(() => {
+      // After cargo state is initialized, call runAstar
+      runAstar();
+    })
+    .catch((error) => {
+      console.error("Error in initialization:", error);
+    });
 
   const runMove = async (moveData) => {
     try {
-      const moveResult = await handleRunMove(moveData)
+      const moveResult = await handleRunMove(moveData);
       // Perform any actions based on the response from handleRunMove
-      console.log('Move execution result:', moveResult.message)
+      console.log("Move execution result:", moveResult.message);
       // You may want to update your component state or perform other actions here
     } catch (error) {
-      console.error('Error running move:', error)
+      console.error("Error running move:", error);
     }
-  }
+  };
 
-  const BUFFER = 'buffer'
-  const SHIP = 'ship'
+  const BUFFER = "buffer";
+  const SHIP = "ship";
 
   return (
-    <div className='dock-view-container'>
-      <Grid type={SHIP} items={cachedState.manifest} id='ship-dock' />
-      <Grid type={BUFFER} items={[]} id='buffer-dock' />
-      <div className='instruction-box'>
+    <div className="dock-view-container">
+      <Grid type={SHIP} items={cachedState.manifest} id="ship-dock" />
+      <Grid type={BUFFER} items={[]} id="buffer-dock" />
+      <div className="instruction-box">
         <h1>
           Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}
         </h1>
-        <h2 className='instruction'></h2>
-        <button>Log something</button>
+        <h2 className="instruction"></h2>
+        <button onClick={logCustomMessage}>Log something</button>
+        {customMessage && <p>Custom Message: {customMessage}</p>}
       </div>
     </div>
-  )
+  );
 }
