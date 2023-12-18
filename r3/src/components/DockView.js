@@ -1,5 +1,4 @@
-
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   handleCreateCargoState,
   handleRunAstar,
@@ -8,72 +7,69 @@ import {
   handleLogMessage,
   handleGetCurrentCargoState
 } from './BackendRoutes'
-import { useState } from 'react'; 
-import Grid from './Grid'; 
+import Grid from './Grid'
 
 export default function DockView ({ cachedState, setCachedState }) {
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       await handleCreateCargoState(
-//         localStorage.getItem('manifest'),
-//         cachedState.offloadList,
-//         cachedState.loadList
-//       )
-//       //const currentCargoState = await handleGetCurrentCargoState()
-//       //console.log('Current Cargo State:', currentCargoState)
+  const createCargoState = async () => {
+    try {
+      await handleCreateCargoState(
+        localStorage.getItem('manifest'),
+        cachedState.offloadList,
+        cachedState.loadList
+      )
+      console.log('successfully created Cargo state:')
+    } catch (error) {
+      console.error('Error creating cargo state:', error)
+    }
+  }
 
-//       const currentCargoState = await handleGetManifest()
-//       console.log('Current Cargo manifest:', currentCargoState)
-//     }
+  const runAstar = async () => {
+    const isBalance =
+      cachedState.opType === 'Offloading/Onloading' ? false : true
 
-//     fetchData()
-//   }, [cachedState.manifest, cachedState.offloadList, cachedState.loadList])
+    try {
+      const astarResult = await handleRunAstar(
+        localStorage.getItem('manifest'),
+        isBalance,
+        cachedState.offloadList,
+        cachedState.loadList
 
-//   useEffect(() => {
-//     const runAstar = async () => {
-//       const isBalance =
-//         cachedState.opType === 'Offloading/Onloading' ? false : true
+        // provide other required parameters here
+      )
+      // Perform any actions based on the response from handleRunAstar
+      console.log('A* Algorithm solution:', astarResult.solution.val)
+      console.log('A* Algorithm moves:', astarResult.moves)
+    } catch (error) {
+      console.error('Error creating cargo state:', error)
+    }
+  }
 
-//       const astarResult = await handleRunAstar(
-//         localStorage.getItem('manifest'),
-//         isBalance,
-//         cachedState.offloadList, 
-//         cachedState.loadList
+  const runMove = async (moveData) => {
+    try {
+      const moveResult = await handleRunMove(moveData)
+      // Perform any actions based on the response from handleRunMove
+      console.log('Move execution result:', moveResult.message)
+      // You may want to update your component state or perform other actions here
+    } catch (error) {
+      console.error('Error running move:', error)
+    }
+  }
 
-//         // provide other required parameters here
-//       )
-//       // Perform any actions based on the response from handleRunAstar
-//       console.log('A* Algorithm solution:', astarResult.solution.val)
-//       console.log('A* Algorithm moves:', astarResult.moves)
-//     }
-
-    // Call the runAstar function when the component mounts or when specific dependencies change
-//     //runAstar()
-//   }, [cachedState.manifest, cachedState.opType, cachedState.offloadList, cachedState.loadList])
-  
-   setCachedState({
-        ...cachedState, 
-        inProgress: true
-    }); 
-    const [hoveredItem, setHoveredItem] = useState(null); 
-    const BUFFER = "buffer"; 
-    const SHIP = "ship"; 
-    // some back end stuff 
-    // const renderNextInstruction = (e) => {
-
-    // }; 
+  const [hoveredItem, setHoveredItem] = useState(null)
+  const BUFFER = 'buffer'
+  const SHIP = 'ship'
 
   return (
-        <div className='dock-view-container'>
-            <Grid type={SHIP} items={cachedState.manifest} /> 
-            <Grid type={BUFFER} items={[]} /> 
-            <div className='instruction-box'>
-                <h1>Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}</h1>
-                <h2 className='instruction'></h2>
-                <button>Log something</button> 
-            </div>
-        </div>
+    <div className='dock-view-container'>
+      <Grid type={SHIP} items={cachedState.manifest} id='ship-dock' />
+      <Grid type={BUFFER} items={[]} id='buffer-dock' />
+      <div className='instruction-box'>
+        <h1>
+          Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}
+        </h1>
+        <h2 className='instruction'></h2>
+        <button>Log something</button>
+      </div>
+    </div>
   )
-}; 
-
-
+}
