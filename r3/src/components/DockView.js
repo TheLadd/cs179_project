@@ -101,9 +101,8 @@ export default function DockView ({ cachedState, setCachedState }) {
       // console.log('A* Algorithm moves:', astarResult.moves)
   }; 
 
-  const runMove = async moveData => {
-
-
+  const runMove = async currMove => {
+    
     await handleRunMove(moveData).catch(err => console.log(err))
     .then((response) => {
       console.log("DOCKVIEW.JS: handleRunMove completed")
@@ -123,12 +122,6 @@ export default function DockView ({ cachedState, setCachedState }) {
   }
 
 
-
-  const makeMove = e => {
-    console.log("DOCKVIEW.JS MAKEMOVE")
-
-    
-  }
 
 
   const BUFFER = "buffer";
@@ -173,7 +166,7 @@ export default function DockView ({ cachedState, setCachedState }) {
           <h2 className='instruction' value={currMove.current}>
             Move {currMove.current['name']} in {mapArea('current-area')} from slot {String(currMove.current['current-grid-position'])} to slot {String(currMove.current['next-grid-position'])} in {mapArea('next-area')}
           </h2>
-          <button onClick={makeMove}>Make Move</button>
+          <button onClick={runMove}>Make Move</button>
           <button>Skip Move</button>
           <button>Log something</button>
         </div>
