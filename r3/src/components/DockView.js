@@ -1,4 +1,3 @@
-import { create } from '@mui/material/styles/createTransitions';
 import { useRef, useEffect, useState } from 'react'
 import {
   handleCreateCargoState,
@@ -6,9 +5,21 @@ import {
   handleRunMove,
   handleGetManifest,
   handleLogMessage,
-  handleGetCurrentCargoState
-} from './BackendRoutes'
-import Grid from './Grid'
+  handleGetCurrentCargoState,
+} from "./BackendRoutes";
+import Grid from "./Grid";
+
+export default function DockView({ cachedState, setCachedState }) {
+  const [customMessage, setCustomMessage] = useState("");
+
+  const logCustomMessage = () => {
+    const userInput = window.prompt("Enter your custom message:");
+    if (userInput !== null) {
+      handleLogMessage(userInput);
+      // You can log the message or perform other actions here
+      console.log("Custom message logged:", userInput);
+    }
+  };
 
 // 
 export default function DockView ({ cachedState, setCachedState }) {
@@ -100,8 +111,8 @@ export default function DockView ({ cachedState, setCachedState }) {
     }
   }; 
 
-  const BUFFER = 'buffer'
-  const SHIP = 'ship'
+  const BUFFER = "buffer";
+  const SHIP = "ship";
 
   useEffect(() => {
     console.log("dockView..."); 
