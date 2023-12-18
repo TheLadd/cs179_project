@@ -495,6 +495,22 @@ class CargoState:
                         man += line
             return man
       
+      def toBuffer(self) -> List[List[str]]:
+            """
+            Returns the buffer as a single dimensional array where 
+            each element is a triplet of [[x,y], weight, name]
+
+            NOTE: [x,y] are *not* zero-indexed
+            NOTE: each element (including [x,y]) is a string
+            """
+            buf = []
+            for row in range(4):
+                  for col in range(24):
+                        cell: Container = self.buf[row][col]
+                        item = [f'[{row+1}, {col+1}]', str(cell.weight), cell.name]
+                        buf.append(item)
+            return buf
+
       def toShip(self) -> List[List[str]]:
             """
             Returns the ship as a single dimensional array where 
