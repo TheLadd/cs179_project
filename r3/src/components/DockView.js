@@ -105,13 +105,10 @@ export default function DockView ({ cachedState, setCachedState }) {
       // console.log('A* Algorithm moves:', astarResult.moves)
   }; 
 
-  const runMove = async move => {
-    await handleRunMove(move).catch(err => console.log(err))
-    .then((response) => {
-      console.log("DOCKVIEW.JS: handleRunMove completed")
-      console.log(response)
-    }); 
-  }; 
+  const runMove = async (move) => {
+    handleRunMove(move);
+    //handleGetCurrentCargoState;
+  };
 
 
 
@@ -207,7 +204,7 @@ export default function DockView ({ cachedState, setCachedState }) {
             {String(currMove.current["next-grid-position"])} in{" "}
             {mapArea("next-area")}
           </h2>
-          <button onClick={() => handleRunMove(currMove.current)}>Make Move</button>
+          <button onClick={() => runMove(currMove.current)}>Make Move</button>
           <button onClick={() => skipMove(currMove.current)}>Skip Move</button>
           <button>Log something</button>
         </div>
