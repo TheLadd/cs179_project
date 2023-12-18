@@ -103,7 +103,8 @@ def run_astar():
     print(moves)
 
     # 3. return moves to frontend
-    return jsonify({"solution": str(solution), "moves": str(moves)})
+    # return jsonify({"solution": str(solution), "moves": str(moves)})
+    return jsonify({"solution": solution.val.toDict(), "moves": moves})
 
 @app.route('/runMove', methods=['POST'])
 def run_move():
