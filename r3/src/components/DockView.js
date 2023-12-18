@@ -70,7 +70,7 @@ export default function DockView ({ cachedState, setCachedState }) {
 
         // local storage 
         localStorage.setItem('moves', mvs)
-        localStorage.setItem('totalSteps', mvs.length-1)
+        localStorage.setItem('totalSteps', mvs.length)
         localStorage.setItem('currStep', 1)
 
         // save in ref - we set here so we don't have to refresh as much 
@@ -90,8 +90,8 @@ export default function DockView ({ cachedState, setCachedState }) {
         setCachedState({
           ...cachedState, 
           inProgress: true, 
-          moves: mvs, 
-          totalSteps: mvs.length+1 
+          moves: mvs, // saves as an object?  
+          totalSteps: mvs.length+1
         }); 
        
 
@@ -171,7 +171,7 @@ export default function DockView ({ cachedState, setCachedState }) {
             Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}: 
           </h1>
           <h2 className='instruction' value={currMove.current}>
-            Move {currMove.current['name']} in {mapArea('current-area')} from slot {String(currMove.current['current-grid-position'])} to slot {area_keys[currMove.current['next-grid-position']]} in {mapArea('next-area')}
+            Move {currMove.current['name']} in {mapArea('current-area')} from slot {String(currMove.current['current-grid-position'])} to slot {String(currMove.current['next-grid-position'])} in {mapArea('next-area')}
           </h2>
           <button onClick={makeMove}>Make Move</button>
           <button>Skip Move</button>
