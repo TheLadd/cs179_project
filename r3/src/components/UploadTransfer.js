@@ -116,6 +116,9 @@ function UploadTransfer({ cachedState, setCachedState }) {
     localStorage.removeItem("lastActivityTime");
     localStorage.removeItem("offloadList");
     localStorage.removeItem("loadList");
+    localStorage.removeItem("totalSteps"); 
+    localStorage.removeItem("currStep"); 
+    localStorage.removeItem("moves"); 
 
     localStorage.setItem(
       "offloadList",
