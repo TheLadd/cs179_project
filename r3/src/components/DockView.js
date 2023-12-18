@@ -24,14 +24,24 @@ export default function DockView ({ cachedState, setCachedState }) {
   const goalCargoState = useRef([]); 
 
   const currMove = useRef({
-    cost: -1,
-    "current-area": -1,
-    name: "",
-    "current-grid-position": [],
-    "next-area": -1,
-    "next-grid-position": [],
-  });
+    'cost': -1, 
+    'current-area': -1, 
+    'name': '', 
+    'current-grid-position': [], 
+    'next-area': -1, 
+    'next-grid-position': []
+  }); 
   const moveList = useRef([]);
+  const [customMessage, setCustomMessage] = useState("");
+
+  const logCustomMessage = () => {
+    const userInput = window.prompt("Enter your custom message:");
+    if (userInput !== null) {
+      handleLogMessage(userInput);
+      // You can log the message or perform other actions here
+      console.log("Custom message logged:", userInput);
+    }
+  }; 
 
   // ------------------------------ flask backend functions -------------------------------------
   // initializes cargo state
@@ -202,7 +212,8 @@ export default function DockView ({ cachedState, setCachedState }) {
           </h2>
           <button onClick={() => handleRunMove(currMove.current)}>Make Move</button>
           <button onClick={() => skipMove(currMove.current)}>Skip Move</button>
-          <button>Log something</button>
+          <button onClick={logCustomMessage}>Log something</button>
+          {customMessage && <p>Custom Message: {customMessage}</p>}
         </div>
       </div>
     </div>
