@@ -25,7 +25,7 @@ if not isBalance:
         load.append(Container(info=(name, weight)))
 
 
-    print('Input the containers you want to offload (case sensitive); enter name; enter exit to quit:')
+    print('Input the containers you want to offload (case sensitive); enter name, then enter weight; enter exit to quit:')
     while True:
         name = input()
         if name == 'exit':
@@ -38,11 +38,9 @@ print(f'Performing operation {op} on test case {testCase}...')
 manifest = readManifest(file)
 state = CargoState(manifest, offload, load)
 
-#print('Original Manifest:')
-#printManifest(manifest)
-#print('\n')
-#print(manifest)
-#print('\n')
+print('Original Manifest:')
+printManifest(manifest)
+print('\n\n')
 
 if isBalance:
     if not state.isBalanceable():
@@ -55,5 +53,22 @@ solution, moves = astar(file, isBalance, offload=offload, load=load)
 for move in moves:
     print(move)
 print('\n')
-print("solution: ")
 print(solution)
+
+
+
+
+
+# Testing CargoState.toDict()
+# solution.val.buf[0][0] = Container(info=('owen test!', 99999))
+# solution.val.buf[0][4] = Container(info=('owen test 2?', 777))
+
+# dictRepr = solution.val.toDict()
+# print('{')
+# for key,val in dictRepr.items():
+#     print(f'\t\'{key}\':\n\t\t[')
+#     for item in val:
+#         print(f'\t\t\t\t{item},')
+#     print(f'\t\t\t],\n')
+# print('}')
+
