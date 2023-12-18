@@ -129,7 +129,7 @@ function Home({ cachedState, setCachedState }) {
       <h1>R³ Solutions</h1>
       {cachedState.inProgress ? (
         <Alert>
-          This is currently an operation in progress. would you like to
+          There is currently an operation in progress. would you like to
           continue?
           <Button color="success" onClick={handleContinue}>
             Yes
