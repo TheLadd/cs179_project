@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from CargoState import CargoState, Move, Container
+from CargoState import CargoState, Move, Container, Position
 import logging
 import search
 from typing import List, Dict
@@ -91,10 +91,10 @@ def run_astar():
     print(f'moves before formatting: {moves}')
     for move in moves:
         temp = {
-            'current grid position': [move.src.row+1, move.src.col+1],
-            'current area': move.src.area,
-            'next grid position': [move.dst.row+1, move.dst.col+1],
-            'next area': move.dst.area,
+            'current-grid-position': [move.src.row+1, move.src.col+1],
+            'current-area': move.src.area,
+            'next-grid-position': [move.dst.row+1, move.dst.col+1],
+            'next-area': move.dst.area,
             'cost': move.cost()
         }
         movesReformat.append(temp)
@@ -111,7 +111,18 @@ def run_move():
     data = request.get_json()
 
     move_data = data.get('move')
-    move = Move(**move_data)
+
+    # Init src
+    src_pos = move_data['current-grid-position']
+    src_con = Container(info=(move_data['name'], move_data['weight'])) 
+    src = Position(move_data['current-area'], src_pos[0], src_pos[1], container=src_con)    
+
+    # Init dst
+    dst_pos = move_data['next-grid-position']
+    dst = Position(move_data['next-area'], dst_pos[0], dst_pos[1])
+
+    move = Move(src, dst)
+    # move = Move(**move_data)
 
     global current_cargo_state
     current_cargo_state = current_cargo_state.move(move)
