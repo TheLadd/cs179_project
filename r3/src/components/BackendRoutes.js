@@ -50,11 +50,8 @@ const handleRunAstar = async (manifest, isBalance, offload, load) => {
 
     if (response.ok) {
       const result = await response.json();
-      console.log("BACKENDROUTES.JS: ", result.moves);  // Log the response from the backend
-      let movelist = result.moves
-      console.log(typeof(movelist)); 
-      console.log(movelist[0]); 
-
+      console.log("BACKENDROUTES.JS: ", result.solution);  // Log the response from the backend
+      return result; 
       // Perform any additional actions based on the response
     } else {
       console.error('Failed to run A* algorithm. Status:', response.status);

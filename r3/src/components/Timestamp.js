@@ -6,5 +6,4 @@ export default function handleTimestamp() {
     timestampst += ": " + date.getHours().toString() + ":" + date.getMinutes().toString()
     console.log(timestampst)
     return timestampst; 
-
 }

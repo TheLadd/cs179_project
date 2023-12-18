@@ -11,7 +11,7 @@ import UploadTransfer from "./components/UploadTransfer"
 function App() {
 
   const [cachedState, setCachedState] = useState({
-    inProgress: localStorage.getItem("inProgress") === "true",
+    inProgress: localStorage.getItem("inProgress") === "true" ? true : false,
     opType: localStorage.getItem("opType") ? localStorage.getItem("opType") : "", 
     lastActivityTime: localStorage.getItem("lastActivityTime") ? localStorage.getItem("lastActivityTime"): "", 
     currStep: localStorage.getItem("currStep") ? localStorage.getItem("currStep") : 0, 
@@ -19,7 +19,8 @@ function App() {
     user: "", 
     manifest: localStorage.getItem("manifest") ? localStorage.getItem("manifest") : null, 
     loadList: localStorage.getItem("loadList") ? (localStorage.getItem("loadList")) : [],
-    offloadList: localStorage.getItem("offloadList") ? (localStorage.getItem("offloadList")) : []
+    offloadList: localStorage.getItem("offloadList") ? (localStorage.getItem("offloadList")) : [],
+    moveList: localStorage.getItem("moveList") ? localStorage.getItem("moveList") : [], 
   });
 
 useEffect(() => {
@@ -33,7 +34,8 @@ useEffect(() => {
       user: '',
       manifest: null,
       loadList: [],
-      offloadList: []
+      offloadList: [], 
+      moves: []
     }
 
     setCachedState(defaultState)

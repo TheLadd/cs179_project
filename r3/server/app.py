@@ -91,6 +91,7 @@ def run_astar():
     print(f'moves before formatting: {moves}')
     for move in moves:
         temp = {
+            'name': move.src.container.name, 
             'current-grid-position': [move.src.row+1, move.src.col+1],
             'current-area': move.src.area,
             'next-grid-position': [move.dst.row+1, move.dst.col+1],
