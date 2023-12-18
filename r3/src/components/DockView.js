@@ -86,7 +86,7 @@ export default function DockView({ cachedState, setCachedState }) {
           Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}
         </h1>
         <h2 className="instruction"></h2>
-        <button onClick={logCustomMessage}>Log something</button>
+        <button onClick={logCustomMessage}>Write a comment in the log</button>
         {customMessage && <p>Custom Message: {customMessage}</p>}
       </div>
     </div>
