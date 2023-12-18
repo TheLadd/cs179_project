@@ -19,8 +19,8 @@ import Grid from "./Grid";
 export default function DockView ({ cachedState, setCachedState }) {
   const logMessage = useRef(""); 
   const cargoState = useRef(false); 
-  const currentCargoState = useRef(null); 
-  const currentBufferState = useRef(null); 
+  const currentCargoState = useRef(cachedState.manifest); 
+  const currentBufferState = useRef([]); 
   const goalCargoState = useRef([]); 
 
   const currMove = useRef({
@@ -33,16 +33,6 @@ export default function DockView ({ cachedState, setCachedState }) {
     "weight": -1, 
   });
   const moveList = useRef([]);
-  const [customMessage, setCustomMessage] = useState("");
-
-  const logCustomMessage = () => {
-    const userInput = window.prompt("Enter your custom message:");
-    if (userInput !== null) {
-      handleLogMessage(userInput);
-      // You can log the message or perform other actions here
-      console.log("Custom message logged:", userInput);
-    }
-  };
 
   // ------------------------------ flask backend functions -------------------------------------
   // initializes cargo state
@@ -115,12 +105,44 @@ export default function DockView ({ cachedState, setCachedState }) {
       // console.log('A* Algorithm moves:', astarResult.moves)
   }; 
 
-  const runMove = async (move) => {
-    handleRunMove(move);
-    //handleGetCurrentCargoState;
-  };
+  const runMove = async move => {
+    await handleRunMove(move).catch(err => console.log(err))
+    .then(async (response) => {
+      console.log("DOCKVIEW.JS: handleRunMove completed")
+      console.log(response)
+      const dict = await handleGetCurrentCargoState().catch(err => console.log(err))
+      .then((response) => {
+       //  console.log(response);
+        currentBufferState.current = response.buffer
+        currentCargoState.current = response.ship
+        console.log("DOCKVIEW.JS: getCurrentCargoState completed")
+      }); 
+    });
 
+    if (moveList.current.length !== 0) {
+      let mvs = moveList.current; 
 
+      localStorage.setItem('moves', mvs)
+      localStorage.setItem('totalSteps', mvs.length)
+      localStorage.setItem('currStep', 1)
+
+      // save in ref - we set here so we don't have to refresh as much 
+      const nextMove = mvs.shift(); 
+      currMove.current = nextMove; 
+      moveList.current = mvs; 
+
+      console.log("RUNMOVE CURRMOVE: ", currMove.current); 
+
+      //sanity check 
+      setCachedState({
+        ...cachedState, 
+        inProgress: true, 
+        moves: mvs, // saves as an object?  
+        totalSteps: mvs.length+1
+      }); 
+  }; 
+
+}; 
 
   // assumption: current cargo state is being updated with every call to make move. 
   const skipMove = async (move) => {
@@ -151,8 +173,7 @@ export default function DockView ({ cachedState, setCachedState }) {
 
     }
 
-    runAstar(); 
-
+    handleRunAstar(); 
   }; 
 
 
@@ -202,31 +223,22 @@ export default function DockView ({ cachedState, setCachedState }) {
   return (
     <div className="dock-view-container">
       <div>
-        <Grid type={SHIP} items={cachedState.manifest} id="ship-dock" />
-        <Grid type={BUFFER} items={[]} id="buffer-dock" />
-        {cachedState.inProgress ? (
-          <>
-            <div className="instruction-box">
-              <h1 value={cachedState}>
-                Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}:
-              </h1>
-              <h2 className="instruction" value={currMove.current}>Move {currMove.current["name"]} in {mapArea("current-area")}{" "} from slot {String(currMove.current["current-grid-position"])} to slot {String(currMove.current["next-grid-position"])} in{" "} {mapArea("next-area")}
-              </h2>
-              <button onClick={() => runMove(currMove.current)}>
-                Make Move
-              </button>
-              <button onClick={() => skipMove(currMove.current)}>
-                Skip Move
-              </button>
-              <button onClick={logCustomMessage}>
-                Write a comment in the log
-              </button>
-              {customMessage && <p>Custom Message: {customMessage}</p>}
-            </div>
-          </>
-        ) : (
-          <p>Moves are currently being calculated</p>
-        )}
+        <Grid type={SHIP} items={currentCargoState.current} id="ship-dock" />
+        <Grid type={BUFFER} items={[currentBufferState.current]} id="buffer-dock" />
+        <div className="instruction-box">
+          <h1 value={cachedState}>
+            Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}:
+          </h1>
+          <h2 className="instruction" value={currMove.current}>
+            Move {currMove.current["name"]} in {mapArea("current-area")} from
+            slot {String(currMove.current["current-grid-position"])} to slot{" "}
+            {String(currMove.current["next-grid-position"])} in{" "}
+            {mapArea("next-area")}
+          </h2>
+          <button onClick={() => runMove(currMove.current)}>Make Move</button>
+          <button onClick={() => skipMove(currMove.current)}>Skip Move</button>
+          <button>Log something</button>
+        </div>
       </div>
     </div>
   );
