@@ -75,6 +75,7 @@ const handleRunMove = async (moveData) => {
       const result = await response.json();
       console.log(result.message);  // Log the response from the backend
       // Perform any additional actions based on the response
+      handleLogMessage('made a move')
     } else {
       console.error('Failed to run move. Status:', response.status);
     }

@@ -47,6 +47,16 @@ export default function DockView ({ cachedState, setCachedState }) {
       console.error('Error creating cargo state:', error)
     }
   }
+  createCargoState()
+  .then(() => {
+    // After cargo state is initialized, call runAstar
+    runAstar()
+  })
+  .catch(error => {
+    console.error('Error in initialization:', error)
+  })
+
+
 
   const runMove = async (moveData) => {
     try {

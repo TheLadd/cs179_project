@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Dict, Tuple
 from copy import deepcopy
 
 class Container:
@@ -495,37 +495,24 @@ class CargoState:
                         man += line
             return man
       
-      def toManifestFixed(self, path: str='manifest.txt') -> str:
+      def toShip(self) -> List[List[str]]:
             """
-            Writes the current manifest to a string and returns it
-            """
-            file = open(path, 'w')
-            man = ''
-            #print("PRINT SELF.SHIP")
-            #print(len(self.ship), " x ", len(self.ship[0]))
-            #print(self.ship)
-            #print("cells")
-            #for cell in self.ship[0]:
-             #     print(cell)
-            for idx, cell in enumerate(self.ship[0]):
-                  row = idx // 12
-                  col = idx % 12
+            Returns the ship as a single dimensional array where 
+            each element is a triplet of [[x,y], weight, name]
+            NOTE: [x,y] are *not* zero-indexed
+            NOTE: each element (including [x,y]) is a string
+            """ 
+            ship = []
+            for row in range(8):
+                  for col in range(12):
+                        cell: Container = self.ship[row][col]
+                        item = [f'{row+1}, {col+1}', str(cell.weight), cell.name]
+                        ship.append(item)
+            return ship
 
-                  fRow = ('0' if (row+1) // 10 == 0 else '') + str(row+1)     # 0-index -> 1-index
-                  fCol = ('0' if (col+1) // 10 == 0 else '') + str(col+1)     # ... and prepend 0 if needed
-
-                  #print("ROW: ", row, " COL: ", col)
-                  #print("ABOUT TO PRINT CELL: ")
-                  #print(cell)
-
-                  fWeight = str(cell[1])
-                  #print("fWeight: ", fWeight)
-                  fWeight = ( '0' * (6-len(fWeight)) ) + fWeight  # Prepend 0's if needed  
-                  line = f'[{fRow},{fCol}], {{{fWeight}}}, {cell[2]}' + ('' if (row == 7 and col == 11) else '\n')
-                  #print("EACH INVIDIDUAL LINE: ")
-                  #print(line)
-                  man += line
-            #print("RETURNED MANIFEST: ")
-            #print(man)
-            return man
+      def toDict(self) -> Dict[str, List[List[str]]]:
+            dic = {}
+            dic['ship'] = self.toShip()
+            dic['buffer'] = self.toBuffer()
+            return dic
             
