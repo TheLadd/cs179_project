@@ -13,7 +13,7 @@
 }
 
 .secondary-submit-btn {
-  background-color: pink;
+  background-color: royalblue;
   width: 30%;
   font-family: "Raleway";
   font-weight: bolder;
@@ -57,6 +57,44 @@ h1 {
 #upload-manifest {
   font-family: inherit;
   display: inline-block;
+}
+#instruction { 
+  font-family: 'Raleway'; 
+  font-weight: bolder; 
+}
+
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #fed;
+  border-color: #fed transparent #fed transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.instruction-box { 
+  font-family: 'Raleway', Arial, Helvetica;
+  text-align: center;
+}
+
+.btn-grp { 
+  margin: 1em; 
 }
 
 .input-txt {
