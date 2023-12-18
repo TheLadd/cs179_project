@@ -28,7 +28,17 @@ export default function DockView ({ cachedState, setCachedState }) {
     'next-area': -1, 
     'next-grid-position': []
   }); 
-  const moveList = useRef([]); 
+  const moveList = useRef([]);
+  const [customMessage, setCustomMessage] = useState("");
+
+  const logCustomMessage = () => {
+    const userInput = window.prompt("Enter your custom message:");
+    if (userInput !== null) {
+      handleLogMessage(userInput);
+      // You can log the message or perform other actions here
+      console.log("Custom message logged:", userInput);
+    }
+  }; 
 
   // ------------------------------ flask backend functions -------------------------------------
   // initializes cargo state 
@@ -149,22 +159,26 @@ export default function DockView ({ cachedState, setCachedState }) {
   }, [ cachedState, currMove.current, moveList.current, goalCargoState]);
 
   return (
-    <div className='dock-view-container'>
-        <div>
-        <Grid type={SHIP} items={cachedState.manifest} id='ship-dock' />
-        <Grid type={BUFFER} items={[]} id='buffer-dock' />
-        <div className='instruction-box'>
+    <div className="dock-view-container">
+      <div>
+        <Grid type={SHIP} items={cachedState.manifest} id="ship-dock" />
+        <Grid type={BUFFER} items={[]} id="buffer-dock" />
+        <div className="instruction-box">
           <h1 value={cachedState}>
-            Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}: 
+            Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}:
           </h1>
-          <h2 className='instruction' value={currMove.current}>
-            Move {currMove.current['name']} in {mapArea('current-area')} from slot {String(currMove.current['current-grid-position'])} to slot {String(currMove.current['next-grid-position'])} in {mapArea('next-area')}
+          <h2 className="instruction" value={currMove.current}>
+            Move {currMove.current["name"]} in {mapArea("current-area")} from
+            slot {String(currMove.current["current-grid-position"])} to slot{" "}
+            {String(currMove.current["next-grid-position"])} in{" "}
+            {mapArea("next-area")}
           </h2>
           <button onClick={() => runMove(currMove.current)}>Make Move</button>
           <button>Skip Move</button>
-          <button>Log something</button>
+          <button onClick={logCustomMessage}>Log something</button>
+          {customMessage && <p>Custom Message: {customMessage}</p>}
         </div>
-        </div>
+      </div>
     </div>
   );
 }
