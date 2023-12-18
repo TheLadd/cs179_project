@@ -14,11 +14,15 @@ import Grid from "./Grid";
 
 //   };
 // }
-// //
-export default function DockView({ cachedState, setCachedState }) {
-  const logMessage = useRef("");
-  const cargoState = useRef(false);
-  const goalCargoState = useRef([]);
+
+// // 
+export default function DockView ({ cachedState, setCachedState }) {
+  const logMessage = useRef(""); 
+  const cargoState = useRef(false); 
+  const currentCargoState = useRef(null); 
+  const currentBufferState = useRef(null); 
+  const goalCargoState = useRef([]); 
+
   const currMove = useRef({
     cost: -1,
     "current-area": -1,
@@ -51,62 +55,93 @@ export default function DockView({ cachedState, setCachedState }) {
 
   // runs astar - only to be called at the beginning of ops or when the move is skipped
   const runAstar = async () => {
-    const isBalance =
-      cachedState.opType === "Offloading/Onloading" ? false : true;
-    const aStarRes = await handleRunAstar(
-      localStorage.getItem("manifest"),
-      isBalance,
-      cachedState.offloadList,
-      cachedState.loadList
-    )
-      .catch((err) => console.log(err.message))
-      .then((result) => {
-        console.log("DOCKVIEW.JS: runastar completed");
-        moveList.current = result.moves;
-      });
-    console.log("DOCKVIEW.JS: result ", moveList.current);
-    if (moveList.current.length !== 0) {
-      let mvs = moveList.current;
+    const isBalance = cachedState.opType === 'Offloading/Onloading' ? false : true; 
+      const aStarRes = await handleRunAstar(
+        localStorage.getItem('manifest'),
+        isBalance,
+        cachedState.offloadList,
+        cachedState.loadList
+      ).catch(err => console.log(err.message))
+      .then(result => {
+        console.log("DOCKVIEW.JS: runastar completed")
+        moveList.current = result.moves; 
+      }); 
+      console.log("DOCKVIEW.JS: result ", moveList.current); 
+      if (moveList.current.length !== 0) {
+        let mvs = moveList.current; 
 
-      // local storage
-      localStorage.setItem("moves", mvs);
-      localStorage.setItem("totalSteps", mvs.length);
-      localStorage.setItem("currStep", 1);
+        // local storage 
+        localStorage.setItem('moves', mvs)
+        localStorage.setItem('totalSteps', mvs.length)
+        localStorage.setItem('currStep', 1)
 
-      // save in ref - we set here so we don't have to refresh as much
-      const nextMove = mvs.shift();
-      currMove.current = nextMove;
-      moveList.current = mvs;
-      // const currarea = mapArea(nextMove['current-area']);
-      // const nextarea = mapArea(nextMove['next-area']);
-      // currMove.current = {
-      //   ...currMove.current,
-      //   'current-area': currarea,
-      //   'next-area': nextarea
-      // }
-      console.log("CURRMOVE: ", currMove.current);
+        // save in ref - we set here so we don't have to refresh as much 
+        const nextMove = mvs.shift(); 
+        currMove.current = nextMove; 
+        moveList.current = mvs; 
+        // const currarea = mapArea(nextMove['current-area']); 
+        // const nextarea = mapArea(nextMove['next-area']); 
+        // currMove.current = {
+        //   ...currMove.current, 
+        //   'current-area': currarea, 
+        //   'next-area': nextarea
+        // }
+        console.log("CURRMOVE: ", currMove.current); 
 
-      //sanity check
-      setCachedState({
-        ...cachedState,
-        inProgress: true,
-        moves: mvs, // saves as an object?
-        totalSteps: mvs.length + 1,
-      });
+        //sanity check 
+        setCachedState({
+          ...cachedState, 
+          inProgress: true, 
+          moves: mvs, // saves as an object?  
+          totalSteps: mvs.length+1
+        }); 
+       
+
+      }
+      // Perform any actions based on the response from handleRunAstar
+      // console.log('A* Algorithm solution:', astarResult.solution)
+      // console.log('A* Algorithm moves:', astarResult.moves)
+  }; 
+
+  const runMove = async move => {
+    await handleRunMove(move).catch(err => console.log(err))
+    .then((response) => {
+      console.log("DOCKVIEW.JS: handleRunMove completed")
+      console.log(response)
+    }); 
+  }; 
+
+
+
+
+
+  // delete it 
+
+  // assumption: current cargo state is being updated with every call to make move. 
+  const skipMove = async (move) => {
+    if (cachedState.opType === "Load-Balancing") { 
+      handleRunAstar(); 
+    } else { 
+      if (currMove.current['current-area'] < currMove.current['next-area']) { // offload operation - we check offload list
+        let name = currMove.current['name']
+        let newOffload = cachedState.offloadList
+        let idx = cachedState.offloadList.indexOf(name); 
+        newOffload.splice(idx, 1)
+        setCachedState({
+          ...cachedState, 
+          offloadList: newOffload
+        }); 
+        handleRunAstar(); 
+      } else { // we check onload list - onload includes weight 
+        const name = currMove.current['name']
+        let newOnload = cachedState.loadList; 
+        // const weight = currMove.current['weight']
+      }
+
+
     }
-    // Perform any actions based on the response from handleRunAstar
-    // console.log('A* Algorithm solution:', astarResult.solution)
-    // console.log('A* Algorithm moves:', astarResult.moves)
-  };
+  }; 
 
-  const runMove = async (move) => {
-    await handleRunMove(move)
-      .catch((err) => console.log(err))
-      .then((response) => {
-        console.log("DOCKVIEW.JS: handleRunMove completed");
-        console.log(response);
-      });
-  };
   // ------------------------------ end flask backend functions -------------------------------------
   const area_keys = {
     0: "Ship",
@@ -165,10 +200,8 @@ export default function DockView({ cachedState, setCachedState }) {
             {String(currMove.current["next-grid-position"])} in{" "}
             {mapArea("next-area")}
           </h2>
-          <button onClick={() => handleRunMove(currMove.current)}>
-            Make Move
-          </button>
-          <button>Skip Move</button>
+          <button onClick={() => handleRunMove(currMove.current)}>Make Move</button>
+          <button onClick={() => skipMove(currMove.current)}>Skip Move</button>
           <button>Log something</button>
         </div>
       </div>

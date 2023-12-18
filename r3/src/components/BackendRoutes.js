@@ -144,6 +144,7 @@ const handleGetCurrentCargoState = async () => {
       const result = await response.json();
       console.log("Current Cargo State:", result); // Log the response from the backend
       // Perform any additional actions based on the response
+      return result; 
     } else {
       console.error(
         "Failed to get current CargoState. Status:",
