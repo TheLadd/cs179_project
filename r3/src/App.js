@@ -24,7 +24,7 @@ function App() {
   });
 
 useEffect(() => {
-  if (!cachedState.inProgress) {
+  if (localStorage.getItem("inProgress") === "false") {
     const defaultState = {
       inProgress: false,
       opType: '',

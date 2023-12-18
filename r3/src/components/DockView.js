@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { create } from '@mui/material/styles/createTransitions';
+import { useRef, useEffect, useState } from 'react'
 import {
   handleCreateCargoState,
   handleRunAstar,
@@ -11,8 +12,9 @@ import Grid from './Grid'
 
 // 
 export default function DockView ({ cachedState, setCachedState }) {
-  const [cargoState, setCargoState] = useState(null); 
-  const [currMove, setCurrMove] = useState({
+  const cargoState = useRef(false); 
+  const goalCargoState = useRef([]); 
+  const currMove = useRef({
     'cost': -1, 
     'current-area': '', 
     'name': '', 
@@ -20,63 +22,71 @@ export default function DockView ({ cachedState, setCachedState }) {
     'next-area': '', 
     'next-grid-position': []
   }); 
-  const [goalCargo, setGoalCargo] = useState([]); 
+  const moveList = useRef([]); 
 
-
-
+  // ------------------------------ flask backend functions -------------------------------------
 
   const createCargoState = async () => {
-    try {
-      await handleCreateCargoState(
+    console.log("DOCKVIEW.JS createcargostate");
+      let state = await handleCreateCargoState(
         localStorage.getItem('manifest'),
         cachedState.offloadList,
         cachedState.loadList
-      ).then(() => runAstar()); 
+      ).catch(err => console.log(err))
+      .then((response) => {
+        cargoState.current = true
+        console.log("DOCKVIEW current cargo state initialized: ", goalCargoState.current)}
+      ); 
       console.log('successfully created Cargo state'); 
-    } catch (error) {
-      console.error('Error creating cargo state:', error); 
-    }
-    
-  } 
+  };  
+
 
   const runAstar = async () => {
-    const isBalance =
-      cachedState.opType === 'Offloading/Onloading' ? false : true
-
-    try {
-      const astarResult = await handleRunAstar(
+    const isBalance = cachedState.opType === 'Offloading/Onloading' ? false : true; 
+      const aStarRes = await handleRunAstar(
         localStorage.getItem('manifest'),
         isBalance,
         cachedState.offloadList,
         cachedState.loadList
-
-        // provide other required parameters here
-      )
-      setCachedState({...cachedState, 
-          moveList: astarResult.moves
+      ).catch(err => console.log(err.message))
+      .then(result => {
+        console.log("DOCKVIEW.JS: runastar completed")
+        moveList.current = result.moves; 
       }); 
-      return astarResult; 
+      console.log("DOCKVIEW.JS: result ", moveList.current); 
+      if (moveList.current.length !== 0) {
+        let mvs = moveList.current; 
+        const nextMove = mvs.shift(); 
+        currMove.current = nextMove; 
+        moveList.current = mvs; 
+        const currarea = mapArea(nextMove['current-area']); 
+        const nextarea = mapArea(nextMove['next-area']); 
+        currMove.current = {
+          ...currMove.current, 
+          'current-area': currarea, 
+          'next-area': nextarea
+        }
+        console.log("CURRMOVE: ", currMove.current); 
+        setCachedState({
+          ...cachedState, 
+          inProgress: true, 
+          moves: mvs
+        }); 
+      }
       // Perform any actions based on the response from handleRunAstar
       // console.log('A* Algorithm solution:', astarResult.solution)
       // console.log('A* Algorithm moves:', astarResult.moves)
-      
-    } catch (error) {
-      console.error('Error creating cargo state:', error)
-    }
-  }
+  }; 
 
+  const runMove = async moveData => {
+    await handleRunMove(moveData).catch(err => console.log(err))
+    .then((response) => {
+      console.log("DOCKVIEW.JS: handleRunMove completed")
+      console.log(response.message)
+    }); 
+  }; 
+  // ------------------------------ end flask backend functions -------------------------------------
 
-  const runMove = async (moveData) => {
-    try {
-      const moveResult = await handleRunMove(moveData)
-      return moveResult; 
-      // Perform any actions based on the response from handleRunMove
-      console.log('Move execution result:', moveResult.message)
-      // You may want to update your component state or perform other actions here
-    } catch (error) {
-      console.error('Error running move:', error)
-    }
-  }
 
   const mapArea = num => {
     if (num === 0) {
@@ -88,61 +98,57 @@ export default function DockView ({ cachedState, setCachedState }) {
     } else {
       return ""
     }
-  }
+  }; 
 
   const BUFFER = 'buffer'
   const SHIP = 'ship'
 
   useEffect(() => {
-    if (cargoState === null) {
-      setCachedState({
-        ...cachedState, 
-        inProgress: true
-      }); 
-      localStorage.setItem("inProgress", true); 
-      setCargoState(createCargoState()); 
-    } 
-    console.log("move list: ", cachedState.moveList); 
-    if (cachedState.moveList) {
-      let currmoves = cachedState.moveList; 
-      const nextMove = currmoves.shift(); 
-      const currarea = mapArea(nextMove['current-area']); 
-      const nextarea = mapArea(nextMove['next-area']); 
-      setCurrMove({
-        ...nextMove, 
-        'current-area': currarea, 
-        'next-area': nextarea
-      })
-      setCachedState({
-        ...cachedState, 
-        moveList: currmoves
-      }); 
+    console.log("dockView..."); 
+    localStorage.setItem('inProgress', 'true'); 
+    if (cargoState.current === false) { // cargo state has not been initialized yet 
+      createCargoState(); 
+      runAstar(); 
     }
-  }, [cachedState.moveList]);
+    console.log("CURRMOVE: ", currMove.current); 
+    // console.log(cargoState.current); 
+    // if (cachedState.moves.length !== 0) {
+    //   let currmoves = cachedState.moves; 
+    //   const nextMove = currmoves.shift(); 
+    //   const currarea = mapArea(nextMove['current-area']); 
+    //   const nextarea = mapArea(nextMove['next-area']); 
+    //   currMove.current = {
+    //     ...nextMove, 
+    //     'current-area': currarea, 
+    //     'next-area': nextarea
+    //   }
+    //   setCachedState({
+    //     ...cachedState, 
+    //     inProgress: true, 
+    //     moves: currmoves
+    //   }); 
+    // }
+  }, [ cachedState, currMove.current, moveList.current, goalCargoState]);
 
   return (
     <div className='dock-view-container'>
-      {cachedState.moveList ? (
-        null
-      ) : (
+      {cachedState.moves ? (
         <div>
         <Grid type={SHIP} items={cachedState.manifest} id='ship-dock' />
         <Grid type={BUFFER} items={[]} id='buffer-dock' />
         <div className='instruction-box'>
-          <h1 value={currMove}>
+          <h1 value={cachedState}>
             Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}: 
           </h1>
-          <h2 className='instruction' value={currMove}>
-            Move {currMove['name']} in {currMove['current-area']} from slot {currMove['current-grid-position'].toString()} to slot {currMove['next-grid-position'].toString()} in {currMove['next-area']}
+          <h2 className='instruction' value={currMove.current}>
+            Move {currMove.current['name']} in {currMove.current['current-area']} from slot {String(currMove.current['current-grid-position'])} to slot {String(currMove.current['next-position'])} in {currMove.current['next-area']}
           </h2>
           <button>Make Move</button>
           <button>Skip Move</button>
           <button>Log something</button>
         </div>
         </div> 
-
-      )}
-
+      ) : ( null )}
     </div>
-  )
-}
+  );
+} 

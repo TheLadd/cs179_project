@@ -15,8 +15,6 @@ export default function Grid(props) {
         }
     }
 
-    items.reverse(); 
-    items.reverse(); 
 
     // console.log(items.length); 
 
