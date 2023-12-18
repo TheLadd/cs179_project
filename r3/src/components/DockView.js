@@ -24,24 +24,15 @@ export default function DockView ({ cachedState, setCachedState }) {
   const goalCargoState = useRef([]); 
 
   const currMove = useRef({
-    'cost': -1, 
-    'current-area': -1, 
-    'name': '', 
-    'current-grid-position': [], 
-    'next-area': -1, 
-    'next-grid-position': []
-  }); 
+    "cost": -1,
+    "current-area": -1,
+    "name": "",
+    "current-grid-position": [],
+    "next-area": -1,
+    "next-grid-position": [],
+    "weight": -1, 
+  });
   const moveList = useRef([]);
-  const [customMessage, setCustomMessage] = useState("");
-
-  const logCustomMessage = () => {
-    const userInput = window.prompt("Enter your custom message:");
-    if (userInput !== null) {
-      handleLogMessage(userInput);
-      // You can log the message or perform other actions here
-      console.log("Custom message logged:", userInput);
-    }
-  }; 
 
   // ------------------------------ flask backend functions -------------------------------------
   // initializes cargo state
@@ -123,17 +114,11 @@ export default function DockView ({ cachedState, setCachedState }) {
 
 
 
-
-
-  // delete it 
-
   // assumption: current cargo state is being updated with every call to make move. 
   const skipMove = async (move) => {
-    if (cachedState.opType === "Load-Balancing") { 
-      handleRunAstar(); 
-    } else { 
-      if (currMove.current['current-area'] < currMove.current['next-area']) { // offload operation - we check offload list
-        let name = currMove.current['name']
+    if (cachedState.opType === "Offloading/Onloading") {
+      if (move['current-area'] < move['next-area']) { // offload operation - we check offload list
+        let name = move['name']
         let newOffload = cachedState.offloadList
         let idx = cachedState.offloadList.indexOf(name); 
         newOffload.splice(idx, 1)
@@ -141,16 +126,27 @@ export default function DockView ({ cachedState, setCachedState }) {
           ...cachedState, 
           offloadList: newOffload
         }); 
-        handleRunAstar(); 
       } else { // we check onload list - onload includes weight 
-        const name = currMove.current['name']
+        const name = move['name']
+        const weight = move['weight'].toString()
         let newOnload = cachedState.loadList; 
-        // const weight = currMove.current['weight']
+        for (let i = 0; i < newOnload.length; i=i+2) { 
+          if (newOnload[i] === name && newOnload[i+1] === weight) { 
+            newOnload.splice(i, 2)
+          }
+        }
+        setCachedState({
+          ...cachedState, 
+          loadList: newOnload
+        }); 
       }
 
-
     }
+
+    handleRunAstar(); 
+
   }; 
+
 
   // ------------------------------ end flask backend functions -------------------------------------
   const area_keys = {
@@ -212,8 +208,7 @@ export default function DockView ({ cachedState, setCachedState }) {
           </h2>
           <button onClick={() => handleRunMove(currMove.current)}>Make Move</button>
           <button onClick={() => skipMove(currMove.current)}>Skip Move</button>
-          <button onClick={logCustomMessage}>Log something</button>
-          {customMessage && <p>Custom Message: {customMessage}</p>}
+          <button>Log something</button>
         </div>
       </div>
     </div>

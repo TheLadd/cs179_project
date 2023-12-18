@@ -96,7 +96,8 @@ def run_astar():
             'current-area': move.src.area,
             'next-grid-position': [move.dst.row+1, move.dst.col+1],
             'next-area': move.dst.area,
-            'cost': move.cost()
+            'cost': move.cost(), 
+            'weight': move.src.container.weight, 
         }
         movesReformat.append(temp)
     moves = movesReformat
