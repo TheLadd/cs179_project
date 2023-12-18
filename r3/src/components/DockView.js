@@ -24,12 +24,13 @@ export default function DockView ({ cachedState, setCachedState }) {
   const goalCargoState = useRef([]); 
 
   const currMove = useRef({
-    cost: -1,
+    "cost": -1,
     "current-area": -1,
-    name: "",
+    "name": "",
     "current-grid-position": [],
     "next-area": -1,
     "next-grid-position": [],
+    "weight": -1, 
   });
   const moveList = useRef([]);
 
@@ -112,10 +113,6 @@ export default function DockView ({ cachedState, setCachedState }) {
   }; 
 
 
-
-
-
-  // delete it 
 
   // assumption: current cargo state is being updated with every call to make move. 
   const skipMove = async (move) => {
