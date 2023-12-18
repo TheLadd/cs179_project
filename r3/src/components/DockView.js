@@ -1,3 +1,4 @@
+import { create } from '@mui/material/styles/createTransitions';
 import { useEffect, useState } from 'react'
 import {
   handleCreateCargoState,
@@ -10,6 +11,7 @@ import {
 import Grid from './Grid'
 
 export default function DockView ({ cachedState, setCachedState }) {
+  const [cargoState, setCargoState] = useState(false); // tracks whether cargo state has been initialized or not 
 
   // -------------- flask backend methods ----------------
   const createCargoState = async () => {
@@ -18,17 +20,20 @@ export default function DockView ({ cachedState, setCachedState }) {
         localStorage.getItem('manifest'),
         cachedState.offloadList,
         cachedState.loadList
-      )
-      console.log('successfully created Cargo state:')
+      ); 
+      console.log('successfully created Cargo state:', cargoState)
     } catch (error) {
       console.error('Error creating cargo state:', error)
     }
   }
 
   const runAstar = async () => {
+    console.log(localStorage.getItem('manifest'))
+    console.log(cachedState.offloadList)
+    console.log(cachedState.loadList)
     const isBalance =
       cachedState.opType === 'Offloading/Onloading' ? false : true
-
+    console.log(isBalance)
     try {
       const astarResult = await handleRunAstar(
         localStorage.getItem('manifest'),
@@ -100,6 +105,13 @@ export default function DockView ({ cachedState, setCachedState }) {
 
     }; 
 
+  useEffect(() => {
+    if (!cargoState) {
+      createCargoState().then(() => {
+        setCargoState(true); 
+      }) 
+    }
+  }); 
 
   return (
         <div className='dock-view-container'>
