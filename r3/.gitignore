@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+/server/log.txt
 
 # production
 /build

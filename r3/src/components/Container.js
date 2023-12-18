@@ -10,7 +10,6 @@ const Container = (props) => {
 
     let classes = ''; 
     
-
     // for setting appropriate classes on individual grid items 
     if (props.name === "NAN") {
         classes = 'nan-grid'; 
@@ -29,8 +28,7 @@ const Container = (props) => {
         setAnchor(null); 
     }; 
 
-    const open = Boolean(anchor); 
-
+   const open = Boolean(anchor); 
 
     // testing useRef and checking to see how we're gonna do the animation
     useEffect(() => {

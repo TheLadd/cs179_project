@@ -9,8 +9,9 @@ import "../css/Form.css";
 // cached state is passed in the event of a crash.
 // nav is used for route switching between different link paths
 
-function Home({ cachedState, setCachedState }) {
-  const nav = useNavigate();
+function Home ({ cachedState, setCachedState }) {
+  const nav = useNavigate()
+  
 
   // checks if there is a file present to see if we're in the middle of an operation, if not, takes you to home page
   const [txtFile, setTxtFile] = useState(

@@ -20,7 +20,7 @@ const handleCreateCargoState = async (manifest, offloadList, loadList) => {
     // Check if the request was successful (status code 200)
     if (response.ok) {
       const result = await response.json();
-      console.log(result.message);  // Log the response from the backend
+      return result; 
       // Perform any additional actions based on the response
     } else {
       console.error('Failed to create CargoState. Status:', response.status);
@@ -49,8 +49,10 @@ const handleRunAstar = async (manifest, isBalance, offload, load) => {
 
     if (response.ok) {
       const result = await response.json();
-      console.log(result);  // Log the response from the backend
-      return (result);
+      console.log(result)
+      console.log("BACKENDROUTES.JS: ", result.solution);  // Log the response from the backend
+      console.log("BACKENDROUTES.JS: ", result.moves); 
+      return result; 
       // Perform any additional actions based on the response
     } else {
       console.error('Failed to run A* algorithm. Status:', response.status);
