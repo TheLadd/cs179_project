@@ -151,7 +151,7 @@ export default function DockView ({ cachedState, setCachedState }) {
 
     }
 
-    handleRunAstar(); 
+    runAstar(); 
 
   }; 
 
@@ -204,21 +204,29 @@ export default function DockView ({ cachedState, setCachedState }) {
       <div>
         <Grid type={SHIP} items={cachedState.manifest} id="ship-dock" />
         <Grid type={BUFFER} items={[]} id="buffer-dock" />
-        <div className="instruction-box">
-          <h1 value={cachedState}>
-            Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}:
-          </h1>
-          <h2 className="instruction" value={currMove.current}>
-            Move {currMove.current["name"]} in {mapArea("current-area")} from
-            slot {String(currMove.current["current-grid-position"])} to slot{" "}
-            {String(currMove.current["next-grid-position"])} in{" "}
-            {mapArea("next-area")}
-          </h2>
-          <button onClick={() => runMove(currMove.current)}>Make Move</button>
-          <button onClick={() => skipMove(currMove.current)}>Skip Move</button>
-          <button onClick={logCustomMessage}>Write a comment in the log</button>
-          {customMessage && <p>Custom Message: {customMessage}</p>}
-        </div>
+        {cachedState.inProgress ? (
+          <>
+            <div className="instruction-box">
+              <h1 value={cachedState}>
+                Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}:
+              </h1>
+              <h2 className="instruction" value={currMove.current}>Move {currMove.current["name"]} in {mapArea("current-area")}{" "} from slot {String(currMove.current["current-grid-position"])} to slot {String(currMove.current["next-grid-position"])} in{" "} {mapArea("next-area")}
+              </h2>
+              <button onClick={() => runMove(currMove.current)}>
+                Make Move
+              </button>
+              <button onClick={() => skipMove(currMove.current)}>
+                Skip Move
+              </button>
+              <button onClick={logCustomMessage}>
+                Write a comment in the log
+              </button>
+              {customMessage && <p>Custom Message: {customMessage}</p>}
+            </div>
+          </>
+        ) : (
+          <p>Moves are currently being calculated</p>
+        )}
       </div>
     </div>
   );
