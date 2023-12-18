@@ -9,7 +9,10 @@ import {
 } from './BackendRoutes'
 import Grid from './Grid'
 
+// 
 export default function DockView ({ cachedState, setCachedState }) {
+  const [cargoState, setCargoState] = useState(null); 
+  const [moves, setMoveList] = useState(null); 
   const createCargoState = async () => {
     try {
       await handleCreateCargoState(
@@ -17,10 +20,11 @@ export default function DockView ({ cachedState, setCachedState }) {
         cachedState.offloadList,
         cachedState.loadList
       )
-      console.log('successfully created Cargo state:')
+      console.log('successfully created Cargo state'); 
     } catch (error) {
-      console.error('Error creating cargo state:', error)
+      console.error('Error creating cargo state:', error); 
     }
+    
   }
 
   const runAstar = async () => {
@@ -57,6 +61,16 @@ export default function DockView ({ cachedState, setCachedState }) {
 
   const BUFFER = 'buffer'
   const SHIP = 'ship'
+
+  useEffect(() => {
+    if (cargoState === null) {
+      setCachedState({
+        ...cachedState, 
+        inProgress: true
+      }); 
+      setCargoState(createCargoState()); 
+    } 
+  }, [cargoState, cachedState]);
 
   return (
     <div className='dock-view-container'>

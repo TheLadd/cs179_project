@@ -35,7 +35,7 @@ const Container = (props) => {
     // testing useRef and checking to see how we're gonna do the animation
     useEffect(() => {
         const containerPos = containerRef.current.getBoundingClientRect(); 
-        console.log(containerPos); 
+        // console.log(containerPos); 
     })
 
 
