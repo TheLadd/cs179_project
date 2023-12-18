@@ -96,6 +96,7 @@ export default function DockView ({ cachedState, setCachedState }) {
           moves: mvs, // saves as an object?  
           totalSteps: mvs.length+1
         }); 
+        localStorage.setItem("inProgress", "true");
        
 
       }
