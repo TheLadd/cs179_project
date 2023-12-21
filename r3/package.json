@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "server": "python3 server/app.py",
+    "server": "cross-env PYTHON=python3 node src/serverRunner.js",
     "dev": "run-p server start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -43,5 +43,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }
