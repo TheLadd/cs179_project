@@ -115,13 +115,13 @@ def run_move():
 
     # Init src
     src_pos = move_data['current-grid-position']
-    #src_con = Container(info=(move_data['name'], move_data['weight'])) 
-    src_con = Container(info=(move_data['name'])) 
-    src = Position(move_data['current-area'], src_pos[0], src_pos[1], container=src_con)    
+    src_con = Container(info=(move_data['name'], move_data['weight'])) 
+    #src_con = Container(info=(move_data['name'])) 
+    src = Position(move_data['current-area'], src_pos[0]-1, src_pos[1]-1, container=src_con)    
 
     # Init dst
     dst_pos = move_data['next-grid-position']
-    dst = Position(move_data['next-area'], dst_pos[0], dst_pos[1])
+    dst = Position(move_data['next-area'], dst_pos[0]-1, dst_pos[1]-1)
 
     move = Move(src, dst)
     # move = Move(**move_data)
