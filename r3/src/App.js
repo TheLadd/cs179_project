@@ -6,6 +6,7 @@ import Login from "./components/Login"
 import Home from "./components/Home"
 import DockView from "./components/DockView"
 import UploadTransfer from "./components/UploadTransfer"
+import useSyncedState from "./components/useSyncedState";
 
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
     manifest: localStorage.getItem("manifest") ? localStorage.getItem("manifest") : null, 
     loadList: localStorage.getItem("loadList") ? (localStorage.getItem("loadList")) : [],
     offloadList: localStorage.getItem("offloadList") ? (localStorage.getItem("offloadList")) : [],
-    moveList: localStorage.getItem("moveList") ? localStorage.getItem("moveList") : [], 
+    moves: localStorage.getItem("moves") ? localStorage.getItem("moves") : [], 
   });
 
 useEffect(() => {
