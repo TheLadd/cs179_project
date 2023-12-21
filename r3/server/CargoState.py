@@ -333,7 +333,7 @@ class CargoState:
                   srcArea[src.row][src.col] = Container()
             if dstArea != 'trk':
                   dstArea[dst.row][dst.col] = temp
-
+            print(newCargoState)
             return newCargoState
             
 

@@ -68,6 +68,7 @@ export default function DockView ({ cachedState, setCachedState }) {
 
   // runs astar - only to be called at the beginning of ops or when the move is skipped
   const runAstar = async () => {
+    console.log("DOCKVIEW: called astar")
     const isBalance = cachedState.opType === 'Offloading/Onloading' ? false : true; 
       const aStarRes = await handleRunAstar(
         localStorage.getItem('manifest'),

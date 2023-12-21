@@ -127,10 +127,8 @@ def run_move():
     # move = Move(**move_data)
 
     global current_cargo_state
-    print("current_cargo_state first: ", current_cargo_state)
-    if (current_cargo_state): print("current_cargo_state middle evaluated to not none: ", current_cargo_state)
+    print("current_cargo_state: ", current_cargo_state)
     current_cargo_state = current_cargo_state.move(move)
-    if (current_cargo_state): print("current_cargo_state end evaluated to not none: ", current_cargo_state)
     return jsonify({"message": "Move executed successfully"})
 
 @app.route('/getManifest', methods=['GET'])
