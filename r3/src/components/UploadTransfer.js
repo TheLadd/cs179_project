@@ -25,8 +25,6 @@ function UploadTransfer({ cachedState, setCachedState }) {
     operation: "",
   });
 
-  console.log("cachedState in uploadTransfer: ", cachedState);
-
   // save to our cached state
   const handleSubmitContainer = (e) => {
     // log
@@ -108,24 +106,14 @@ function UploadTransfer({ cachedState, setCachedState }) {
     e.preventDefault();
     setCachedState({
       ...cachedState,
-      inProgress: true,
-      opType: "Offloading/Onloading",
       lastActivityTime: handleTimestamp(),
     });
-    localStorage.removeItem("inProgress");
-    localStorage.removeItem("lastActivityTime");
-    localStorage.removeItem("offloadList");
-    localStorage.removeItem("loadList");
-    localStorage.removeItem("totalSteps"); 
-    localStorage.removeItem("currStep"); 
-    localStorage.removeItem("moves"); 
 
     localStorage.setItem(
       "offloadList",
       JSON.stringify(cachedState.offloadList)
     );
     localStorage.setItem("loadList", JSON.stringify(cachedState.loadList));
-    localStorage.setItem("inProgress", true);
     localStorage.setItem("lastActivityTime", cachedState.lastActivityTime);
     nav("/dock-view");
   };
