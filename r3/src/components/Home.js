@@ -91,6 +91,12 @@ function Home ({ cachedState, setCachedState }) {
         nav("/dock-view");
       }
     };
+    
+    setCachedState({
+      ...cachedState,
+      opType: op,
+      lastActivityTime: handleTimestamp(),
+    });
 
     localStorage.setItem("opType", op);
     localStorage.setItem("lastActivityTime", uploadtime);
