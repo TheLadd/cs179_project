@@ -182,6 +182,7 @@ export default function DockView ({ cachedState, setCachedState }) {
 
     await handleGetManifest().catch(e => console.log(e))
     .then(async (response) => {
+      // may need to update this to setCache then parsemanifest file we shall see.
       localStorage.setItem('manifest', response)
       await runAstar().catch(e => console.log(e)).then(() => {
         console.log("handleGetManifest: astar successfully fetched")

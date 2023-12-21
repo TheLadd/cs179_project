@@ -87,7 +87,7 @@ useEffect(() => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login cachedState={cachedState} setCachedState={setCachedState}/>} /> 
+        <Route path="/" element={<Login cachedState={cachedState} setCachedState={updateCachedState}/>} /> 
         <Route path="/home" element={<Home cachedState={cachedState} setCachedState={updateCachedState} updateCachedState={setCachedState}/>} /> 
         <Route path="/upload-transfer" element={<UploadTransfer cachedState={cachedState} setCachedState={updateCachedState}/>} />
         <Route path="/dock-view" element={<DockView cachedState={cachedState} setCachedState={updateCachedState}/>} /> 

@@ -114,7 +114,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
       JSON.stringify(cachedState.offloadList)
     );
     localStorage.setItem("loadList", JSON.stringify(cachedState.loadList));
-    localStorage.setItem("lastActivityTime", cachedState.lastActivityTime);
+    //localStorage.setItem("lastActivityTime", cachedState.lastActivityTime);
     nav("/dock-view");
   };
 
