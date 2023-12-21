@@ -90,11 +90,6 @@ export default function DockView ({ cachedState, setCachedState }) {
           totalSteps: mvs.length
         }); 
 
-        // local storage 
-        localStorage.setItem('moves', mvs)
-        localStorage.setItem('totalSteps', mvs.length)
-        localStorage.setItem('currStep', 1)
-
         // save in ref - we set here so we don't have to refresh as much 
         const nextMove = mvs.shift(); 
         currMove.current = nextMove; 
@@ -107,11 +102,7 @@ export default function DockView ({ cachedState, setCachedState }) {
         //   'next-area': nextarea
         // }
         console.log("CURRMOVE: ", currMove.current); 
-
-        //sanity check 
-        localStorage.setItem("inProgress", "true");
        
-
       }
       // Perform any actions based on the response from handleRunAstar
       // console.log('A* Algorithm solution:', astarResult.solution)
@@ -134,10 +125,6 @@ export default function DockView ({ cachedState, setCachedState }) {
 
     if (moveList.current.length !== 0) {
       let mvs = moveList.current; 
-
-      localStorage.setItem('moves', mvs)
-      localStorage.setItem('totalSteps', mvs.length)
-      localStorage.setItem('currStep', 1)
 
       // save in ref - we set here so we don't have to refresh as much 
       const nextMove = mvs.shift(); 
@@ -222,7 +209,6 @@ export default function DockView ({ cachedState, setCachedState }) {
 
   useEffect(() => {
     console.log("dockView...");
-    localStorage.setItem("inProgress", "true");
     if (cargoState.current === false) {
       // cargo state has not been initialized yet
       createCargoState();
