@@ -60,7 +60,7 @@ useEffect(() => {
       lastActivityTime: cachedState.lastActivityTime,
       currStep: 0,
       totalSteps: 0,
-      user: '',
+      user: cachedState.user,
       manifest: null,
       loadList: [],
       offloadList: [], 
