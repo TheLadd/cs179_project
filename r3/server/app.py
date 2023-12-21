@@ -77,7 +77,7 @@ def run_astar():
     # 1.2 Reformat from list of strings to list of Containers
     loadReformat: List[Container] = []
     print(f'load before formatting: {load}')
-    for i in range(0, len(offload), 2):
+    for i in range(0, len(load), 2):
         loadReformat.append( Container(info=(load[i], load[i+1])) )
     load = loadReformat
 
