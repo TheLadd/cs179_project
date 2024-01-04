@@ -41,7 +41,7 @@ function Login ({ cachedState, setCachedState }) {
       name: e.target.value,
       ti: tim
     })
-    localStorage.setItem('user', user.name); 
+    //localStorage.setItem('user', user.name); 
 
   setCachedState({
     ...cachedState,
@@ -49,7 +49,7 @@ function Login ({ cachedState, setCachedState }) {
 
   });
 
-    localStorage.setItem('lastActivityTime', user.ti); 
+    //localStorage.setItem('lastActivityTime', user.ti); 
     // logging
     handleLogMessage(user.name + ' signs in')
 

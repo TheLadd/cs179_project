@@ -9,7 +9,7 @@ import "../css/Form.css";
 // cached state is passed in the event of a crash.
 // nav is used for route switching between different link paths
 
-function Home ({ cachedState, setCachedState }) {
+function Home ({ cachedState, setCachedState, updateCachedState }) {
   const nav = useNavigate()
   
 
@@ -23,6 +23,7 @@ function Home ({ cachedState, setCachedState }) {
 
   // in the event if there is an operation in progress and we want to start over
   const handleStartOver = () => {
+    console.log("handlestart over called")
     const defaultState = {
       inProgress: false,
       opType: "",
@@ -35,17 +36,22 @@ function Home ({ cachedState, setCachedState }) {
       offloadList: [],
     };
 
+    localStorage.clear();
     setCachedState(defaultState);
+    /*
     localStorage.clear();
     Object.keys(defaultState).forEach((key) => {
       localStorage.setItem(key, defaultState[key]);
     });
+    */
     console.log(localStorage);
+
   };
 
   const handleContinue = () => {
     console.log("continue");
     // do something here with reloading everything from local storage back into cachedState then navigating to /dock-view
+    /*
     const storedInProgress = localStorage.getItem("inProgress");
     const storedLastActivityTime = localStorage.getItem("lastActivityTime");
     const storedOpType = localStorage.getItem("opType");
@@ -68,7 +74,8 @@ function Home ({ cachedState, setCachedState }) {
       loadList: storedLoadList || [],
       offloadList: storedOffloadList || [],
     });
-    parseManifestFile(storedManifest, setCachedState);
+    */
+    parseManifestFile(localStorage.getItem("manifest"), setCachedState);
 
     // Navigate to /dock-view
     nav("/dock-view");
@@ -80,11 +87,13 @@ function Home ({ cachedState, setCachedState }) {
     e.preventDefault();
 
     const fileReader = new FileReader();
-    fileReader.onload = (e) => {
+    fileReader.onload = async (e) => {
       const manifestContent = e.target.result;
       // Set the manifest content in the state
       //console.log('MANIFEST CONTENT READ IN FROM FILE:\n', manifestContent)
-      parseManifestFile(manifestContent, setCachedState);
+      //setCachedState({...cachedState,
+      //manifest: manifestContent})
+      parseManifestFile(manifestContent, updateCachedState);
       if (op === "Offloading/Onloading") {
         nav("/upload-transfer");
       } else {
@@ -98,8 +107,8 @@ function Home ({ cachedState, setCachedState }) {
       lastActivityTime: handleTimestamp(),
     });
 
-    localStorage.setItem("opType", op);
-    localStorage.setItem("lastActivityTime", uploadtime);
+    //localStorage.setItem("opType", op);
+    //localStorage.setItem("lastActivityTime", uploadtime);
     fileReader.readAsText(txtFile);
   };
 
