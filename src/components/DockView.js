@@ -7,16 +7,10 @@ import {
   handleGetManifest,
   handleLogMessage,
   handleGetCurrentCargoState,
+  handleCustomLog,
 } from "./BackendRoutes";
 import Grid from "./Grid";
 
-// function DockView({ cachedState, setCachedState }) {
-//   const [customMessage, setCustomMessage] = useState("");
-
-//   };
-// }
-
-// // 
 export default function DockView ({ cachedState, setCachedState }) {
   const nav = useNavigate(); 
   const logMessage = useRef(""); 
@@ -35,16 +29,7 @@ export default function DockView ({ cachedState, setCachedState }) {
     "weight": -1, 
   });
   const moveList = useRef([]);
-  const [customMessage, setCustomMessage] = useState("");
 
-  const logCustomMessage = () => {
-    const userInput = window.prompt("Enter your custom message:");
-    if (userInput !== null) {
-      handleLogMessage(userInput);
-      // You can log the message or perform other actions here
-      console.log("Custom message logged:", userInput);
-    }
-  };
 
   // ------------------------------ flask backend functions -------------------------------------
   // initializes cargo state
@@ -263,10 +248,9 @@ export default function DockView ({ cachedState, setCachedState }) {
               <button onClick={() => skipMove(currMove.current)} className="primary-submit-btn">
                 Skip Move
               </button>
-              <button onClick={logCustomMessage} className="primary-submit-btn">
+              <button onClick={handleCustomLog} className="primary-submit-btn">
                 Write a comment in the log
               </button>
-              {customMessage && <p>Custom Message: {customMessage}</p>}
               </div>
             </div>
           </>

@@ -156,6 +156,24 @@ const handleGetCurrentCargoState = async () => {
   }
 };
 
+const handleSkipMove = async (move) => {
+  // Logic to skip move in BackendRoutes.js
+  // todo
+};
+
+const handleCustomLog = async () => {
+  try {
+    const userInput = window.prompt("Enter your custom message:");
+    if (userInput !== null) {
+      // Log the custom message using handleLogMessage
+      await handleLogMessage(userInput);
+      console.log("Custom message logged:", userInput);
+    }
+  } catch (error) {
+    console.error("Error during handling custom log:", error.message);
+  }
+};
+
 export {
   handleCreateCargoState,
   handleRunAstar,
@@ -163,4 +181,6 @@ export {
   handleGetManifest,
   handleLogMessage,
   handleGetCurrentCargoState,
+  handleSkipMove,
+  handleCustomLog,
 };
