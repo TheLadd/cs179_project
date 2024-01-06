@@ -118,23 +118,6 @@ function Home ({ cachedState, setCachedState, updateCachedState }) {
     nav("/");
   };
 
-  const testBackend = async () => {
-    try {
-      const response = await fetch("http://127.0.0.1:5000/");
-      //const data = await response.json()
-      if (response.ok) {
-        //console.log(data)
-        console.log("Backend is running and responsive!");
-      } else {
-        console.error("Backend is not responsive. Status:", response.status);
-      }
-    } catch (error) {
-      console.error("Error while trying to reach the backend:", error.message);
-    }
-  };
-
-  //testBackend();
-
   // refreshes every single time CachedState is changed.  async function
 
   return (
@@ -143,7 +126,7 @@ function Home ({ cachedState, setCachedState, updateCachedState }) {
         Logout
       </button>
       <h1>R³ Solutions</h1>
-      {cachedState.inProgress ? (
+      {cachedState.inProgress == true ? (
         <Alert>
           There is currently an operation in progress. would you like to
           continue?
