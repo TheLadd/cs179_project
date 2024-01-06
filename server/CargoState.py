@@ -333,7 +333,7 @@ class CargoState:
                   srcArea[src.row][src.col] = Container()
             if dstArea != 'trk':
                   dstArea[dst.row][dst.col] = temp
-            print(newCargoState)
+            #print(newCargoState)
             return newCargoState
             
 
@@ -507,7 +507,7 @@ class CargoState:
             for row in range(4):
                   for col in range(24):
                         cell: Container = self.buf[row][col]
-                        item = [f'[{row+1}, {col+1}]', str(cell.weight), cell.name]
+                        item = [f'{row+1}, {col+1}', str(cell.weight), cell.name]
                         buf.append(item)
             return buf
 
