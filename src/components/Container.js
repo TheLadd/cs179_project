@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'; 
 import { Popover, Typography } from '@mui/material'; 
 
+// Grid component is filled with these Container cards, one for each slot 
 const Container = (props) => { 
     const [anchor, setAnchor] = useState(null); 
     const containerRef = useRef(null); 

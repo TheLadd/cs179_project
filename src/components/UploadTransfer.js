@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { TextField, Autocomplete, useColorScheme, colors } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import handleTimestamp from "./Timestamp";
-import { AgGridReact } from "ag-grid-react"; // React Grid Logic
-import "ag-grid-community/styles/ag-grid.css"; // Core CSS
-import "ag-grid-community/styles/ag-theme-quartz.css"; // Theme
+// import { AgGridReact } from "ag-grid-react"; // React Grid Logic
+// import "ag-grid-community/styles/ag-grid.css"; // Core CSS
+// import "ag-grid-community/styles/ag-theme-quartz.css"; // Theme
+import InstructionList from "./InstructionList";
 
 function UploadTransfer({ cachedState, setCachedState }) {
   const nav = useNavigate();
@@ -78,7 +79,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
     setDisableSubmit(true);
   };
 
-  // ensuring the options autocomplete doesnt have any repeats in dropdown, or unused slots
+  // sets the autocomplete options in the container names. filters out NAN/unused containers. 
   const filterOptions = (option) => {
     let name = option[2];
     if (name === "UNUSED" || name === "NAN" || container_names.has(name)) {
@@ -87,30 +88,20 @@ function UploadTransfer({ cachedState, setCachedState }) {
     return true;
   };
 
+  // for grid display of instruction list; naming and setting column properties. 
   const columns = [
     {
-      field: "#",
-      valueGetter: "node.rowIndex + 1",
+      field: "operation"
     },
     {
-      field: "operation",
+      field: "name"
     },
     {
-      field: "name",
-    },
-    {
-      field: "weight",
-      cellRenderer: (params) => {
-        if (params.value === 0) {
-          return <p>-</p>;
-        } else {
-          return <span>{params.value} kg</span>;
-        }
-      },
-    },
+      field: "weight"
+      }
   ];
 
-  // start onloading and offloading
+  // triggered with submit button; navigates to dock view page, passes load/offload list to backend. 
   const handleOperationSubmission = (e) => {
     e.preventDefault();
     setCachedState({
@@ -128,7 +119,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
   };
 
   useEffect(() => {
-    console.log(rowData);
+    console.log("row data: ", rowData);
   }, [rowData]);
 
   return (
@@ -215,13 +206,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
           Finish
         </button>
       </div>
-      {/* <div
-      className={ "ag-theme-quartz-dark" }
-      style={{ width: '100%', height: '100%' }}
-    >
-      <AgGridReact columnDefs={columns} 
-      rowData={rowData}/> 
-    </div> */}
+      <InstructionList /> 
     </div>
   );
 }
