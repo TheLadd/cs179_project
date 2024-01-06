@@ -1,5 +1,7 @@
-Thank you for using R3 Solutions Cargo Optimizer! Here is a list of packages you will need to have installed before this works
+Thank you for using R3 Solutions Cargo Optimizer! Here is a list of packages you will need to have installed before this works. 
 
+React 
+   - 'npm install react' 
 Python 3.12.0
     - Can be installed from this site: https://www.python.org/downloads/windows/
 Node.js (or npm) 8.19.2
