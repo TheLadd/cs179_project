@@ -100,7 +100,7 @@ export default function DockView ({ cachedState, setCachedState }) {
       console.log(response)
       const dict = await handleGetCurrentCargoState().catch(err => console.log(err))
       .then((response) => {
-       //  console.log(response);
+        // console.log("DOCKVIEW.JS RESPONSE FROM RUNMOVE: ", response);
         currentBufferState.current = response.buffer
         currentCargoState.current = response.ship
         console.log("DOCKVIEW.JS: getCurrentCargoState completed")
@@ -233,7 +233,7 @@ export default function DockView ({ cachedState, setCachedState }) {
         <Grid type={SHIP} items={currentCargoState.current} id="ship-dock" />
         <Grid
           type={BUFFER}
-          items={[currentBufferState.current]}
+          items={currentBufferState.current}
           id="buffer-dock"
         />
         {cachedState.inProgress ? (
