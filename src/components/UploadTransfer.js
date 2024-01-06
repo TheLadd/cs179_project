@@ -7,25 +7,34 @@ import "ag-grid-community/styles/ag-grid.css"; // Core CSS
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Theme
 
 function UploadTransfer({ cachedState, setCachedState }) {
+  const nav = useNavigate();
+
   const [onload, setOnload] = useState(false); // switches to read-only in form if the operation is true or is onload operation
   const [rowData, setRowData] = useState([]);
   const [disableSubmit, setDisableSubmit] = useState(true);
   const [autocompleteValue, setAutocompleteValue] = useState("");
   const MANIFEST = cachedState.manifest;
-  const nav = useNavigate();
-
-  // items that we have already selected
-  const selected = {};
-  const container_names = new Set();
-  // items that repeat in table
-
   const [currentContainer, setCurrentContainer] = useState({
     name: "",
     weight: 0,
     operation: "",
   });
+  
 
-  // save to our cached state
+  // items that we have already selected
+  const selected = {};
+   // items that repeat in table 
+  const container_names = new Set();
+
+
+  // clear weight input in form if offload function is selected.  
+  function clearWeight() {
+    var weightField = document.querySelector('.input-weight')
+    weightField.value = ''
+    
+  }; 
+
+  // save the container input and operation to our cached state. 
   const handleSubmitContainer = (e) => {
     // log
     e.preventDefault();
@@ -146,6 +155,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
             value="offload"
             onClick={(e) => {
               setOnload(false);
+              clearWeight(); 
               setDisableSubmit(false);
             }}
           />
