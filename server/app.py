@@ -152,12 +152,6 @@ def get_current_cargo_state():
     else:
         return jsonify({"error": "CargoState not initialized."}), 404
 
-@app.route('/solve', methods=['GET'])
-def solve():
-    #print("hi")
-    return jsonify({"message": "hi"})
-    #todo implement backend lol
-
 @app.route('/log', methods=['POST'])
 def log():
     data = request.get_json()
