@@ -19,6 +19,7 @@ formatter = logging.Formatter(log_format, datefmt=date_format)
 logging.basicConfig(filename='server/log.txt', level=logging.INFO, format=log_format, datefmt=date_format)
 
 current_cargo_state = None
+moves = []
 
 @app.route('/create-cargo-state', methods=['POST'])
 def create_cargo_state():
@@ -84,6 +85,7 @@ def run_astar():
     print(f'Offload before astar: {offload}')
 
     # 2. Run astar
+    global moves
     solution, moves = search.astar(manifest_8x12, is_balance, offload=offload, load=load)
 
     # 2.2 Reformat moves from list of Move objects to list of Move-like dictionaries
@@ -105,7 +107,13 @@ def run_astar():
     print(moves)
 
     # 3. return moves to frontend
-    return jsonify({"solution": solution.val.toDict(), "moves": moves})
+    return jsonify({"solution": solution.val.toDict()})
+
+@app.route('/get-moves', methods=['GET'])
+def get_moves():
+    global moves
+    # Return the moves stored in the global variable
+    return jsonify({"moves": moves})
 
 @app.route('/runMove', methods=['POST'])
 def run_move():
@@ -169,6 +177,7 @@ def get_cargo_state_dict():
     if current_cargo_state:
         # Return the current_cargo_state as a dictionary
         cargo_state_dict = current_cargo_state.toDict()
+        #print("APP.PY: \n", cargo_state_dict)
         return jsonify(cargo_state_dict)
     else:
         return jsonify({"error": "CargoState not initialized."}), 404
