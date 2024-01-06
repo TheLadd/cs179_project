@@ -240,7 +240,7 @@ export default function DockView ({ cachedState, setCachedState }) {
           <>
             <div className="instruction-box">
               <h1 value={cachedState}>
-                Step {cachedState.currStep + 1} of {cachedState.totalSteps + 1}:
+                Step {cachedState.currStep + 1} of {cachedState.totalSteps}:
               </h1>
               <h2 className="instruction" value={currMove.current}>
                 Move {currMove.current["name"]} in {mapArea("current-area")}<br/> 
