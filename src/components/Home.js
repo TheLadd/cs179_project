@@ -23,29 +23,22 @@ function Home ({ cachedState, setCachedState, updateCachedState }) {
 
   // in the event if there is an operation in progress and we want to start over
   const handleStartOver = () => {
-    console.log("handlestart over called")
+    console.log("HOME.JS: handle start over called")
     const defaultState = {
       inProgress: false,
       opType: "",
-      lastActivityTime: cachedState.lastActivityTime,
+      lastActivityTime: null,
       currStep: 0,
       totalSteps: 0,
       user: cachedState.user,
       manifest: null,
       loadList: [],
       offloadList: [],
+      moves: []
     };
 
     localStorage.clear();
     setCachedState(defaultState);
-    /*
-    localStorage.clear();
-    Object.keys(defaultState).forEach((key) => {
-      localStorage.setItem(key, defaultState[key]);
-    });
-    */
-    console.log(localStorage);
-
   };
 
   const handleContinue = () => {

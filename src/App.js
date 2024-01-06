@@ -9,32 +9,40 @@ import UploadTransfer from "./components/UploadTransfer"
 
 
 function App() {
-
-  const [cachedState, setCachedState] = useState({
-    inProgress: localStorage.getItem("inProgress") === "true" ? true : false,
-    opType: localStorage.getItem("opType")
-      ? localStorage.getItem("opType")
-      : "",
-    lastActivityTime: localStorage.getItem("lastActivityTime")
-      ? localStorage.getItem("lastActivityTime")
-      : "",
-    currStep: localStorage.getItem("currStep")
-      ? localStorage.getItem("currStep")
-      : 0,
-    totalSteps: localStorage.getItem("totalSteps")
-      ? localStorage.getItem("totalSteps")
-      : 0,
+  const defaultState = {
+    inProgress: false,
+    opType: "",
+    lastActivityTime: null,
+    currStep: 0,
+    totalSteps: 0,
     user: "",
-    manifest: localStorage.getItem("manifest")
-      ? localStorage.getItem("manifest")
-      : null,
-    loadList: localStorage.getItem("loadList")
-      ? localStorage.getItem("loadList")
-      : [],
-    offloadList: localStorage.getItem("offloadList")
-      ? localStorage.getItem("offloadList")
-      : [],
-    moves: localStorage.getItem("moves") ? localStorage.getItem("moves") : [],
+    manifest: null,
+    loadList: [],
+    offloadList: [], 
+    moves: []
+  }
+
+  const [cachedState, setCachedState] = useState(() => {
+    const inProgress = localStorage.getItem("inProgress") === "true";
+    if (inProgress) {
+      console.log("APP.JS: in progress, cachedstate restored from localstorage")
+      return {
+        inProgress : true,
+        opType: localStorage.getItem("opType") || "",
+        lastActivityTime: localStorage.getItem("lastActivityTime") || "",
+        currStep: parseInt(localStorage.getItem("currStep")) || 0,
+        totalSteps: parseInt(localStorage.getItem("totalSteps")) || 0,
+        user: "",
+        manifest: localStorage.getItem("manifest") || null,
+        loadList: localStorage.getItem("loadList") || [],
+        offloadList: localStorage.getItem("offloadList") || [],
+        moves: JSON.parse(localStorage.getItem("moves")) || [],
+      };
+    } else {
+      localStorage.clear();
+      console.log("APP.JS: not in progress, reset cachedstate and localstorage to default")
+      return defaultState;
+    }
   });
 
   const updateCachedState = (newState) => {
@@ -46,39 +54,14 @@ function App() {
         if (key !== "manifest") {
           localStorage.setItem(key, newState[key]);
         }
+        if (key == "moves") {
+          localStorage.setItem(key, JSON.stringify(newState[key]));
+        }
       });
 
       return updatedState;
     });
   };
-
-useEffect(() => {
-  if (localStorage.getItem("inProgress") === "false") {
-    const defaultState = {
-      inProgress: false,
-      opType: '',
-      lastActivityTime: cachedState.lastActivityTime,
-      currStep: 0,
-      totalSteps: 0,
-      user: cachedState.user,
-      manifest: null,
-      loadList: [],
-      offloadList: [], 
-      moves: []
-    }
-
-    localStorage.clear();
-    updateCachedState(defaultState);
-
-    console.log("reset cachedstate and localstorage to default")
-    /*
-    Object.keys(defaultState).forEach(key => {
-      localStorage.setItem(key, (defaultState[key]))
-
-    })
-    */
-  }
-}, [cachedState.inProgress])
 
   console.log("APP.JS CURRENT CACHE STATE\n", cachedState);
   console.log('CURRENT LOCALSTORAGE\n', localStorage)
