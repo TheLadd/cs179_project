@@ -13,7 +13,6 @@ import Grid from "./Grid";
 
 export default function DockView ({ cachedState, setCachedState }) {
   const nav = useNavigate(); 
-  const logMessage = useRef(""); 
   const cargoState = useRef(false); 
   const currentCargoState = useRef(cachedState.manifest); 
   const currentBufferState = useRef([]); 
@@ -126,6 +125,7 @@ export default function DockView ({ cachedState, setCachedState }) {
         currStep: cachedState.currStep + 1
       }); 
   } else { // we're done with moves. fin 
+    setCachedState({inProgress: false}); 
     nav('/home'); 
 
   }
@@ -159,6 +159,7 @@ export default function DockView ({ cachedState, setCachedState }) {
           currStep: cachedState.currStep + 1
         }); 
         if (cachedState.currStep === cachedState.totalSteps) {
+          setCachedState({inProgress: false}); 
           nav('/home')
         }
 
@@ -197,7 +198,13 @@ export default function DockView ({ cachedState, setCachedState }) {
     console.log("dockView...");
     if (cargoState.current === false) {
       // cargo state has not been initialized yet
-      createCargoState();
+      //createCargoState();
+      handleCreateCargoState(
+        localStorage.getItem("manifest"),
+        cachedState.offloadList,
+        cachedState.loadList
+      )
+      cargoState.current = true;
       runAstar();
     }
     console.log("CURRMOVE: ", currMove.current);
