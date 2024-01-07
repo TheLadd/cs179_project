@@ -6,6 +6,7 @@ import Login from "./components/Login"
 import Home from "./components/Home"
 import DockView from "./components/DockView"
 import UploadTransfer from "./components/UploadTransfer"
+import { parseManifestFile } from "./components/manifestParser";
 
 
 function App() {
@@ -21,9 +22,9 @@ function App() {
     offloadList: [], 
     moves: []
   }
+  const inProgress = localStorage.getItem("inProgress") === "true";
 
   const [cachedState, setCachedState] = useState(() => {
-    const inProgress = localStorage.getItem("inProgress") === "true";
     if (inProgress) {
       console.log("APP.JS: in progress, cachedstate restored from localstorage")
       return {
@@ -33,9 +34,9 @@ function App() {
         currStep: parseInt(localStorage.getItem("currStep")) || 0,
         totalSteps: parseInt(localStorage.getItem("totalSteps")) || 0,
         user: "",
-        manifest: localStorage.getItem("manifest") || null,
-        loadList: localStorage.getItem("loadList") || [],
-        offloadList: localStorage.getItem("offloadList") || [],
+        //manifest: localStorage.getItem("manifest") || null,
+        loadList: JSON.parse(localStorage.getItem("loadList")) || [],
+        offloadList: JSON.parse(localStorage.getItem("offloadList")) || [],
         moves: JSON.parse(localStorage.getItem("moves")) || [],
       };
     } else {
@@ -45,6 +46,14 @@ function App() {
     }
   });
 
+  useEffect(() => {
+    // Call parseManifestFile after cachedState is initialized so that we can pass setCachedState into parseManifestFile
+    if (inProgress) {
+      parseManifestFile(localStorage.getItem("manifest"), setCachedState);
+    }
+  }, [cachedState.inProgress]);
+
+  // function that updates cachedState along with the corresponding values in localStorage every time it is called
   const updateCachedState = (newState) => {
     setCachedState((prevCachedState) => {
       const updatedState = { ...prevCachedState, ...newState };
@@ -54,7 +63,7 @@ function App() {
         if (key !== "manifest") {
           localStorage.setItem(key, newState[key]);
         }
-        if (key == "moves") {
+        if (key == "moves" || key == "loadList" || key == "offloadList") {
           localStorage.setItem(key, JSON.stringify(newState[key]));
         }
       });
