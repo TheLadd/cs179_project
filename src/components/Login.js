@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
 import { handleLogMessage } from './BackendRoutes'
 
-
-
 // assumption: if we logout, we are clearing all the user data 
 function Login ({ cachedState, setCachedState }) {
   const nav = useNavigate(); 
@@ -13,8 +11,6 @@ function Login ({ cachedState, setCachedState }) {
     ti: ''
   })
 
-  
-  
   const handleChange = e => {
     e.preventDefault()
     const tim = handleTimestamp()
@@ -43,13 +39,14 @@ function Login ({ cachedState, setCachedState }) {
     })
     //localStorage.setItem('user', user.name); 
 
-  setCachedState({
-    ...cachedState,
-    user: user.name
+    setCachedState({
+      ...cachedState,
+      user: user.name
+    });
 
-  });
+    // have to manually set localstorage here because don't want to accidently override the backup in localstorage before logging in
+    localStorage.setItem('user', user.name); 
 
-    //localStorage.setItem('lastActivityTime', user.ti); 
     // logging
     handleLogMessage(user.name + ' signs in')
 

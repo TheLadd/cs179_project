@@ -52,14 +52,13 @@ const Container = (props) => {
                 horizontal: 'left',
             }}
             >
-            <Typography sx={{p: 1, fontWeight: 'bold', fontSize: 10,}}>
-                Name: {name === 'NAN' ? 'SHIP HULL' : name} <br/> 
-                Position: {position} <br/> 
-                Weight: {name === 'NAN' ? '-' : weight}
-            </Typography>
+                <Typography sx={{p: 1, fontWeight: 'bold', fontSize: 10,}}>
+                    Name: {name === 'NAN' ? 'SHIP HULL' : name} <br/> 
+                    Position: {position} <br/> 
+                    Weight: {name === 'NAN' ? '-' : weight}
+                </Typography>
             </Popover>
-      </div>
-
+        </div>
     ); 
 }
 

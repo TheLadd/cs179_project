@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import handleTimestamp from "./Timestamp";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button } from "@mui/material";
-import { parseManifestFile } from "./manifestParser";
+import { manifestTxtToArray } from "./manifestParser";
+import { initializeCargoState } from "./BackendRoutes";
 import "../css/Form.css";
 
 // cached state is passed in the event of a crash.
@@ -17,68 +18,110 @@ function Home ({ cachedState, setCachedState, updateCachedState }) {
   const [txtFile, setTxtFile] = useState(
     localStorage.getItem("manifest") ? localStorage.getItem("manifest") : null
   );
-  const [op, setOp] = useState(
-    localStorage.getItem("opType") ? localStorage.getItem("opType") : ""
-  );
+  const [op, setOp] = useState(null)
+
+  const defaultState = {
+    inProgress: false,
+    instruction: "",
+    opType: "",
+    lastActivityTime: null,
+    currStep: 0,
+    user: cachedState.user,
+    manifest: null,
+    buffer: null,
+    loadList: [],
+    offloadList: [],
+    moves: []
+  };
 
   // in the event if there is an operation in progress and we want to start over
   const handleStartOver = () => {
     console.log("HOME.JS: handle start over called")
-    const defaultState = {
-      inProgress: false,
-      opType: "",
-      lastActivityTime: null,
-      currStep: 0,
-      totalSteps: 0,
-      user: cachedState.user,
-      manifest: null,
-      loadList: [],
-      offloadList: [],
-      moves: []
-    };
-
+  
     localStorage.clear();
     setCachedState(defaultState);
   };
 
   const handleContinue = () => {
     console.log("HOME.JS: continue with current operation");
-    // Navigate to /dock-view
+
+    // create new state backed up from localstorage
+    const updatedState = {
+      ...cachedState,
+      inProgress : true,
+      instruction: localStorage.getItem("instruction") || "",
+      opType: localStorage.getItem("opType") || "",
+      lastActivityTime: localStorage.getItem("lastActivityTime") || "",
+      currStep: parseInt(localStorage.getItem("currStep")) || 0,
+      manifest: manifestTxtToArray(localStorage.getItem("manifest")),
+      buffer: manifestTxtToArray(localStorage.getItem("buffer")),
+      loadList: JSON.parse(localStorage.getItem("loadList")) || [],
+      offloadList: JSON.parse(localStorage.getItem("offloadList")) || [],
+      moves: JSON.parse(localStorage.getItem("moves")) || [],
+    };
+
+    // set cachedState to the state that was backed up from localstorage
+    setCachedState({
+      ...updatedState
+    });
+    initializeCargoState(updatedState, setCachedState);
     nav("/dock-view");
   };
 
+  // when you chose the type of operation you want then navigate to appropriate screen
   const handleSubmit = (e) => {
+    console.log("HOME.JS: handlesubmit");
     // logging function goes here
-    const uploadtime = handleTimestamp();
     e.preventDefault();
 
     const fileReader = new FileReader();
     fileReader.onload = async (e) => {
       const manifestContent = e.target.result;
-      // parses the content and updates cachedState along with storing the original manifest in localStorage
-      parseManifestFile(manifestContent, updateCachedState);
+
+      const updatedState = {
+        ...cachedState,
+        //manifest: manifestTxtToArray(manifestContent),
+        manifest: manifestContent,
+        opType: op,
+      };
+      //console.log("HOME.JS: ", manifestContent)
+      setCachedState({
+        ...updatedState,
+        manifest: manifestTxtToArray(manifestContent),
+      });
+
+      localStorage.setItem("manifest", manifestContent);
+
+      initializeCargoState(updatedState, setCachedState);
+
       if (op === "Offloading/Onloading") {
         nav("/upload-transfer");
       } else {
         nav("/dock-view");
       }
     };
-    
-    setCachedState({
-      ...cachedState,
-      opType: op,
-    });
 
     fileReader.readAsText(txtFile);
+
   };
 
   const handleLogout = () => {
+    console.log("HOME.JS: handle log out");
+    // TODO FIX THIS
     localStorage.setItem("lastActivityTime", handleTimestamp());
     localStorage.setItem("user", "");
     nav("/");
   };
 
+  // i dont think this code does anything but i am too scared to remove it just yet...
+
   // refreshes every single time CachedState is changed.  async function
+  // useEffect(() => {
+  //   if (localStorage.getItem("inProgress" === "true")){
+  //     console.log("HOME.JS: reset to default");
+  //     setCachedState(defaultState);
+  //   }
+  // }, [cachedState.inProgress]);
 
   return (
     <div>
@@ -86,7 +129,7 @@ function Home ({ cachedState, setCachedState, updateCachedState }) {
         Logout
       </button>
       <h1>R³ Solutions</h1>
-      {cachedState.inProgress == true ? (
+      {localStorage.getItem("inProgress") === "true" ? (
         <Alert>
           There is currently an operation in progress. would you like to
           continue?
