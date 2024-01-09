@@ -6,7 +6,6 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import DockView from "./components/DockView";
 import UploadTransfer from "./components/UploadTransfer";
-import { manifestTxtToArray } from "./components/manifestParser";
 
 function App() {
   const defaultState = {
