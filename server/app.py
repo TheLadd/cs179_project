@@ -93,18 +93,6 @@ def run_astar():
     # 3. return the goal state, moves, and the step you are currently on to frontend (will always be 0 since you are just running the algorithm)
     return jsonify({"solution": solution.val.toDict(), "moves": steps, "currStep": currStep })
 
-@app.route('/get-moves', methods=['POST'])
-def get_moves():
-    global steps
-    # Return the moves stored in the global variable
-    return jsonify({"moves": steps})
-
-@app.route('/get-curr-step', methods=['POST'])
-def get_curr_step():
-    global currStep
-    # Return the step number stored in the global variable
-    return jsonify({"currStep": currStep})
-
 @app.route('/run-move', methods=['POST'])
 def run_move():
     global current_cargo_state
