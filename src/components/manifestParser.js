@@ -1,40 +1,19 @@
-function parseManifestFile(manifestTxt, setCachedState) {
-    //console.log("IN MANIFEST PARSER");
-    //console.log("MANIFEST TXT IN MANIFESTPARSER: ", manifestTxt);
-    const regexPattern = /\[(\d{2},\d{2})\],\s\{(\d{5})\},\s([^\r\n]+)/g;
+function manifestTxtToArray(manifestTxt) {
+  const regexPattern = /\[(\d{2},\d{2})\],\s\{(\d{5})\},\s([^\r\n]+)/g;
 
-    // Initialize an array to store the parsed data
-    const parsedData = [];
+  // Initialize an array to store the parsed data
+  const parsedData = [];
 
-    // Use a loop to match and extract data from the input string
-    let match;
-    while ((match = regexPattern.exec(manifestTxt)) !== null) {
-      // Extract matched groups and push them to the result array
-      const [, position, weight, name] = match;
-      parsedData.push([`[${position}]`, weight, name]);
-    }
+  // Use a loop to match and extract data from the input string
+  let match;
 
-    //console.log("MANIFESTPARSER.JS: before set cahcedStaet: ", parsedData);
-
-    setCachedState((prevCachedState) => {
-      const updatedManifest = parsedData
-      .map(
-        (innerArray, rowIndex, array) =>
-          innerArray
-            .map((str, index) => (index === 1 ? `{${str}}` : str))
-            .join(", ") + (rowIndex === array.length - 1 ? "" : "\n")
-      )
-      .join("");
-
-    // Set the updated manifest in localStorage
-    localStorage.setItem("manifest", updatedManifest);
-
-    // Return the updated state
-      return {
-        ...prevCachedState,
-        manifest: parsedData,
-      };
-    });
+  while ((match = regexPattern.exec(manifestTxt)) !== null) {
+    // Extract matched groups and push them to the result array
+    const [, position, weight, name] = match;
+    parsedData.push([`[${position}]`, weight, name]);
+  }
+  
+  return(parsedData);
 }
 
-export { parseManifestFile };
+export { manifestTxtToArray };

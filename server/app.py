@@ -18,7 +18,9 @@ formatter = logging.Formatter(log_format, datefmt=date_format)
 
 logging.basicConfig(filename='server/log.txt', level=logging.INFO, format=log_format, datefmt=date_format)
 
-current_cargo_state = None
+current_cargo_state = None  # stores the states for the ship and buffer
+steps = []
+currStep = 0
 
 @app.route('/create-cargo-state', methods=['POST'])
 def create_cargo_state():
@@ -26,42 +28,23 @@ def create_cargo_state():
 
     # Create CargoState
     manifest=data.get('manifest', [])
-    #print("MANIFEST WE START OUT WITH AFTER CALLING CREATE CARGO STATE ROUTE")
-    #print(manifest)
     manifest_8x12 = convert_manifest_to_8x12(manifest)
-    #print("MANIFEST WE PASS INTO CARGOSTATE")
-    #print(manifest_8x12)
     offload=data.get('offload', [])
     load=data.get('load', [])
     cost=data.get('cost', 0)
     last_move=None
 
-
-    #print("manifest in create cargo state edited: ", man)
     # Set the current_cargo_state after receiving data from frontend    
     global current_cargo_state
     current_cargo_state = CargoState(manifest_8x12, offload, load, cost, last_move)
-    print("ABOUT TO PRINT CURRENT CARGO STATE: ")
-    print("current_cargo_state when it was created: ", current_cargo_state)
-    #print(current_cargo_state.toManifestFixed())
 
-    return jsonify({"message": "CargoState created successfully"})
+    # Return the cargo state to frontend, the cargo state being the ship and buffer manifests in dict/json/array form
+    return jsonify(current_cargo_state.toDict())
 
 def convert_manifest_to_8x12(manifest_data: List[List[str]]) -> List[List[Container]]:
-    #print("GOING THROUGH CONVERT_MANIFEST")
-    
-    #for line in manifest_data.splitlines():
-        #print("PRINT EACH INDIVDUAL LINE IN MANIFEST TEST: ")
-        #print(line)
     containers = [Container(line) for line in manifest_data.splitlines()]
-    #print("CONTAINERS PRINTED: ")
-    #print(containers)
     manifest_8x12 = [containers[i:i+12] for i in range(0, len(containers), 12)]
 
-    #print("TRANSFORMED MANIFEST: ")
-    #print(manifest_8x12)
-    #for row in manifest_8x12:
-     #   print(row)
     return manifest_8x12
 
 @app.route('/run-astar', methods=['POST'])
@@ -84,12 +67,15 @@ def run_astar():
     print(f'Offload before astar: {offload}')
 
     # 2. Run astar
-    solution, moves = search.astar(manifest_8x12, is_balance, offload=offload, load=load)
+    global steps
+    global currStep
+    currStep = 0
+    solution, steps = search.astar(manifest_8x12, is_balance, offload=offload, load=load)
 
     # 2.2 Reformat moves from list of Move objects to list of Move-like dictionaries
     movesReformat: List[Dict[str, List[int]|int]] = []
-    print(f'moves before formatting: {moves}')
-    for move in moves:
+    print(f'moves before formatting: {steps}')
+    for move in steps:
         temp = {
             'name': move.src.container.name, 
             'current-grid-position': [move.src.row+1, move.src.col+1],
@@ -100,18 +86,24 @@ def run_astar():
             'weight': move.src.container.weight, 
         }
         movesReformat.append(temp)
-    moves = movesReformat
+    steps = movesReformat
     print("MOVES PRINTED: ")
-    print(moves)
+    print(steps)
 
-    # 3. return moves to frontend
-    return jsonify({"solution": solution.val.toDict(), "moves": moves})
+    # 3. return the goal state, moves, and the step you are currently on to frontend (will always be 0 since you are just running the algorithm)
+    return jsonify({"solution": solution.val.toDict(), "moves": steps, "currStep": currStep })
 
-@app.route('/runMove', methods=['POST'])
+@app.route('/run-move', methods=['POST'])
 def run_move():
-    data = request.get_json()
+    global current_cargo_state
+    global steps
+    global currStep
+    currStep += 1
 
-    move_data = data.get('move')
+    # if we are finished with operation only return the increment currStep not the current cargo state, and don't try to run a move
+    if (currStep >= len(steps)):
+        return jsonify({"currStep": currStep})
+    move_data = steps[currStep-1]
 
     # Init src
     src_pos = move_data['current-grid-position']
@@ -126,37 +118,16 @@ def run_move():
     move = Move(src, dst)
     # move = Move(**move_data)
 
-    global current_cargo_state
-    print("current_cargo_state: ", current_cargo_state)
+    # make the move
     current_cargo_state = current_cargo_state.move(move)
-    return jsonify({"message": "Move executed successfully"})
 
-@app.route('/getManifest', methods=['GET'])
-def get_manifest():
-    global current_cargo_state
-    # Check if current_cargo_state is not None
-    if current_cargo_state:
-        # Return the current_cargo_state as JSON
-        return jsonify(current_cargo_state.toManifest())
-    else:
-        return jsonify({"error": "CargoState not initialized."}), 404
+    # todo: make it so that it logs a message here
+    
+    dict = current_cargo_state.toDict()
+    dict['currStep'] = currStep
 
-@app.route('/get-current-cargo-state', methods=['GET'])
-def get_current_cargo_state():
-    global current_cargo_state
-
-    # Check if current_cargo_state is not None
-    if current_cargo_state:
-        # Return the current_cargo_state as JSON
-        return jsonify(current_cargo_state.toManifest())
-    else:
-        return jsonify({"error": "CargoState not initialized."}), 404
-
-@app.route('/solve', methods=['GET'])
-def solve():
-    #print("hi")
-    return jsonify({"message": "hi"})
-    #todo implement backend lol
+    # return the current cargo state and the step # you are currently on
+    return jsonify(dict)
 
 @app.route('/log', methods=['POST'])
 def log():
@@ -175,6 +146,7 @@ def get_cargo_state_dict():
     if current_cargo_state:
         # Return the current_cargo_state as a dictionary
         cargo_state_dict = current_cargo_state.toDict()
+        #print("APP.PY: \n", cargo_state_dict)
         return jsonify(cargo_state_dict)
     else:
         return jsonify({"error": "CargoState not initialized."}), 404

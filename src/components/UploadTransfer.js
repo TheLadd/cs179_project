@@ -101,27 +101,16 @@ function UploadTransfer({ cachedState, setCachedState }) {
     },
   ];
 
-  // start onloading and offloading
+  // finished making transfer list, navigate to actual algorithm now
   const handleOperationSubmission = (e) => {
     e.preventDefault();
     setCachedState({
       ...cachedState,
       lastActivityTime: handleTimestamp(),
     });
-
-    localStorage.setItem(
-      "offloadList",
-      JSON.stringify(cachedState.offloadList)
-    );
-    localStorage.setItem("loadList", JSON.stringify(cachedState.loadList));
-    //localStorage.setItem("lastActivityTime", cachedState.lastActivityTime);
     nav("/dock-view");
   };
-
-  useEffect(() => {
-    console.log(rowData);
-  }, [rowData]);
-
+ 
   return (
     <div>
       <h1>Upload Transfer Items</h1>
