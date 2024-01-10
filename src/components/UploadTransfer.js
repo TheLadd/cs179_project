@@ -2,18 +2,15 @@ import React, { useEffect, useState } from "react";
 import { TextField, Autocomplete, useColorScheme, colors } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import handleTimestamp from "./Timestamp";
-// import { AgGridReact } from "ag-grid-react"; // React Grid Logic
-// import "ag-grid-community/styles/ag-grid.css"; // Core CSS
-// import "ag-grid-community/styles/ag-theme-quartz.css"; // Theme
-import InstructionList from "./InstructionList";
+import "../css/InstructionList.css"; // Theme
 
 function UploadTransfer({ cachedState, setCachedState }) {
   const nav = useNavigate();
 
   const [onload, setOnload] = useState(false); // switches to read-only in form if the operation is true or is onload operation
-  const [rowData, setRowData] = useState([]);
-  const [disableSubmit, setDisableSubmit] = useState(true);
-  const [autocompleteValue, setAutocompleteValue] = useState("");
+  const [rowData, setRowData] = useState([]); // contains our data in a convenient fashion when used to display our inputted instruction list 
+  const [disableSubmit, setDisableSubmit] = useState(true); // disables submit until all form data is filled in correctly 
+  const [autocompleteValue, setAutocompleteValue] = useState(""); // two types of trackers for the value using autocomplete coz its weird 
   const MANIFEST = cachedState.manifest;
   const [currentContainer, setCurrentContainer] = useState({
     name: "",
@@ -60,6 +57,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
       container = {
         ...currentContainer,
         operation: "Offload",
+        weight: "-"
       };
       setCachedState({
         ...cachedState,
@@ -206,7 +204,24 @@ function UploadTransfer({ cachedState, setCachedState }) {
           Finish
         </button>
       </div>
-      <InstructionList /> 
+      {rowData && !rowData.empty ? (
+        <table className="table-styling">
+          <tbody>
+            <tr>
+              <th>Name</th>
+              <th>Operation</th>
+              <th>Weight</th>
+            </tr>
+          {rowData.map((row, key) => {
+            return (
+            <tr key={key}>
+              <td>{row.name}</td>
+              <td>{row.operation}</td>
+              <td>{row.weight}</td>
+            </tr> 
+          )})}
+          </tbody>
+      </table>): (<p1>poop</p1>)}
     </div>
   );
 }
