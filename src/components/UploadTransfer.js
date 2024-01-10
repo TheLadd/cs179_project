@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TextField, Autocomplete, useColorScheme, colors } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import handleTimestamp from "./Timestamp";
+import trash from "../trashicon.png"; 
 import "../css/InstructionList.css"; // Theme
 
 function UploadTransfer({ cachedState, setCachedState }) {
@@ -11,28 +12,30 @@ function UploadTransfer({ cachedState, setCachedState }) {
   const [rowData, setRowData] = useState([]); // contains our data in a convenient fashion when used to display our inputted instruction list 
   const [disableSubmit, setDisableSubmit] = useState(true); // disables submit until all form data is filled in correctly 
   const [autocompleteValue, setAutocompleteValue] = useState(""); // two types of trackers for the value using autocomplete coz its weird 
-  const MANIFEST = cachedState.manifest;
-  const [currentContainer, setCurrentContainer] = useState({
+
+  const MANIFEST = cachedState.manifest; // note: if user refreshes the page, cached state and local storage is set to default. possibly fix later. 
+
+  const [currentContainer, setCurrentContainer] = useState({ // keeps track of the conrainer that the user is currently inputting into form. 
     name: "",
     weight: 0,
     operation: "",
   });
   
 
-  // items that we have already selected
+  // items that we have already selected from our manifest list, so it doesn't appear again if it's not on the ship. 
   const selected = {};
    // items that repeat in table 
   const container_names = new Set();
 
 
-  // clear weight input in form if offload function is selected.  
+  // clear weight input in form; triggered if offload option is selected.  
   function clearWeight() {
     var weightField = document.querySelector('.input-weight')
     weightField.value = ''
     
   }; 
 
-  // save the container input and operation to our cached state. 
+  // save the container input and operation to our cached state; triggered by submit button on form.  
   const handleSubmitContainer = (e) => {
     // log
     e.preventDefault();
@@ -77,7 +80,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
     setDisableSubmit(true);
   };
 
-  // sets the autocomplete options in the container names. filters out NAN/unused containers. 
+  // sets the autocomplete options in the container names for the form. filters out NAN/unused containers. 
   const filterOptions = (option) => {
     let name = option[2];
     if (name === "UNUSED" || name === "NAN" || container_names.has(name)) {
@@ -86,20 +89,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
     return true;
   };
 
-  // for grid display of instruction list; naming and setting column properties. 
-  const columns = [
-    {
-      field: "operation"
-    },
-    {
-      field: "name"
-    },
-    {
-      field: "weight"
-      }
-  ];
-
-  // triggered with submit button; navigates to dock view page, passes load/offload list to backend. 
+  // triggered with finish button; navigates to dock view page, passes load/offload list to backend. 
   const handleOperationSubmission = (e) => {
     e.preventDefault();
     setCachedState({
@@ -115,6 +105,14 @@ function UploadTransfer({ cachedState, setCachedState }) {
     //localStorage.setItem("lastActivityTime", cachedState.lastActivityTime);
     nav("/dock-view");
   };
+
+
+  const deleteRow = (idx) => {
+    console.log(rowData[idx])
+  }
+
+
+
 
   useEffect(() => {
     console.log("row data: ", rowData);
@@ -158,7 +156,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
               marginTop: 1,
             }}
             freeSolo
-            options={MANIFEST.filter(filterOptions).map((opt) => opt[2])}
+            options={Array.isArray(MANIFEST) ? (MANIFEST.filter(filterOptions).map((opt) => opt[2])) : []}
             onInputChange={(e, value) => {
               setAutocompleteValue(value);
               setCurrentContainer({
@@ -211,6 +209,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
               <th>Name</th>
               <th>Operation</th>
               <th>Weight</th>
+              <th> </th>
             </tr>
           {rowData.map((row, key) => {
             return (
@@ -218,6 +217,11 @@ function UploadTransfer({ cachedState, setCachedState }) {
               <td>{row.name}</td>
               <td>{row.operation}</td>
               <td>{row.weight}</td>
+              <td>
+                <a onClick={() => deleteRow(key)}>
+                  <img src={trash} alt="delete" width="20" height="20"></img>
+                </a> 
+              </td>
             </tr> 
           )})}
           </tbody>
