@@ -107,6 +107,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
   };
 
 
+  // triggered when users click the delete button. 
   const deleteRow = (idx) => {
     console.log("DELETEROW")
     let currRows = rowData; 
@@ -230,7 +231,9 @@ function UploadTransfer({ cachedState, setCachedState }) {
         </button>
       </div>
       {rowData && !rowData.empty ? (
+        <div> 
         <table className="table-styling">
+          <caption>COUNT: {rowData.length}</caption>
           <tbody>
             <tr>
               <th>Name</th>
@@ -252,7 +255,9 @@ function UploadTransfer({ cachedState, setCachedState }) {
             </tr> 
           )})}
           </tbody>
-      </table>): (<p1>poop</p1>)}
+      </table>
+      </div> 
+      ): (<p1>poop</p1>)}
     </div>
   );
 }

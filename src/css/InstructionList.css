@@ -16,6 +16,15 @@ th {
     background-color: black;
 }
 
+
+p1 { 
+    font-family: 'Raleway'; 
+    margin-left: auto; 
+    margin-right: auto; 
+    width: 50%; 
+    text-align: center; 
+}
+
 img:hover { 
     background-color: pink; 
 }
