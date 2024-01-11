@@ -1,6 +1,8 @@
 import '../css/Grid.css'; 
 import Container from './Container'; 
 
+
+// component to display the actual ship grid
 export default function Grid(props) {
     let items = props.items; 
 

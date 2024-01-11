@@ -2,30 +2,40 @@ import React, { useEffect, useState } from "react";
 import { TextField, Autocomplete, useColorScheme, colors } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import handleTimestamp from "./Timestamp";
-import { AgGridReact } from "ag-grid-react"; // React Grid Logic
-import "ag-grid-community/styles/ag-grid.css"; // Core CSS
-import "ag-grid-community/styles/ag-theme-quartz.css"; // Theme
+import trash from "../trashicon.png"; 
+import "../css/InstructionList.css"; // Theme
 
 function UploadTransfer({ cachedState, setCachedState }) {
-  const [onload, setOnload] = useState(false); // switches to read-only in form if the operation is true or is onload operation
-  const [rowData, setRowData] = useState([]);
-  const [disableSubmit, setDisableSubmit] = useState(true);
-  const [autocompleteValue, setAutocompleteValue] = useState("");
-  const MANIFEST = cachedState.manifest;
   const nav = useNavigate();
 
-  // items that we have already selected
-  const selected = {};
-  const container_names = new Set();
-  // items that repeat in table
+  const [onload, setOnload] = useState(false); // switches to read-only in form if the operation is true or is onload operation
+  const [rowData, setRowData] = useState([]); // contains our data in a convenient fashion when used to display our inputted instruction list 
+  const [disableSubmit, setDisableSubmit] = useState(true); // disables submit until all form data is filled in correctly 
+  const [autocompleteValue, setAutocompleteValue] = useState(""); // two types of trackers for the value using autocomplete coz its weird 
 
-  const [currentContainer, setCurrentContainer] = useState({
+  const MANIFEST = cachedState.manifest; // note: if user refreshes the page, cached state and local storage is set to default. possibly fix later. 
+
+  const [currentContainer, setCurrentContainer] = useState({ // keeps track of the conrainer that the user is currently inputting into form. 
     name: "",
     weight: 0,
     operation: "",
   });
+  
 
-  // save to our cached state
+  // items that we have already selected from our manifest list, so it doesn't appear again if it's not on the ship. 
+  const selected = {};
+   // items that repeat in table 
+  const container_names = new Set();
+
+
+  // clear weight input in form; triggered if offload option is selected.  
+  function clearWeight() {
+    var weightField = document.querySelector('.input-weight')
+    weightField.value = ''
+    
+  }; 
+
+  // save the container input and operation to our cached state; triggered by submit button on form.  
   const handleSubmitContainer = (e) => {
     // log
     e.preventDefault();
@@ -50,6 +60,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
       container = {
         ...currentContainer,
         operation: "Offload",
+        weight: "-"
       };
       setCachedState({
         ...cachedState,
@@ -69,7 +80,8 @@ function UploadTransfer({ cachedState, setCachedState }) {
     setDisableSubmit(true);
   };
 
-  // ensuring the options autocomplete doesnt have any repeats in dropdown, or unused slots
+  
+  // sets the autocomplete options in the container names for the form. filters out NAN/unused containers. 
   const filterOptions = (option) => {
     let name = option[2];
     if (name === "UNUSED" || name === "NAN" || container_names.has(name)) {
@@ -78,30 +90,8 @@ function UploadTransfer({ cachedState, setCachedState }) {
     return true;
   };
 
-  const columns = [
-    {
-      field: "#",
-      valueGetter: "node.rowIndex + 1",
-    },
-    {
-      field: "operation",
-    },
-    {
-      field: "name",
-    },
-    {
-      field: "weight",
-      cellRenderer: (params) => {
-        if (params.value === 0) {
-          return <p>-</p>;
-        } else {
-          return <span>{params.value} kg</span>;
-        }
-      },
-    },
-  ];
-
-  // finished making transfer list, navigate to actual algorithm now
+  
+  // finished making transfer list, triggered with finish button, navigate to dock view page, actual algorithm now
   const handleOperationSubmission = (e) => {
     e.preventDefault();
     setCachedState({
@@ -110,7 +100,46 @@ function UploadTransfer({ cachedState, setCachedState }) {
     });
     nav("/dock-view");
   };
- 
+
+  
+  // triggered when users click the delete button. 
+  const deleteRow = (idx) => {
+    console.log("DELETEROW")
+    let currRows = rowData; 
+    let currRow = currRows.splice(idx, 1); 
+    console.log("CURR ROW", currRow)
+    if (currRow[0].operation === "Offload") {
+      let off = cachedState.offloadList
+      off.splice(off.indexOf(currRow[0].name), 1)
+      const offload = off
+      console.log("UPDATED LIST ", off)
+      setCachedState({
+        ...cachedState, 
+        offloadList: offload, 
+      }); 
+    } else { 
+      let on = cachedState.loadList
+      for (let i = 0; i < on.length; i = i + 2) { 
+        if (currRow[0].name === on[i] && currRow[0].weight === on[i + 1]) { 
+          on.splice(i, 2)
+          i = on.length
+        }
+      }
+      console.log("UPDATED LIST ", on)
+      const onload = on
+      setCachedState({
+        ...cachedState, 
+        loadList: onload, 
+      }); 
+    }
+  }
+
+  
+  useEffect(() => {
+    console.log("row data: ", rowData);
+  }, [rowData]);
+
+  
   return (
     <div>
       <h1>Upload Transfer Items</h1>
@@ -135,6 +164,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
             value="offload"
             onClick={(e) => {
               setOnload(false);
+              clearWeight(); 
               setDisableSubmit(false);
             }}
           />
@@ -148,7 +178,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
               marginTop: 1,
             }}
             freeSolo
-            options={MANIFEST.filter(filterOptions).map((opt) => opt[2])}
+            options={Array.isArray(MANIFEST) ? (MANIFEST.filter(filterOptions).map((opt) => opt[2])) : []}
             onInputChange={(e, value) => {
               setAutocompleteValue(value);
               setCurrentContainer({
@@ -194,13 +224,34 @@ function UploadTransfer({ cachedState, setCachedState }) {
           Finish
         </button>
       </div>
-      {/* <div
-      className={ "ag-theme-quartz-dark" }
-      style={{ width: '100%', height: '100%' }}
-    >
-      <AgGridReact columnDefs={columns} 
-      rowData={rowData}/> 
-    </div> */}
+      {rowData && !rowData.empty ? (
+        <div> 
+        <table className="table-styling">
+          <caption>COUNT: {rowData.length}</caption>
+          <tbody>
+            <tr>
+              <th>Name</th>
+              <th>Operation</th>
+              <th>Weight</th>
+              <th> </th>
+            </tr>
+          {rowData.map((row, key) => {
+            return (
+            <tr key={key}>
+              <td>{row.name}</td>
+              <td>{row.operation}</td>
+              <td>{row.weight}</td>
+              <td>
+                <a onClick={() => deleteRow(key)}>
+                  <img src={trash} alt="delete" width="20" height="20"></img>
+                </a> 
+              </td>
+            </tr> 
+          )})}
+          </tbody>
+      </table>
+      </div> 
+      ): (<p1>poop</p1>)}
     </div>
   );
 }
