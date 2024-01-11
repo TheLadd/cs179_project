@@ -108,7 +108,33 @@ function UploadTransfer({ cachedState, setCachedState }) {
 
 
   const deleteRow = (idx) => {
-    console.log(rowData[idx])
+    console.log("DELETEROW")
+    let currRows = rowData; 
+    let currRow = currRows.splice(idx, 1); 
+    console.log(currRow); 
+    if (currRow.operation === "Offload") {
+      let off = cachedState.offloadList
+      off.splice(off.indexOf(currRow.name), 1)
+      console.log(off)
+      setCachedState({
+        ...cachedState, 
+        offloadList: off 
+      }); 
+    } else { 
+      let on = cachedState.loadList
+      for (let i = 0; i < on.length; i = i + 2) { 
+        if (currRow.name === on[i] && String(currRow.weight) === on[i + 1]) { 
+          on.splice(i, 2)
+          i = on.length + 1
+        }
+      }
+      console.log(on)
+      setCachedState({
+        ...cachedState, 
+        loadList: on
+      }); 
+    }
+    console.log(cachedState)
   }
 
 
