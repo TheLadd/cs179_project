@@ -80,6 +80,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
     setDisableSubmit(true);
   };
 
+  
   // sets the autocomplete options in the container names for the form. filters out NAN/unused containers. 
   const filterOptions = (option) => {
     let name = option[2];
@@ -89,24 +90,18 @@ function UploadTransfer({ cachedState, setCachedState }) {
     return true;
   };
 
-  // triggered with finish button; navigates to dock view page, passes load/offload list to backend. 
+  
+  // finished making transfer list, triggered with finish button, navigate to dock view page, actual algorithm now
   const handleOperationSubmission = (e) => {
     e.preventDefault();
     setCachedState({
       ...cachedState,
       lastActivityTime: handleTimestamp(),
     });
-
-    localStorage.setItem(
-      "offloadList",
-      JSON.stringify(cachedState.offloadList)
-    );
-    localStorage.setItem("loadList", JSON.stringify(cachedState.loadList));
-    //localStorage.setItem("lastActivityTime", cachedState.lastActivityTime);
     nav("/dock-view");
   };
 
-
+  
   // triggered when users click the delete button. 
   const deleteRow = (idx) => {
     console.log("DELETEROW")
@@ -139,13 +134,12 @@ function UploadTransfer({ cachedState, setCachedState }) {
     }
   }
 
-
-
-
+  
   useEffect(() => {
     console.log("row data: ", rowData);
   }, [rowData]);
 
+  
   return (
     <div>
       <h1>Upload Transfer Items</h1>

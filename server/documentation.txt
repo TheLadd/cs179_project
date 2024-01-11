@@ -8,11 +8,8 @@ search.astar():
     - Must be told of the transfer list
     - More formal description:
         Parameters:
-            manifest: the contents of a manifest file
+            cargoState: a CargoState object
             isBalance: whether or not the operation is load balancing
-            offload: a list of names of containers to offload (only needed if doing tranfer operation)
-            load: a list of containers (name+weight) to load (only needed if doing transfer operation)
-                * format: [Name1, Weight1, Name2, Weight2, ... NameN, WeightN]
 
         Returns:
             solution: a Node object (see Tree.py) where solution.val is the CargoState of the solution
@@ -43,13 +40,26 @@ Class Move:
 
 Class CargoState:
       - Defines the current configuration, transfer list, and cost of a cargo state    
+      - Parameters:
+            manifest: the manifest in List[List[Container]] format
+            offload: List[str], load: List[Container], cost: int = 0, lastMove: Move = None
+            offload: a list of names of containers to offload in List[str] format
+            load: a list of containers (name+weight) to load in List[Container] format
+                * format: [Name1, Weight1, Name2, Weight2, ... NameN, WeightN]
       - Methods:
         - CargoState.move(mov: Move) -> CargoState:
-            -  Returns a CargoState object that represents the current state AFTER taking the move
-               described by the 'mov' parameter
+            - Returns a CargoState object that represents the current state AFTER taking the move
+              described by the 'mov' parameter
             - This might be used to keep track of the current cargo state on the frontend. As in,
               Start with the origin CargoState, and each time an operator presses the 'finished 
               move' button, use this to update the CargoState
         - CargoState.toManifest() -> str:
             - Writes the current *ship* manifest to a string that holds the same format of the  
-              manifest text files. You can write this string to a file and it should be valid  
+              manifest text files. You can write this string to a file and it should be valid
+        - CargoState.bufferToManifest() -> str:
+            - Writes the current *buffer* manifest to a string that holds the same format of the  
+              manifest text files. You can write this string to a file and it should be valid
+            - May be removed soon if unneeded    
+        - CargoState.toDict() -> Dict[str, List[List[str]]]:
+            - Returns a dict which contains the cargo state of both the ship and buffer 
+              represented in both string and array format

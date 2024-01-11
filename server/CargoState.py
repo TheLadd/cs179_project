@@ -16,7 +16,7 @@ class Container:
             """
             #print("LINE has length; ", len(line))
             #print(line)
-            if line == None and  info == None:
+            if line == None and info == None:
                 self.name = 'UNUSED'
                 self.weight = 0
             elif line == None:
@@ -40,6 +40,8 @@ class Container:
                 return self.weight < other.weight
 
     def __eq__(self, other):
+            #print("CARGOSTATE.PY: self then other ", self, ", ", other)
+            #print("CARGOSTATE.PY: types ", type(self), ", ", type(other))
             return (self.name == other.name and self.weight == other.weight)
 
     def __add__(self, other):
@@ -333,7 +335,7 @@ class CargoState:
                   srcArea[src.row][src.col] = Container()
             if dstArea != 'trk':
                   dstArea[dst.row][dst.col] = temp
-            print(newCargoState)
+            #print(newCargoState)
             return newCargoState
             
 
@@ -488,9 +490,35 @@ class CargoState:
                         #print("ABOUT TO PRINT CELL: ")
                         #print(cell)
                         fWeight = str(cell.weight)
-                        fWeight = ( '0' * (6-len(fWeight)) ) + fWeight  # Prepend 0's if needed
+                        fWeight = ( '0' * (5-len(fWeight)) ) + fWeight  # Prepend 0's if needed
                         
-                        line = f'[{fRow}][{fCol}], {{{fWeight}}}, {cell.name}' + ('' if (row == 7 and col == 11) else '\n')
+                        line = f'[{fRow},{fCol}], {{{fWeight}}}, {cell.name}' + ('' if (row == 7 and col == 11) else '\n')
+                        # file.write(line)
+                        man += line
+            return man
+      
+      def bufferToManifest(self) -> str:
+            """
+            Writes the current buffer manifest to a string and returns it
+            """
+            #file = open(path, 'w')
+            man = ''
+            #print("PRINT SELF.SHIP")
+            #print(len(self.ship), " x ", len(self.ship[0]))
+            #print(self.ship)
+            for row in range(4):
+                  for col in range(24):
+                        fRow = ('0' if (row+1) // 10 == 0 else '') + str(row+1)     # 0-index -> 1-index
+                        fCol = ('0' if (col+1) // 10 == 0 else '') + str(col+1)     # ... and prepend 0 if needed
+
+                        #print("ROW: ", row, " COL: ", col)
+                        cell = self.buf[row][col]
+                        #print("ABOUT TO PRINT CELL: ")
+                        #print(cell)
+                        fWeight = str(cell.weight)
+                        fWeight = ( '0' * (5-len(fWeight)) ) + fWeight  # Prepend 0's if needed
+                        
+                        line = f'[{fRow},{fCol}], {{{fWeight}}}, {cell.name}' + ('' if (row == 3 and col == 23) else '\n')
                         # file.write(line)
                         man += line
             return man
@@ -507,7 +535,11 @@ class CargoState:
             for row in range(4):
                   for col in range(24):
                         cell: Container = self.buf[row][col]
-                        item = [f'[{row+1}, {col+1}]', str(cell.weight), cell.name]
+                        # Formatting strings with leading zeros
+                        x_str = f'{row+1:02}'  # Ensure two digits with leading zeros
+                        y_str = f'{col+1:02}'  # Ensure two digits with leading zeros
+                        weight_str = f'{cell.weight:05}'  # Ensure five digits with leading zeros
+                        item = [f'[{x_str},{y_str}]', weight_str, cell.name]
                         buf.append(item)
             return buf
 
@@ -522,7 +554,11 @@ class CargoState:
             for row in range(8):
                   for col in range(12):
                         cell: Container = self.ship[row][col]
-                        item = [f'{row+1}, {col+1}', str(cell.weight), cell.name]
+                        # Formatting strings with leading zeros
+                        x_str = f'{row+1:02}'  # Ensure two digits with leading zeros
+                        y_str = f'{col+1:02}'  # Ensure two digits with leading zeros
+                        weight_str = f'{cell.weight:05}'  # Ensure five digits with leading zeros
+                        item = [f'[{x_str},{y_str}]', weight_str, cell.name]
                         ship.append(item)
             return ship
 
@@ -530,5 +566,7 @@ class CargoState:
             dic = {}
             dic['ship'] = self.toShip()
             dic['buffer'] = self.toBuffer()
+            dic['shipTxt'] = self.toManifest()
+            dic['bufferTxt'] = self.bufferToManifest()
             return dic
             
