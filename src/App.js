@@ -31,7 +31,7 @@ function App() {
   const updateCachedState = (newState) => {
     // Update localStorage for each key in newState
     Object.keys(newState).forEach((key) => {
-      // if its the manifest or buffer being set dont update localStorage because we run special logic for that
+      // if its the manifest or buffer being set dont update localStorage because we have to manually set localStorage for those..
       // console.log("APP.JS: ", key)
       if (key !== "manifest" && key !== "buffer") {
         localStorage.setItem(key, newState[key]);

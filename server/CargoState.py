@@ -16,7 +16,7 @@ class Container:
             """
             #print("LINE has length; ", len(line))
             #print(line)
-            if line == None and  info == None:
+            if line == None and info == None:
                 self.name = 'UNUSED'
                 self.weight = 0
             elif line == None:
@@ -40,6 +40,8 @@ class Container:
                 return self.weight < other.weight
 
     def __eq__(self, other):
+            #print("CARGOSTATE.PY: self then other ", self, ", ", other)
+            #print("CARGOSTATE.PY: types ", type(self), ", ", type(other))
             return (self.name == other.name and self.weight == other.weight)
 
     def __add__(self, other):
@@ -495,7 +497,7 @@ class CargoState:
                         man += line
             return man
       
-      def bufferToManifest(self, path: str='manifest.txt') -> str:
+      def bufferToManifest(self) -> str:
             """
             Writes the current buffer manifest to a string and returns it
             """
