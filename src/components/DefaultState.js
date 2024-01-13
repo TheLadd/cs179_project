@@ -1,6 +1,7 @@
-
 // global var of default state so we can access in multiple places. portable! 
-export const DefaultState = {
+const DefaultState = ( cachedState  => {
+
+return ({ 
     inProgress: false,
     instruction: "",
     opType: "",
@@ -12,4 +13,7 @@ export const DefaultState = {
     loadList: [],
     offloadList: [],
     moves: []
-};
+}); 
+});
+
+export default DefaultState; 

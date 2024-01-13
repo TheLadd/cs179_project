@@ -6,6 +6,7 @@ import {
   handleCustomLog,
 } from "./BackendRoutes";
 import Grid from "./Grid";
+import LogoutButton from "./LogoutButton";
 
 export default function DockView ({ cachedState, setCachedState }) {
   const nav = useNavigate(); 
@@ -245,6 +246,7 @@ export default function DockView ({ cachedState, setCachedState }) {
 
   return (
     <div className="dock-view-container">
+      <LogoutButton setCachedState={setCachedState}/> 
       <div>
         {cachedState.buffer ? (
           <>
