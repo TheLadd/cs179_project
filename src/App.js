@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import DefaultState from "./components/DefaultState"; 
 import Login from "./components/Login";
 import Home from "./components/Home";
+import Finish from "./components/Finish"; 
 import DockView from "./components/DockView";
 import UploadTransfer from "./components/UploadTransfer";
 
@@ -12,7 +13,7 @@ function App() {
   const inProgress = localStorage.getItem("inProgress") === "true";
 
   const [cachedState, setCachedState] = useState(() => {
-    return DefaultState;
+    return DefaultState(null);
   });
 
   // function that updates cachedState along with the corresponding values in localStorage every time it is called
@@ -38,7 +39,7 @@ function App() {
     if (!inProgress) {
       console.log("APP.JS: not in progress, reset cachedstate and localstorage to default");
       localStorage.clear();
-      updateCachedState(DefaultState);
+      updateCachedState(DefaultState(cachedState));
     } else {
       console.log("APP.JS: in progress");
     }
@@ -54,7 +55,7 @@ function App() {
         <Route path="/home" element={<Home cachedState={cachedState} setCachedState={updateCachedState} updateCachedState={setCachedState}/>}/>
         <Route path="/upload-transfer" element={<UploadTransfer cachedState={cachedState} setCachedState={updateCachedState}/>}/>
         <Route path="/dock-view" element={<DockView cachedState={cachedState} setCachedState={updateCachedState}/>}/>
-        <Route path="/finish" element={<Finish cachedState={cache}/>} /> 
+        <Route path="/finish" element={<Finish cachedState={cachedState} setCachedState={updateCachedState}/>} /> 
         </Routes>
     </BrowserRouter>
   );

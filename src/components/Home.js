@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import handleTimestamp from "./Timestamp";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button } from "@mui/material";
@@ -11,7 +11,7 @@ import "../css/Form.css";
 // cached state is passed in the event of a crash.
 // nav is used for route switching between different link paths
 
-function Home ({ cachedState, setCachedState, updateCachedState }) {
+function Home ({ cachedState, setCachedState }) {
   const nav = useNavigate()
 
   // checks if there is a file present to see if we're in the middle of an operation, if not, takes you to home page
