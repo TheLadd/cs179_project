@@ -232,13 +232,9 @@ export default function DockView ({ cachedState, setCachedState }) {
   // useEffect that handles when u finish and generates the instruction every time we make a move (currStep changes)
   useEffect(() => {
     if (cachedState.inProgress === true) {
-      if (cachedState.currStep === cachedState.moves.length+1 && cachedState.currStep != 0) {
-        // operation finished
-        // actually do something here like a finish screen this is just placeholder
-
-        // resets the cachedState to the default then navigates back to home screen
+      if (cachedState.currStep === cachedState.moves.length && cachedState.currStep != 0) {
         setCachedState(defaultState);
-        nav("/home");
+        nav("/finish");
       }
     }
   }, [cachedState.inProgress, cachedState.moves, cachedState.currStep]);

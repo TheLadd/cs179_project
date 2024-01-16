@@ -1,18 +1,34 @@
-
+import { useNavigate } from 'react-router-dom'; 
+import DefaultState from './DefaultState';
+import { ButtonGroup } from '@mui/material';
+import Div from "./Div"; 
 // will display the finish screen 
-const Finish = (props) => { 
+const Finish = ({ cachedState, setCachedState }) => { 
+    const nav = useNavigate(); 
 
+    const handleNavToHome = () => {
+        setCachedState(DefaultState(cachedState)); 
+        nav('/home'); 
 
+    }
 
+    const handleLogout = () => { 
+        setCachedState(DefaultState(null)); 
+        nav('/login'); 
+
+    }
 
     return (
-        <div> 
+        <Div sx={{
+            bgcolor: 'finish.main', 
+            width: 1/2, 
+        }}> 
             congrats! you're done. 
-            {/* <button onClick={handleLogout}>Logout</button>
-            <button onClick={handleNavToHome}>Home</button> */}
-        </div> 
-
-
+            <ButtonGroup>
+                <button onClick={handleLogout}>Logout</button>
+                <button onClick={handleNavToHome}>Home</button>
+            </ButtonGroup> 
+        </Div> 
     ); 
 }; 
 
