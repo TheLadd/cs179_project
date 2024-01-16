@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import DefaultState from './DefaultState';
 import { ButtonGroup, Button } from '@mui/material';
 import Div from "./Div"; 
+import "../css/Finish.css"; 
 // will display the finish screen 
 const Finish = ({ cachedState, setCachedState }) => { 
     const nav = useNavigate(); 
@@ -36,10 +37,8 @@ const Finish = ({ cachedState, setCachedState }) => {
             flexDirection: 'column', 
         }}> 
             congrats!<br/>you're done. 
-            <ButtonGroup variant="text" aria-label="text button group" sx={{
-                color: 'finish.text', 
-            }}>
-                <Button onClick={handleLogout}>Logout</Button>
+            <ButtonGroup variant="text" color="secondary" aria-label="secondary button group">
+                <Button color="inherit" onClick={handleLogout}>Logout</Button>
                 <Button onClick={handleNavToHome}>Home</Button>
             </ButtonGroup> 
         </Div> 
