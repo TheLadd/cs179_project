@@ -35,12 +35,13 @@ const Finish = ({ cachedState, setCachedState }) => {
             textAlign: 'center', 
             alignItems: 'center', 
             flexDirection: 'column', 
+            
         }}> 
-            congrats!<br/>you're done. 
-            <ButtonGroup variant="text" color="secondary" aria-label="secondary button group">
-                <Button color="inherit" onClick={handleLogout}>Logout</Button>
-                <Button onClick={handleNavToHome}>Home</Button>
-            </ButtonGroup> 
+            congrats!<br/>you're done.<br/>
+            <div className='button-group'>
+                <div className='button-styling'>Logout</div>
+                <div className='button-styling'>Home</div>
+            </div>
         </Div> 
     ); 
 }; 

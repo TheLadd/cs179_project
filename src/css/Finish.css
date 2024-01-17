@@ -1,4 +1,25 @@
-.Button { 
-    color: '#E9D8A6';  
 
+.button-group { 
+    display: flex; 
+    flex-direction: row;
+    padding-top: 0.25em;
+    width: 90%; 
+}
+
+
+.button-styling { 
+    background-color: #CA6702;
+    padding: 0.25em; 
+    width: 60%; 
+    color: #E9D8A6; 
+    font-family: 'Raleway';
+    border: 10px solid #0A9396;
+    border-radius: 20px;
+    font-size: 0.6em;
+    margin: 0.20em; 
+}
+
+.button-styling:hover { 
+    background-color: #9B2226;
+    transition: 0.25s ease;
 }
