@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   runAstar,
@@ -16,20 +16,6 @@ export default function DockView ({ cachedState, setCachedState }) {
   const currentCargoState = useRef(cachedState.manifest); 
   const currentBufferState = useRef([]); 
   const goalCargoState = useRef([]);
-
-  const defaultState = {
-    inProgress: false,
-    instruction: "",
-    opType: "",
-    lastActivityTime: null,
-    currStep: 0,
-    user: "",
-    manifest: null,
-    buffer: null,
-    loadList: [],
-    offloadList: [],
-    moves: [],
-  }; 
 
   const currMove = useRef({
     "cost": -1,
@@ -233,7 +219,6 @@ export default function DockView ({ cachedState, setCachedState }) {
   useEffect(() => {
     if (cachedState.inProgress === true) {
       if (cachedState.currStep === cachedState.moves.length && cachedState.currStep != 0) {
-        setCachedState(defaultState);
         nav("/finish");
       }
     }

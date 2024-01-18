@@ -24,7 +24,7 @@ function Home ({ cachedState, setCachedState }) {
   const handleStartOver = () => {
     console.log("HOME.JS: handle start over called")
     localStorage.clear();
-    setCachedState(DefaultState);
+    setCachedState(DefaultState(cachedState));
   };
 
   const handleContinue = () => {
