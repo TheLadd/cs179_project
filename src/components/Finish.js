@@ -31,13 +31,16 @@ const Finish = ({ cachedState, setCachedState }) => {
             /> 
         <Div sx={{
             bgcolor: 'finish.main', 
-            margin: 10, 
-            padding: 30, 
+            padding: '3%', 
+            margin: 'auto', 
+            marginTop: '3%', 
             border: 80, 
             borderColor: 'finish.border', 
             borderRadius: 10, 
             fontWeight: 'bold', 
             fontSize: 80,  
+            height: '80%', 
+            width: '70%', 
             fontFamily: 'Raleway', 
             color: 'finish.text', 
             display: 'flex', 

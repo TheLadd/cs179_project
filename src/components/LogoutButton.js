@@ -7,8 +7,8 @@ const LogoutButton = ({ setCachedState }) => {
     const nav = useNavigate(); 
 
     const handleLogout = (() => {
-        setCachedState({DefaultState}); 
-        nav('/login'); 
+        setCachedState(DefaultState(null)); 
+        nav('/'); 
     }); 
 
     return (
