@@ -1,4 +1,5 @@
 // global var of default state so we can access in multiple places. portable! 
+// if cachedState null, resets to empty user. pass current cached state to reset to default while user is logged in. 
 const DefaultState = ( cachedState  => {
 return ({ 
     inProgress: false,

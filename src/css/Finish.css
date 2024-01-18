@@ -22,4 +22,5 @@
 .button-styling:hover { 
     background-color: #9B2226;
     transition: 0.25s ease;
+    cursor: pointer;
 }

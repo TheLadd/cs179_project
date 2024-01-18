@@ -1,11 +1,14 @@
-import { useNavigate } from 'react-router-dom'; 
+import  { useNavigate } from 'react-router-dom'; 
 import DefaultState from './DefaultState';
-import { ButtonGroup, Button } from '@mui/material';
+import Confetti  from 'react-confetti'; 
+import { useWindowSize }  from 'react-use';
 import Div from "./Div"; 
 import "../css/Finish.css"; 
 // will display the finish screen 
 const Finish = ({ cachedState, setCachedState }) => { 
     const nav = useNavigate(); 
+    const { width, height } = useWindowSize(); 
+    const recycle = false; 
 
     const handleNavToHome = () => {
         setCachedState(DefaultState(cachedState)); 
@@ -20,6 +23,12 @@ const Finish = ({ cachedState, setCachedState }) => {
     }
 
     return (
+        <div>
+            <Confetti 
+                width={width}
+                height={height}
+                recycle={recycle}
+            /> 
         <Div sx={{
             bgcolor: 'finish.main', 
             margin: 10, 
@@ -36,13 +45,14 @@ const Finish = ({ cachedState, setCachedState }) => {
             alignItems: 'center', 
             flexDirection: 'column', 
             
-        }}> 
+        }}>
             congrats!<br/>you're done.<br/>
             <div className='button-group'>
                 <div className='button-styling'>Logout</div>
                 <div className='button-styling'>Home</div>
             </div>
         </Div> 
+        </div> 
     ); 
 }; 
 
