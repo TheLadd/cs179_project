@@ -1,18 +1,18 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import handleTimestamp from "./Timestamp";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button } from "@mui/material";
 import { manifestTxtToArray } from "./manifestParser";
 import { initializeCargoState } from "./BackendRoutes";
+import DefaultState from "./DefaultState"; 
 import "../css/Form.css";
 
 // cached state is passed in the event of a crash.
 // nav is used for route switching between different link paths
 
-function Home ({ cachedState, setCachedState, updateCachedState }) {
+function Home ({ cachedState, setCachedState }) {
   const nav = useNavigate()
-  
 
   // checks if there is a file present to see if we're in the middle of an operation, if not, takes you to home page
   const [txtFile, setTxtFile] = useState(
@@ -20,26 +20,11 @@ function Home ({ cachedState, setCachedState, updateCachedState }) {
   );
   const [op, setOp] = useState(null)
 
-  const defaultState = {
-    inProgress: false,
-    instruction: "",
-    opType: "",
-    lastActivityTime: null,
-    currStep: 0,
-    user: cachedState.user,
-    manifest: null,
-    buffer: null,
-    loadList: [],
-    offloadList: [],
-    moves: []
-  };
-
   // in the event if there is an operation in progress and we want to start over
   const handleStartOver = () => {
     console.log("HOME.JS: handle start over called")
-  
     localStorage.clear();
-    setCachedState(defaultState);
+    setCachedState(DefaultState(cachedState));
   };
 
   const handleContinue = () => {

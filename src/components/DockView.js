@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   runAstar,
@@ -6,6 +6,7 @@ import {
   handleCustomLog,
 } from "./BackendRoutes";
 import Grid from "./Grid";
+import LogoutButton from "./LogoutButton";
 
 export default function DockView ({ cachedState, setCachedState }) {
   const nav = useNavigate(); 
@@ -15,20 +16,6 @@ export default function DockView ({ cachedState, setCachedState }) {
   const currentCargoState = useRef(cachedState.manifest); 
   const currentBufferState = useRef([]); 
   const goalCargoState = useRef([]);
-
-  const defaultState = {
-    inProgress: false,
-    instruction: "",
-    opType: "",
-    lastActivityTime: null,
-    currStep: 0,
-    user: "",
-    manifest: null,
-    buffer: null,
-    loadList: [],
-    offloadList: [],
-    moves: [],
-  }; 
 
   const currMove = useRef({
     "cost": -1,
@@ -231,13 +218,8 @@ export default function DockView ({ cachedState, setCachedState }) {
   // useEffect that handles when u finish and generates the instruction every time we make a move (currStep changes)
   useEffect(() => {
     if (cachedState.inProgress === true) {
-      if (cachedState.currStep === cachedState.moves.length+1 && cachedState.currStep != 0) {
-        // operation finished
-        // actually do something here like a finish screen this is just placeholder
-
-        // resets the cachedState to the default then navigates back to home screen
-        setCachedState(defaultState);
-        nav("/home");
+      if (cachedState.currStep === cachedState.moves.length && cachedState.currStep != 0) {
+        nav("/finish");
       }
     }
   }, [cachedState.inProgress, cachedState.moves, cachedState.currStep]);
@@ -245,6 +227,7 @@ export default function DockView ({ cachedState, setCachedState }) {
 
   return (
     <div className="dock-view-container">
+      <LogoutButton setCachedState={setCachedState}/> 
       <div>
         {cachedState.buffer ? (
           <>
