@@ -48,8 +48,8 @@ const Finish = ({ cachedState, setCachedState }) => {
         }}>
             congrats!<br/>you're done.<br/>
             <div className='button-group'>
-                <div className='button-styling'>Logout</div>
-                <div className='button-styling'>Home</div>
+                <div className='button-styling' onClick={handleLogout}>Logout</div>
+                <div className='button-styling' onClick={handleNavToHome}>Home</div>
             </div>
         </Div> 
         </div> 
