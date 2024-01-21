@@ -94,6 +94,9 @@ def run_astar():
     # 3. return the goal state, moves, and the step you are currently on to frontend (will always be 0 since you are just running the algorithm)
     return jsonify({"solution": solution.val.toDict(), "moves": steps, "currStep": currStep })
 
+
+
+
 @app.route('/run-move', methods=['POST'])
 def run_move():
     global current_cargo_state
@@ -101,7 +104,6 @@ def run_move():
     global currStep
     global offload
     global load
-
     # only make the move if we have moves left
     if (currStep < len(steps)):
         # get the current move
@@ -130,17 +132,23 @@ def run_move():
             current_cargo_state.offload.remove(src_con.name) # pop the container from the offload list with the same name as the container in the move
         elif move_data['current-area'] == 2: # the source for the container is a truck
             print("APP.PY: popped from load")
-            current_cargo_state.load.remove(src_con) # pop the container from the load list with the same name as the container in the move
-
+            new_load_list = current_cargo_state.load.remove(src_con)
     # todo: make it so that it logs a message here should be incredibly simple
+
+    
+    new_load_list = []
+    for container in current_cargo_state.load: 
+        new_load_list.append(str(container.name))
+        new_load_list.append(str(container.weight))
 
     # we are on the next move now
     currStep += 1
 
+
     dict = current_cargo_state.toDict()
     dict['currStep'] = currStep
     dict['offload'] = str(current_cargo_state.offload)
-    dict['load'] = str(current_cargo_state.load)
+    dict['load'] = str(new_load_list)
 
     # return the current cargo state, the step # you are currently on, and the updated offload/load lists
     return jsonify(dict)
