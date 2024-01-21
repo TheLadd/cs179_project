@@ -94,6 +94,43 @@ def run_astar():
     # 3. return the goal state, moves, and the step you are currently on to frontend (will always be 0 since you are just running the algorithm)
     return jsonify({"solution": solution.val.toDict(), "moves": steps, "currStep": currStep })
 
+@app.route('/skip-move', methods=['POST'])
+def skip_move(): 
+    global current_cargo_state 
+    global steps 
+    global currStep 
+
+    deleteStep = steps[currStep] # the step to delete from either load/offload list 
+    deleteContainer = Container(info=(deleteStep['name'], deleteStep['weight'])) 
+    if current_cargo_state: 
+        if deleteStep['current-area'] == 2: # load operation 
+            current_cargo_state.load.remove(deleteContainer)
+        else: # offload operation 
+            current_cargo_state.offload.remove(deleteContainer.name)
+
+    
+    solution, steps = search.astar(current_cargo_state, False)
+
+    # 2.2 Reformat moves from list of Move objects to list of Move-like dictionaries
+    movesReformat: List[Dict[str, List[int]|int]] = []
+    print(f'moves before formatting: {steps}')
+    for move in steps:
+        temp = {
+            'name': move.src.container.name, 
+            'current-grid-position': [move.src.row+1, move.src.col+1],
+            'current-area': move.src.area,
+            'next-grid-position': [move.dst.row+1, move.dst.col+1],
+            'next-area': move.dst.area,
+            'cost': move.cost(), 
+            'weight': move.src.container.weight,
+            'description': str(move), 
+        }
+        movesReformat.append(temp)
+
+    # 3. return the goal state, moves, and the step you are currently on to frontend (will always be 0 since you are just running the algorithm)
+    return jsonify({"solution": solution.val.toDict(), "moves": steps, "currStep": currStep })
+    
+
 
 
 
@@ -106,9 +143,8 @@ def run_move():
     global load
     # only make the move if we have moves left
     if (currStep < len(steps)):
-        # get the current move
         move_data = steps[currStep]
-
+        
         # convert the move from the dict form it was stored in to an actual Move object that can be passed into a CargoState object
 
         # Init src
@@ -132,10 +168,10 @@ def run_move():
             current_cargo_state.offload.remove(src_con.name) # pop the container from the offload list with the same name as the container in the move
         elif move_data['current-area'] == 2: # the source for the container is a truck
             print("APP.PY: popped from load")
-            new_load_list = current_cargo_state.load.remove(src_con)
+            current_cargo_state.load.remove(src_con)
     # todo: make it so that it logs a message here should be incredibly simple
 
-    
+
     new_load_list = []
     for container in current_cargo_state.load: 
         new_load_list.append(str(container.name))
