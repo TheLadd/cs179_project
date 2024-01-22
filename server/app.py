@@ -99,10 +99,13 @@ def skip_move():
     global current_cargo_state 
     global steps 
     global currStep 
-
+    print("offload", current_cargo_state.offload)
+    print("onload", current_cargo_state.load)
     deleteStep = steps[currStep] # the step to delete from either load/offload list 
     deleteContainer = Container(info=(deleteStep['name'], deleteStep['weight'])) 
     if current_cargo_state: 
+        print(current_cargo_state.load)
+        print(current_cargo_state.offload)
         if deleteStep['current-area'] == 2: # load operation 
             current_cargo_state.load.remove(deleteContainer)
         else: # offload operation 
@@ -126,7 +129,7 @@ def skip_move():
             'description': str(move), 
         }
         movesReformat.append(temp)
-
+    steps = movesReformat
     # 3. return the goal state, moves, and the step you are currently on to frontend (will always be 0 since you are just running the algorithm)
     return jsonify({"solution": solution.val.toDict(), "moves": steps, "currStep": currStep })
     
