@@ -2,7 +2,6 @@
 
 * {
   box-sizing: border-box;
-  overflow: hidden;
 }
 
 body {
@@ -15,6 +14,8 @@ body {
   margin: auto;
   width: 350px;
   color: white;
+  text-shadow: 3.35px 0px  #E9D8A6;
+  font-weight: bolder;
   font-family: "Raleway", sans-serif;
   font-size: 250%;
 }
@@ -24,6 +25,11 @@ body {
   display: table;
   clear: both;
 }
+h1 { 
+  font-family: 'Raleway'; 
+  font-size: 2em; 
+}
+
 
 span {
   float: left;
@@ -32,10 +38,7 @@ span {
   width: 50px;
 }
 
-.loading > span {
-  border-left: 1px solid #444;
-  border-right: 1px solid #222;
-}
+
 
 .hidden {
   position: absolute;

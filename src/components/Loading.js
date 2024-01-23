@@ -1,19 +1,18 @@
 import "../css/Loading.css"; 
 
-// source: https://codepen.io/austinmzach/pen/nPJOBO 
-const Loading = ({ displayText, redirectPath }) => { 
+const Loading = ({ displayText }) => { 
     // displayText: show something to users if they want 
-    // redirectPath: where it should redirect users to once finished rendering (if applicable - might just use if/else statement in code)
 
     return ( 
+        <div> 
         <div className="loading"> 
-        <span>l</span>
-        <span>o</span>
-        <span>a</span>
-        <span>d</span>
-        <span>i</span>
-        <span>n</span>
-        <span>g</span>
+        <span style={{backgroundColor: '#005F73'}}>L</span>
+        <span style={{backgroundColor: '#0A9396'}}>O</span>
+        <span style={{backgroundColor: '#94D2BD'}}>A</span>
+        <span style={{backgroundColor: '#EE9B00'}}>D</span>
+        <span style={{backgroundColor: '#CA6702'}}>I</span>
+        <span style={{backgroundColor: '#BB3E03'}}>N</span>
+        <span style={{backgroundColor: '#AE2012'}}>G</span>
         <div className="hidden">
             <span></span>
             <span></span>
@@ -23,6 +22,8 @@ const Loading = ({ displayText, redirectPath }) => {
             <span></span>
             <span></span>
         </div>
+        </div> 
+            <h1>{displayText}</h1>
         </div> 
     )
 
