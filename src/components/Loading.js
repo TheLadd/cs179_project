@@ -4,23 +4,23 @@ const Loading = ({ displayText }) => {
     // displayText: show something to users if they want 
 
     return ( 
-        <div> 
+        <div className="load-container"> 
         <div className="loading"> 
-        <span style={{backgroundColor: '#005F73'}}>L</span>
-        <span style={{backgroundColor: '#0A9396'}}>O</span>
-        <span style={{backgroundColor: '#94D2BD'}}>A</span>
-        <span style={{backgroundColor: '#EE9B00'}}>D</span>
-        <span style={{backgroundColor: '#CA6702'}}>I</span>
-        <span style={{backgroundColor: '#BB3E03'}}>N</span>
-        <span style={{backgroundColor: '#AE2012'}}>G</span>
+        <span style={{backgroundColor: '#005F73'}} className="span-st">L</span>
+        <span style={{backgroundColor: '#0A9396'}} className="span-st">O</span>
+        <span style={{backgroundColor: '#94D2BD'}} className="span-st">A</span>
+        <span style={{backgroundColor: '#EE9B00'}} className="span-st">D</span>
+        <span style={{backgroundColor: '#CA6702'}} className="span-st">I</span>
+        <span style={{backgroundColor: '#BB3E03'}} className="span-st">N</span>
+        <span style={{backgroundColor: '#AE2012'}} className="span-st">G</span>
         <div className="hidden">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+            <span className="span-st"></span>
+            <span className="span-st"></span>
+            <span className="span-st"></span>
+            <span className="span-st"></span>
+            <span className="span-st"></span>
+            <span className="span-st"></span>
+            <span className="span-st"></span>
         </div>
         </div> 
             <h1>{displayText}</h1>

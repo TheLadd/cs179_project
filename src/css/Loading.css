@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-body {
+.load-container {
   padding-top: 10em;
   text-align: center;
 }
@@ -31,7 +31,7 @@ h1 {
 }
 
 
-span {
+.span-st {
   float: left;
   height: 100px;
   line-height: 120px;
