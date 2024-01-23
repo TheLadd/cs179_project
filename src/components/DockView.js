@@ -6,6 +6,7 @@ import {
   handleCustomLog,
   skipMove,
 } from "./BackendRoutes";
+import Loading from "./Loading"; 
 import Grid from "./Grid";
 import LogoutButton from "./LogoutButton";
 
@@ -59,21 +60,12 @@ export default function DockView ({ cachedState, setCachedState }) {
   
 
   return (
-    <div className="dock-view-container">
+    <div> 
       <LogoutButton setCachedState={setCachedState}/> 
-      <div>
-        {cachedState.buffer ? (
-          <>
+        {cachedState.buffer && cachedState.moves ? (
+          <div className="dock-view-container">
             <Grid type={SHIP} items={cachedState.manifest} id="ship-dock" />
             <Grid type={BUFFER} items={cachedState.buffer} id="buffer-dock" />
-          </>
-        ) : (
-          <div class="lds-dual-ring">
-            <div></div>
-          </div>
-        )}
-        {cachedState.inProgress ? (
-          <>
             <div className="instruction-box">
               <h1 value={cachedState}>
                 Step {cachedState.currStep + 1} of {cachedState.moves.length}:
@@ -105,14 +97,10 @@ export default function DockView ({ cachedState, setCachedState }) {
                   Write a comment in the log
                 </button>
               </div>
-            </div>
-          </>
-        ) : (
-          <div class="lds-dual-ring">
-            <div></div>
           </div>
+          </div> 
+        ) : (
+          <Loading displayText={"Sit tight! We're currently calculating the best moveset..."} /> 
         )}
-      </div>
-    </div>
-  );
-}
+    </div> 
+)};

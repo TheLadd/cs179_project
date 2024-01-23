@@ -5,6 +5,7 @@ import DefaultState from "./components/DefaultState";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import Finish from "./components/Finish"; 
+import Loading from "./components/Loading"; 
 import DockView from "./components/DockView";
 import UploadTransfer from "./components/UploadTransfer";
 
