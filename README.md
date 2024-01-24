@@ -9,10 +9,10 @@ This project was made for Mr. Keogh, our 'client' who owns a ship dock. Currentl
 3.  _making the moves:_ This is the primary function of our app, which shows a grid display of the ship and 'buffer', which is an additional place for us to store the shipping containers in the event there's no room on the ship. Users can either choose to make the suggested move, or skip it, in which case the astar algorithm is ran again with a new list of expected moves.
 4.  _uploading the transfer list:_ Users upload a 'manifest', which contains a description of the ship and buffer state, and then can input the transfer list, which contains the loading and offloading instructions for that ship. The transfer list is human-readable and very informal, hence why we need users to upload these instructions manually. 
 
-## Search algorithm and functionality 
+## Search Algorithm & Functionality 
 This project uses the A* algorithm and Manhattan Distance to calculate the minimum number of moves for both load-balancing and onloading/offloading. 
 
-### For onloading/offloading: 
+### For Onloading/Offloading: 
 
 For each container to offload, O_i, calculate the Manhattan distance from the position of O_i from the ship hull (1, 1). Sum all Manhattan distances for all O_i and let that be your cost.
 
@@ -20,11 +20,15 @@ Then, for each container to load, L_i, calculate the Manhattan distance from the
 
 Return cost.
 
-### For load balancing: 
+### For Load Balancing: 
 
-For
+Measure the weight on the left and right side. Determine which side is heavier, let the set of all containers on the heavier side be called HeavyContainers. Sort HeavyContainers so that heaviest containers come first.
 
-## dependencies: 
+Starting with the heaviest container (so long as moving the heaviest container to the other side wouldn’t create another imbalance), determine the amount of columns it would have to traverse to reach the beginning of the lighter side. Add this number to a variable called cellsMoved. Do this until the load is balanced.
+
+Return cellsMoved as the cost
+
+## Dependencies
 - Node.js (or npm) 8.19.2: https://nodejs.org/en
 - React 
 - Python 3.12.0
