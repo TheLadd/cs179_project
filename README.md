@@ -13,3 +13,4 @@ Flask-cors
 
 Once all necessary packages are installed, navigate to the project directory and run the command:
 npm run dev
+
