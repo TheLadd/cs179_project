@@ -30,7 +30,8 @@ For
 - Python 3.12.0
 - Flask 3.0.0
 - Flask-cors
+- and countless others.... run `npm install` to install all dependencies listed in package.json 
 
 Once all necessary packages are installed, navigate to the project directory and run the command:
-npm run dev
+`npm run dev`
 
