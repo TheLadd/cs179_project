@@ -25,17 +25,11 @@ Return cost.
 For
 
 ## dependencies: 
-React 
-   - 'npm install react'
-   - run 'npm install' to grab all the dependencies from package.json. 
-Python 3.12.0
-    - Can be installed from this site: https://www.python.org/downloads/windows/
-Node.js (or npm) 8.19.2
-    - https://nodejs.org/en
-Flask 3.0.0
-    - run 'pip install flask' in command line
-Flask-cors
-    - run pip install flask-cors
+- Node.js (or npm) 8.19.2: https://nodejs.org/en
+- React 
+- Python 3.12.0
+- Flask 3.0.0
+- Flask-cors
 
 Once all necessary packages are installed, navigate to the project directory and run the command:
 npm run dev
