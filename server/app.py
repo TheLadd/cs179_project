@@ -106,14 +106,15 @@ def skip_move():
     if current_cargo_state: 
         print(current_cargo_state.load)
         print(current_cargo_state.offload)
-        if deleteStep['current-area'] == 2: # load operation 
+        if deleteStep['next-area'] == 2: # the destination for the container is a truck
+            print("APP.PY: popped from offload")
+            current_cargo_state.offload.remove(deleteContainer.name) # pop the container from the offload list with the same name as the container in the move
+        elif deleteStep['current-area'] == 2: # the source for the container is a truck
+            print("APP.PY: popped from load")
             current_cargo_state.load.remove(deleteContainer)
-        else: # offload operation 
-            current_cargo_state.offload.remove(deleteContainer.name)
-
-    
     solution, steps = search.astar(current_cargo_state, False)
-
+    currStep = 0
+    
     # 2.2 Reformat moves from list of Move objects to list of Move-like dictionaries
     movesReformat: List[Dict[str, List[int]|int]] = []
     print(f'moves before formatting: {steps}')
@@ -142,8 +143,6 @@ def run_move():
     global current_cargo_state
     global steps
     global currStep
-    global offload
-    global load
     # only make the move if we have moves left
     if (currStep < len(steps)):
         move_data = steps[currStep]

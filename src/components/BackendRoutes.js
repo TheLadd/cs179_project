@@ -118,7 +118,7 @@ const runMove = async (cachedState, setCachedState) => {
 
 const skipMove = async (cachedState, setCachedState) => {
     if (cachedState.opType !== 'Offloading/Onloading') { 
-      throw new Error("Skipping moves is not allowed for load balancing. The ship could tip over!!!\n"); 
+      return; 
     }
   
     try {
@@ -135,7 +135,7 @@ const skipMove = async (cachedState, setCachedState) => {
   
         setCachedState({
           ...cachedState,
-          currStep: 0, 
+          currStep: result.currStep, 
           instruction: makeInstruction(result.currStep, result.moves), 
           moves: result.moves, 
           inProgress: true,

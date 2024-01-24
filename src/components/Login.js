@@ -1,7 +1,7 @@
 import handleTimestamp from './Timestamp'
 import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
-import { handleLogMessage } from './BackendRoutes'
+import { handleLogMessage } from './BackendRoutes'; 
 
 // assumption: if we logout, we are clearing all the user data 
 function Login ({ cachedState, setCachedState }) {

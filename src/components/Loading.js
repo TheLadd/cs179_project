@@ -1,4 +1,5 @@
 import "../css/Loading.css"; 
+import { useState } from 'react'; 
 
 const Loading = ({ displayText }) => { 
     // displayText: show something to users if they want 

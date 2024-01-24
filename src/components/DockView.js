@@ -17,6 +17,7 @@ export default function DockView ({ cachedState, setCachedState }) {
   const currentCargoState = useRef(cachedState.manifest); 
   const currentBufferState = useRef([]); 
   const goalCargoState = useRef([]);
+  const displayText = ""; 
 
   const currMove = useRef({
     "cost": -1,
@@ -34,12 +35,6 @@ export default function DockView ({ cachedState, setCachedState }) {
   const BUFFER = "buffer";
   const SHIP = "ship";
 
-
-
-  const triggerSkipMove = () => {
-    skipMove(cachedState, setCachedState); 
-    
-  }
 
 
   // runs a star if there wasnt already an operation in progress and cargostate has already been initialized (cachedState.buffer)
@@ -62,7 +57,7 @@ export default function DockView ({ cachedState, setCachedState }) {
   return (
     <div> 
       <LogoutButton setCachedState={setCachedState}/> 
-        {cachedState.buffer && cachedState.moves ? (
+        {cachedState.inProgress ? (
           <div className="dock-view-container">
             <Grid type={SHIP} items={cachedState.manifest} id="ship-dock" />
             <Grid type={BUFFER} items={cachedState.buffer} id="buffer-dock" />
@@ -85,7 +80,9 @@ export default function DockView ({ cachedState, setCachedState }) {
                   Make Move
                 </button>
                 <button
-                  onClick={() => skipMove(cachedState, setCachedState)}
+                  onClick={() => {
+                    setCachedState({...cachedState, inProgress: false})
+                    skipMove(cachedState, setCachedState)}}
                   className="primary-submit-btn"
                 >
                   Skip Move
@@ -100,7 +97,7 @@ export default function DockView ({ cachedState, setCachedState }) {
           </div>
           </div> 
         ) : (
-          <Loading displayText={"Sit tight! We're currently calculating the best moveset..."} /> 
+          <Loading displayText={displayText} /> 
         )}
     </div> 
 )};
