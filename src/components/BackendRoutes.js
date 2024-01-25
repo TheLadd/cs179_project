@@ -100,8 +100,8 @@ const runMove = async (cachedState, setCachedState) => {
         instruction: makeInstruction(result.currStep, cachedState.moves),
         manifest: result.ship,
         buffer: result.buffer,
-        offloadList: result.offload,
-        loadList: result.load,
+        offloadList: JSON.parse(result.offload),
+        loadList: JSON.parse(result.load),
       });
 
       localStorage.setItem("manifest", result.shipTxt);
@@ -149,6 +149,41 @@ const skipMove = async (cachedState, setCachedState) => {
     } catch (error) {
       console.error("Error during A* algorithm:", error.message);
     }
+};
+
+const skipMove2 = async (cachedState, setCachedState) => {
+  if (cachedState.opType !== 'Offloading/Onloading') { 
+    return; 
+  }
+
+  try {
+    const response = await fetch("http://127.0.0.1:5000/skip-move2", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log("BACKENDROUTES.JS: ** skip move ** runAstar called ", result);
+
+      setCachedState({
+        ...cachedState,
+        currStep: result.currStep, 
+        moves: null, 
+        inProgress: false,
+        offloadList: JSON.parse(result.offload),
+        loadList: JSON.parse(result.load),
+      });
+      console.log("BACKENDROUTES.JS: for skip move: ", result); 
+      return result;
+    } else {
+      console.error("Failed to skip move. Status:", response.status);
+    }
+  } catch (error) {
+    console.error("Error during skipMove:", error.message);
+  }
 };
 
 // gets the current move from the moves list passed into it and the step # you are on, then builds an instruction string which is then returned as a string
@@ -223,6 +258,7 @@ export {
   runAstar,
   runMove,
   skipMove,
+  skipMove2,
   handleLogMessage,
   handleCustomLog,
 };
