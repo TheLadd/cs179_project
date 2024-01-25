@@ -100,8 +100,8 @@ const runMove = async (cachedState, setCachedState) => {
         instruction: makeInstruction(result.currStep, cachedState.moves),
         manifest: result.ship,
         buffer: result.buffer,
-        offloadList: JSON.parse(result.offload),
-        loadList: JSON.parse(result.load),
+        offloadList: (result.offload),
+        loadList: (result.load),
       });
 
       localStorage.setItem("manifest", result.shipTxt);
@@ -117,47 +117,12 @@ const runMove = async (cachedState, setCachedState) => {
 };
 
 const skipMove = async (cachedState, setCachedState) => {
-    if (cachedState.opType !== 'Offloading/Onloading') { 
-      return; 
-    }
-  
-    try {
-      const response = await fetch("http://127.0.0.1:5000/skip-move", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        }
-      });
-  
-      if (response.ok) {
-        const result = await response.json();
-        console.log("BACKENDROUTES.JS: ** skip move ** runAstar called ", result);
-  
-        setCachedState({
-          ...cachedState,
-          currStep: result.currStep, 
-          instruction: makeInstruction(result.currStep, result.moves), 
-          moves: result.moves, 
-          inProgress: true,
-          solution: result.solution,  
-        });
-        console.log("BACKENDROUTES.JS: for skip move: ", result); 
-        return result;
-      } else {
-        console.error("Failed to run A* algorithm. Status:", response.status);
-      }
-    } catch (error) {
-      console.error("Error during A* algorithm:", error.message);
-    }
-};
-
-const skipMove2 = async (cachedState, setCachedState) => {
   if (cachedState.opType !== 'Offloading/Onloading') { 
     return; 
   }
 
   try {
-    const response = await fetch("http://127.0.0.1:5000/skip-move2", {
+    const response = await fetch("http://127.0.0.1:5000/skip-move", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -170,11 +135,10 @@ const skipMove2 = async (cachedState, setCachedState) => {
 
       setCachedState({
         ...cachedState,
-        currStep: result.currStep, 
         moves: null, 
         inProgress: false,
-        offloadList: JSON.parse(result.offload),
-        loadList: JSON.parse(result.load),
+        offloadList: (result.offload),
+        loadList: (result.load),
       });
       console.log("BACKENDROUTES.JS: for skip move: ", result); 
       return result;
@@ -258,7 +222,6 @@ export {
   runAstar,
   runMove,
   skipMove,
-  skipMove2,
   handleLogMessage,
   handleCustomLog,
 };

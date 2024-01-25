@@ -93,90 +93,27 @@ def run_astar():
 
     # 3. return the goal state, moves, and the step you are currently on to frontend (will always be 0 since you are just running the algorithm)
     return jsonify({"solution": solution.val.toDict(), "moves": steps, "currStep": currStep })
-
+    
 @app.route('/skip-move', methods=['POST'])
 def skip_move(): 
     global current_cargo_state 
     global steps 
     global currStep 
-    print("offload", current_cargo_state.offload)
-    print("onload", current_cargo_state.load)
-    deleteStep = steps[currStep] # the step to delete from either load/offload list 
-    deleteContainer = Container(info=(deleteStep['name'], deleteStep['weight'])) 
-    if current_cargo_state: 
-        print(current_cargo_state.load)
-        print(current_cargo_state.offload)
-        if deleteStep['next-area'] == 2: # the destination for the container is a truck
-            print("APP.PY: popped from offload")
-            current_cargo_state.offload.remove(deleteContainer.name) # pop the container from the offload list with the same name as the container in the move
-        elif deleteStep['current-area'] == 2: # the source for the container is a truck
-            print("APP.PY: popped from load")
-            current_cargo_state.load.remove(deleteContainer)
-    solution, steps = search.astar(current_cargo_state, False)
-    currStep = 0
-    
-    # 2.2 Reformat moves from list of Move objects to list of Move-like dictionaries
-    movesReformat: List[Dict[str, List[int]|int]] = []
-    print(f'moves before formatting: {steps}')
-    for move in steps:
-        temp = {
-            'name': move.src.container.name, 
-            'current-grid-position': [move.src.row+1, move.src.col+1],
-            'current-area': move.src.area,
-            'next-grid-position': [move.dst.row+1, move.dst.col+1],
-            'next-area': move.dst.area,
-            'cost': move.cost(), 
-            'weight': move.src.container.weight,
-            'description': str(move), 
-        }
-        movesReformat.append(temp)
-    steps = movesReformat
-    # 3. return the goal state, moves, and the step you are currently on to frontend (will always be 0 since you are just running the algorithm)
-    return jsonify({"solution": solution.val.toDict(), "moves": steps, "currStep": currStep })
-    
-@app.route('/skip-move2', methods=['POST'])
-def skip_move2(): 
-    global current_cargo_state 
-    global steps 
-    global currStep 
-    print("APP.PY: skipmove 2 called")
-    print("APP.PY: offload", current_cargo_state.offload)
-    print("APP.PY: onload", current_cargo_state.load)
+
     deleteStep = steps[currStep] # the step to delete from either load/offload list 
     deleteContainer = Container(info=(deleteStep['name'], deleteStep['weight'])) 
     if current_cargo_state: 
         if deleteStep['next-area'] == 2: # the destination for the container is a truck
-            print("APP.PY: popped from offload")
             current_cargo_state.offload.remove(deleteContainer.name) # pop the container from the offload list with the same name as the container in the move
         elif deleteStep['current-area'] == 2: # the source for the container is a truck
-            print("APP.PY: popped from load")
             current_cargo_state.load.remove(deleteContainer)
-    #solution, steps = search.astar(current_cargo_state, False)
-    currStep = 0
-    
-    # 2.2 Reformat moves from list of Move objects to list of Move-like dictionaries
-    # movesReformat: List[Dict[str, List[int]|int]] = []
-    # print(f'moves before formatting: {steps}')
-    # for move in steps:
-    #     temp = {
-    #         'name': move.src.container.name, 
-    #         'current-grid-position': [move.src.row+1, move.src.col+1],
-    #         'current-area': move.src.area,
-    #         'next-grid-position': [move.dst.row+1, move.dst.col+1],
-    #         'next-area': move.dst.area,
-    #         'cost': move.cost(), 
-    #         'weight': move.src.container.weight,
-    #         'description': str(move), 
-    #     }
-    #     movesReformat.append(temp)
-    # steps = movesReformat
-    # 3. return the goal state, moves, and the step you are currently on to frontend (will always be 0 since you are just running the algorithm)
+
     new_load_list = []
     for container in current_cargo_state.load: 
         new_load_list.append(str(container.name))
         new_load_list.append(str(container.weight))
 
-    return jsonify({"currStep": currStep, "offload": str(current_cargo_state.offload), "load": str(new_load_list) })
+    return jsonify({"offload": (current_cargo_state.offload), "load": (new_load_list) })
 
 
 
@@ -228,8 +165,8 @@ def run_move():
 
     dict = current_cargo_state.toDict()
     dict['currStep'] = currStep
-    dict['offload'] = str(current_cargo_state.offload)
-    dict['load'] = str(new_load_list)
+    dict['offload'] = (current_cargo_state.offload)
+    dict['load'] = (new_load_list)
 
     # return the current cargo state, the step # you are currently on, and the updated offload/load lists
     return jsonify(dict)

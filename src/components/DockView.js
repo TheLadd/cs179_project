@@ -5,7 +5,6 @@ import {
   runMove,
   handleCustomLog,
   skipMove,
-  skipMove2,
 } from "./BackendRoutes";
 import Loading from "./Loading"; 
 import Grid from "./Grid";
@@ -82,8 +81,7 @@ export default function DockView ({ cachedState, setCachedState }) {
                 </button>
                 <button
                   onClick={() => {
-                    //setCachedState({...cachedState, inProgress: false})
-                    skipMove2(cachedState, setCachedState)}}
+                    skipMove(cachedState, setCachedState)}}
                   className="primary-submit-btn"
                 >
                   Skip Move
