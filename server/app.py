@@ -51,7 +51,7 @@ def run_astar():
     global current_cargo_state
     global steps
     global currStep
-    print("APP.PY: run astar called")
+
     currStep = 0
 
     # 1. Extract data from request
@@ -62,19 +62,19 @@ def run_astar():
 
     # 1.2 Reformat from list of strings to list of Containers
     loadReformat: List[Container] = []
-    print(f'load before formatting: {load}')
+    #print(f'load before formatting: {load}')
     for i in range(0, len(load), 2):
         loadReformat.append( Container(info=(load[i], load[i+1])) )
     current_cargo_state.load = loadReformat
 
-    print(f'Offload before astar: {current_cargo_state.offload}')
+    #print(f'Offload before astar: {current_cargo_state.offload}')
 
     # 2. Run astar
     solution, steps = search.astar(current_cargo_state, is_balance)
 
     # 2.2 Reformat moves from list of Move objects to list of Move-like dictionaries
     movesReformat: List[Dict[str, List[int]|int]] = []
-    print(f'moves before formatting: {steps}')
+    #print(f'moves before formatting: {steps}')
     for move in steps:
         temp = {
             'name': move.src.container.name, 
@@ -122,7 +122,7 @@ def run_move():
     global current_cargo_state
     global steps
     global currStep
-    print("APP.PY: runmove called")
+
     # only make the move if we have moves left
     if (currStep < len(steps)):
         move_data = steps[currStep]
@@ -146,10 +146,8 @@ def run_move():
 
         # Check if the move is for a container in the offload or load list then update the corresponding list if so
         if move_data['next-area'] == 2: # the destination for the container is a truck
-            print("APP.PY: popped from offload")
             current_cargo_state.offload.remove(src_con.name) # pop the container from the offload list with the same name as the container in the move
         elif move_data['current-area'] == 2: # the source for the container is a truck
-            print("APP.PY: popped from load")
             current_cargo_state.load.remove(src_con)
     # todo: make it so that it logs a message here should be incredibly simple
 
