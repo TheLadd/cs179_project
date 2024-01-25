@@ -100,8 +100,8 @@ const runMove = async (cachedState, setCachedState) => {
         instruction: makeInstruction(result.currStep, cachedState.moves),
         manifest: result.ship,
         buffer: result.buffer,
-        offloadList: (result.offload),
-        loadList: (result.load),
+        offloadList: result.offload,
+        loadList: result.load,
       });
 
       localStorage.setItem("manifest", result.shipTxt);
@@ -137,8 +137,8 @@ const skipMove = async (cachedState, setCachedState) => {
         ...cachedState,
         moves: null, 
         inProgress: false,
-        offloadList: (result.offload),
-        loadList: (result.load),
+        offloadList: result.offload,
+        loadList: result.load,
       });
       console.log("BACKENDROUTES.JS: for skip move: ", result); 
       return result;
