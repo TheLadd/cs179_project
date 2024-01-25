@@ -12,7 +12,7 @@ return ({
     buffer: null,
     loadList: [],
     offloadList: [],
-    moves: []
+    moves: null
 }); 
 });
 

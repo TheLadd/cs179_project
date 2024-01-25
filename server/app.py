@@ -62,19 +62,19 @@ def run_astar():
 
     # 1.2 Reformat from list of strings to list of Containers
     loadReformat: List[Container] = []
-    print(f'load before formatting: {load}')
+    #print(f'load before formatting: {load}')
     for i in range(0, len(load), 2):
         loadReformat.append( Container(info=(load[i], load[i+1])) )
     current_cargo_state.load = loadReformat
 
-    print(f'Offload before astar: {current_cargo_state.offload}')
+    #print(f'Offload before astar: {current_cargo_state.offload}')
 
     # 2. Run astar
     solution, steps = search.astar(current_cargo_state, is_balance)
 
     # 2.2 Reformat moves from list of Move objects to list of Move-like dictionaries
     movesReformat: List[Dict[str, List[int]|int]] = []
-    print(f'moves before formatting: {steps}')
+    #print(f'moves before formatting: {steps}')
     for move in steps:
         temp = {
             'name': move.src.container.name, 
@@ -93,20 +93,40 @@ def run_astar():
 
     # 3. return the goal state, moves, and the step you are currently on to frontend (will always be 0 since you are just running the algorithm)
     return jsonify({"solution": solution.val.toDict(), "moves": steps, "currStep": currStep })
+    
+@app.route('/skip-move', methods=['POST'])
+def skip_move(): 
+    global current_cargo_state 
+    global steps 
+    global currStep 
+
+    deleteStep = steps[currStep] # the step to delete from either load/offload list 
+    deleteContainer = Container(info=(deleteStep['name'], deleteStep['weight'])) 
+    if current_cargo_state: 
+        if deleteStep['next-area'] == 2: # the destination for the container is a truck
+            current_cargo_state.offload.remove(deleteContainer.name) # pop the container from the offload list with the same name as the container in the move
+        elif deleteStep['current-area'] == 2: # the source for the container is a truck
+            current_cargo_state.load.remove(deleteContainer)
+
+    new_load_list = []
+    for container in current_cargo_state.load: 
+        new_load_list.append(str(container.name))
+        new_load_list.append(str(container.weight))
+
+    return jsonify({"offload": (current_cargo_state.offload), "load": (new_load_list) })
+
+
 
 @app.route('/run-move', methods=['POST'])
 def run_move():
     global current_cargo_state
     global steps
     global currStep
-    global offload
-    global load
 
     # only make the move if we have moves left
     if (currStep < len(steps)):
-        # get the current move
         move_data = steps[currStep]
-
+        
         # convert the move from the dict form it was stored in to an actual Move object that can be passed into a CargoState object
 
         # Init src
@@ -126,21 +146,25 @@ def run_move():
 
         # Check if the move is for a container in the offload or load list then update the corresponding list if so
         if move_data['next-area'] == 2: # the destination for the container is a truck
-            print("APP.PY: popped from offload")
             current_cargo_state.offload.remove(src_con.name) # pop the container from the offload list with the same name as the container in the move
         elif move_data['current-area'] == 2: # the source for the container is a truck
-            print("APP.PY: popped from load")
-            current_cargo_state.load.remove(src_con) # pop the container from the load list with the same name as the container in the move
-
+            current_cargo_state.load.remove(src_con)
     # todo: make it so that it logs a message here should be incredibly simple
+
+
+    new_load_list = []
+    for container in current_cargo_state.load: 
+        new_load_list.append(str(container.name))
+        new_load_list.append(str(container.weight))
 
     # we are on the next move now
     currStep += 1
 
+
     dict = current_cargo_state.toDict()
     dict['currStep'] = currStep
-    dict['offload'] = str(current_cargo_state.offload)
-    dict['load'] = str(current_cargo_state.load)
+    dict['offload'] = (current_cargo_state.offload)
+    dict['load'] = (new_load_list)
 
     # return the current cargo state, the step # you are currently on, and the updated offload/load lists
     return jsonify(dict)

@@ -116,8 +116,38 @@ const runMove = async (cachedState, setCachedState) => {
   }
 };
 
-const skipMove = async () => {
-  // todo
+const skipMove = async (cachedState, setCachedState) => {
+  if (cachedState.opType !== 'Offloading/Onloading') { 
+    return; 
+  }
+
+  try {
+    const response = await fetch("http://127.0.0.1:5000/skip-move", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log("BACKENDROUTES.JS: ** skip move ** runAstar called ", result);
+
+      setCachedState({
+        ...cachedState,
+        moves: null, 
+        inProgress: false,
+        offloadList: result.offload,
+        loadList: result.load,
+      });
+      console.log("BACKENDROUTES.JS: for skip move: ", result); 
+      return result;
+    } else {
+      console.error("Failed to skip move. Status:", response.status);
+    }
+  } catch (error) {
+    console.error("Error during skipMove:", error.message);
+  }
 };
 
 // gets the current move from the moves list passed into it and the step # you are on, then builds an instruction string which is then returned as a string
