@@ -70,7 +70,7 @@ function Login ({ cachedState, setCachedState }) {
     }}> 
       <h1 className="header-styling" style={{marginBottom: '-5%'}}>R³ Solutions</h1>
         <h2 className='header-styling' style={{marginBottom: '-3%'}}><em>shipping container optimizer</em><br/></h2>
-        <h5 style={{marginBottom: '2%'}}>sign in below to get started!</h5>
+        <h5 style={{marginBottom: '2%'}}>sign in below to get started.</h5>
       <form id='login-form' onSubmit={handleSubmit}>
         <div>Name: </div><br/>
         <input

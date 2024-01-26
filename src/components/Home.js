@@ -6,7 +6,7 @@ import { Alert, Button } from "@mui/material";
 import { manifestTxtToArray } from "./manifestParser";
 import { initializeCargoState } from "./BackendRoutes";
 import DefaultState from "./DefaultState"; 
-import "../css/Form.css";
+import Div from './Div'; 
 
 // cached state is passed in the event of a crash.
 // nav is used for route switching between different link paths
@@ -113,6 +113,24 @@ function Home ({ cachedState, setCachedState }) {
       <button onClick={handleLogout} className="primary-submit-btn">
         Logout
       </button>
+      <Div sx={{ bgcolor: 'finish.main', 
+      padding: '0.75%', 
+      maxHeight: 1000, 
+      margin: 'auto', 
+      marginTop: '3%', 
+      border: 25, 
+      borderColor: 'finish.border', 
+      borderRadius: 10, 
+      fontWeight: 'bold',  
+      fontSize: 20,  
+      height: '80%', 
+      width: '70%', 
+      fontFamily: 'Raleway', 
+      color: 'finish.text', 
+      display: 'flex', 
+      textAlign: 'center', 
+      alignItems: 'center', 
+     flexDirection: 'column', }}>
       <h1>R³ Solutions</h1>
       {localStorage.getItem("inProgress") === "true" ? (
         <Alert>
@@ -164,6 +182,7 @@ function Home ({ cachedState, setCachedState }) {
           </form>
         </div>
       )}
+      </Div>
     </div>
   );
 }
