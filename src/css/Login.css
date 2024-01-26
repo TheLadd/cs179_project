@@ -1,0 +1,31 @@
+.header-styling { 
+    text-shadow: 5px 3px #CA6702; 
+}
+
+#login-form { 
+    display: flex; 
+    overflow: hidden; 
+    justify-items: stretch;
+    max-height: fit-content;
+    align-content: center;
+    justify-content: center;
+    max-height: min-content;
+    margin-bottom: 0.5em;
+}
+
+
+
+.input-text { 
+    width: auto;
+    height: 3em;  
+    box-shadow: none;
+    font-family: 'Raleway';
+    margin: 0.5em; 
+    border-radius: 1em;
+    border-style: solid; 
+    border: 4.5px solid #CA6702;
+}
+
+.input-text:focus { 
+    outline: none; 
+}
