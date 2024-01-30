@@ -196,7 +196,7 @@ function Home ({ cachedState, setCachedState }) {
             />
             <label htmlFor="loadbalancing">Load-Balancing</label>
             <br />
-            <button type="submit" className="button-styling" style={{
+            <button type="submit" onClick={handleSubmit} className="button-styling" style={{
               fontSize: '25px', 
               fontWeight: 'bolder', 
               margin: 'auto', 

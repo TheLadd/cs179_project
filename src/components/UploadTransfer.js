@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import handleTimestamp from "./Timestamp";
 import trash from "../trashicon.png"; 
 import "../css/InstructionList.css"; // Theme
+import Div from "./Div";
 
 function UploadTransfer({ cachedState, setCachedState }) {
   const nav = useNavigate();
@@ -142,7 +143,26 @@ function UploadTransfer({ cachedState, setCachedState }) {
   
   return (
     <div>
-      <h1>Upload Transfer Items</h1>
+    <Div sx={{ bgcolor: 'finish.main', 
+      padding: '0.75%', 
+      maxHeight: 1000, 
+      margin: 'auto', 
+      marginTop: '3%', 
+      border: 25, 
+      borderColor: 'finish.border', 
+      borderRadius: 10, 
+      fontWeight: 'bold',  
+      fontSize: 20,  
+      height: '100%', 
+      width: '60%', 
+      fontFamily: 'Raleway', 
+      color: 'finish.text', 
+      display: 'flex', 
+      textAlign: 'center', 
+      marginBottom: '2em', 
+      alignItems: 'center', 
+     flexDirection: 'column', }}>
+      <h1 className="header-styling" style={{fontSize: '2.5em', marginBottom: '1%'}}>Upload Transfer Items</h1>
       <div className="form-wrapper">
         <form id="container-form" onSubmit={handleSubmitContainer}>
           <span>Select the operation: </span> <br />
@@ -224,6 +244,7 @@ function UploadTransfer({ cachedState, setCachedState }) {
           Finish
         </button>
       </div>
+      </Div>
       {rowData && !rowData.empty ? (
         <div> 
         <table className="table-styling">
