@@ -7,6 +7,7 @@ import { manifestTxtToArray } from "./manifestParser";
 import { initializeCargoState } from "./BackendRoutes";
 import DefaultState from "./DefaultState"; 
 import Div from './Div'; 
+import '../css/Form.css'; 
 
 // cached state is passed in the event of a crash.
 // nav is used for route switching between different link paths
@@ -131,7 +132,7 @@ function Home ({ cachedState, setCachedState }) {
       textAlign: 'center', 
       alignItems: 'center', 
      flexDirection: 'column', }}>
-      <h1>R³ Solutions</h1>
+      <h1 className="header-styling" style={{fontSize: '2.5em', marginBottom: '1%'}}>R³ Solutions Home</h1>
       {localStorage.getItem("inProgress") === "true" ? (
         <Alert>
           There is currently an operation in progress. would you like to
@@ -144,19 +145,32 @@ function Home ({ cachedState, setCachedState }) {
           </Button>
         </Alert>
       ) : (
-        <div className="form-wrapper">
+        <div className="form-wrapper" style={{
+          textAlign: 'center', 
+          display: 'flex',
+          flexDirection: 'column', 
+          width: '100%', 
+          height: '100%', 
+          margin: 'auto', 
+          alignContent: 'center', 
+          justifyContent: 'center'
+
+        }}>
           <form onSubmit={handleSubmit}>
-            <label htmlFor="upload-manifest">Upload Manifest List </label>
+            <span className="form-label">Upload Manifest List:<br/> 
             <input
               type="file"
               id="upload-manifest"
               accept=".txt"
               onChange={(e) => setTxtFile(e.target.files[0])}
               required
+              style={{
+                marginLeft: '7em'
+              }}
             />
+            </span> 
             <br />
-            <span>Please select the type of operation:</span>
-            <br />
+            <span className="form-label">Select the operation type:</span><br/> 
             <input
               type="radio"
               id="onoff"

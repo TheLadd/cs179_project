@@ -20,6 +20,14 @@
   border-radius: 4px;
 }
 
+.form-label { 
+  font-size: 25px;
+
+}
+
+
+
+
 span override {
   font-size: 140px;
   font-weight: 900;
