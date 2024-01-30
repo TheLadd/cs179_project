@@ -111,7 +111,13 @@ function Home ({ cachedState, setCachedState }) {
 
   return (
     <div>
-      <button onClick={handleLogout} className="primary-submit-btn">
+      <button onClick={handleLogout} className="button-styling" style={{
+        width: '15%',
+        marginTop: '0.5em',  
+        fontSize: '30px', 
+        fontWeight: 'bolder', 
+
+      }}>
         Logout
       </button>
       <Div sx={{ bgcolor: 'finish.main', 
@@ -124,8 +130,8 @@ function Home ({ cachedState, setCachedState }) {
       borderRadius: 10, 
       fontWeight: 'bold',  
       fontSize: 20,  
-      height: '80%', 
-      width: '70%', 
+      height: '100%', 
+      width: '60%', 
       fontFamily: 'Raleway', 
       color: 'finish.text', 
       display: 'flex', 
@@ -153,7 +159,7 @@ function Home ({ cachedState, setCachedState }) {
           height: '100%', 
           margin: 'auto', 
           alignContent: 'center', 
-          justifyContent: 'center'
+          justifyContent: 'space-between',
 
         }}>
           <form onSubmit={handleSubmit}>
@@ -190,7 +196,13 @@ function Home ({ cachedState, setCachedState }) {
             />
             <label htmlFor="loadbalancing">Load-Balancing</label>
             <br />
-            <button type="submit" className="primary-submit-btn">
+            <button type="submit" className="button-styling" style={{
+              fontSize: '25px', 
+              fontWeight: 'bolder', 
+              margin: 'auto', 
+              width: '30%', 
+              marginTop: '0.4em'
+            }}>
               Submit
             </button>
           </form>
