@@ -41,7 +41,6 @@ const initializeCargoState = async (cachedState, setCachedState) => {
   }
 };
 
-// runs astar on the cargo state which is already stored in the backend
 const runAstar = async (cachedState, setCachedState) => {
   const isBalance = cachedState.opType === 'Offloading/Onloading' ? false : true; 
   const requestData = {
