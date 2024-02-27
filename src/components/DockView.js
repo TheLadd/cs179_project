@@ -61,20 +61,19 @@ export default function DockView ({ cachedState, setCachedState }) {
         {cachedState.inProgress ? (
           <Div
           sx={{
-            bgcolor: 'dockview.border', 
-            padding: '0.25%', 
+            bgcolor: 'finish.main', 
             maxHeight: 1000, 
             margin: 'auto', 
             marginTop: '1.5%', 
-            border: 80, 
-            borderColor: 'dockview.deepred', 
-            borderRadius: 10, 
+            border: 50, 
+            borderColor: 'finish.border', 
+            borderRadius: 25, 
             fontWeight: 'bold', 
-            fontSize: 40,  
+            fontSize: 25,  
             height: '80%', 
             width: '80%', 
             fontFamily: 'Raleway', 
-            color: 'dockview.orangey', 
+            color: 'finish.text', 
             display: 'flex', 
             textAlign: 'center', 
             alignItems: 'center', 
@@ -84,7 +83,7 @@ export default function DockView ({ cachedState, setCachedState }) {
             <Grid type={SHIP} items={cachedState.manifest} id="ship-dock" />
             <Grid type={BUFFER} items={cachedState.buffer} id="buffer-dock" />
             <div className="instruction-box">
-              <h1 value={cachedState} style={{}}>
+              <h1 value={cachedState} className="header-styling" style={{fontSize: '2.25em', marginBottom: '1%'}}>
                 Step {cachedState.currStep + 1} of {cachedState.moves.length}:
               </h1>
               <h2
@@ -97,20 +96,23 @@ export default function DockView ({ cachedState, setCachedState }) {
               <div className="btn-grp">
                 <button
                   onClick={() => runMove(cachedState, setCachedState)}
-                  className="primary-submit-btn"
+                  className="button-styling" style={{
+                  }}
                 >
                   Make Move
                 </button>
                 <button
                   onClick={() => {
                     skipMove(cachedState, setCachedState)}}
-                  className="primary-submit-btn"
+                  className="button-styling" style={{
+                  }}
                 >
                   Skip Move
                 </button>
                 <button
                   onClick={handleCustomLog}
-                  className="primary-submit-btn"
+                  className="button-styling" style={{
+                  }}
                 >
                   Write a comment in the log
                 </button>
