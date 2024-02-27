@@ -6,6 +6,7 @@ import {
   handleCustomLog,
   skipMove,
 } from "./BackendRoutes";
+import Div from './Div'; 
 import Loading from "./Loading"; 
 import Grid from "./Grid";
 import LogoutButton from "./LogoutButton";
@@ -58,11 +59,32 @@ export default function DockView ({ cachedState, setCachedState }) {
     <div> 
       <LogoutButton setCachedState={setCachedState}/> 
         {cachedState.inProgress ? (
-          <div className="dock-view-container">
+          <Div
+          sx={{
+            bgcolor: 'dockview.border', 
+            padding: '0.25%', 
+            maxHeight: 1000, 
+            margin: 'auto', 
+            marginTop: '1.5%', 
+            border: 80, 
+            borderColor: 'dockview.deepred', 
+            borderRadius: 10, 
+            fontWeight: 'bold', 
+            fontSize: 40,  
+            height: '80%', 
+            width: '80%', 
+            fontFamily: 'Raleway', 
+            color: 'dockview.orangey', 
+            display: 'flex', 
+            textAlign: 'center', 
+            alignItems: 'center', 
+           flexDirection: 'column', 
+          }}
+          >
             <Grid type={SHIP} items={cachedState.manifest} id="ship-dock" />
             <Grid type={BUFFER} items={cachedState.buffer} id="buffer-dock" />
             <div className="instruction-box">
-              <h1 value={cachedState}>
+              <h1 value={cachedState} style={{}}>
                 Step {cachedState.currStep + 1} of {cachedState.moves.length}:
               </h1>
               <h2
@@ -94,7 +116,7 @@ export default function DockView ({ cachedState, setCachedState }) {
                 </button>
               </div>
           </div>
-          </div> 
+          </Div> 
         ) : (
           <Loading displayText={displayText} /> 
         )}
