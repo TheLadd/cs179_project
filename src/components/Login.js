@@ -2,6 +2,9 @@ import handleTimestamp from './Timestamp'
 import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
 import { handleLogMessage } from './BackendRoutes'; 
+import Div from './Div'; 
+import "../css/Login.css"; 
+import "../css/Finish.css"; 
 
 // assumption: if we logout, we are clearing all the user data 
 function Login ({ cachedState, setCachedState }) {
@@ -21,14 +24,6 @@ function Login ({ cachedState, setCachedState }) {
     })
   }
 
-  // const handleLogout = e => {
-  //   const to = handleTimestamp()
-  //   localStorage.setItem('lastActivityTime', to);
-  //   localStorage.removeItem('lastUser');
-  //   nav('/'); 
-  //   // logging
-  // }
-
   const handleSubmit = e => {
     e.preventDefault()
     const tim = handleTimestamp()
@@ -46,23 +41,40 @@ function Login ({ cachedState, setCachedState }) {
 
     // have to manually set localstorage here because don't want to accidently override the backup in localstorage before logging in
     localStorage.setItem('user', user.name); 
-
-    // logging
-    handleLogMessage(user.name + ' signs in')
-
+    handleLogMessage(user.name + ' signed in.')
     nav('/home'); 
   }
 
 
   return (
     <div id='main'>
-      <h1>R³ Solutions</h1>
-      <div className='form-wrapper'>
-        <h2><em>sign in</em></h2>
+    <Div sx={{
+      bgcolor: 'finish.main', 
+      padding: '0.75%', 
+      maxHeight: 1000, 
+      margin: 'auto', 
+      marginTop: '3%', 
+      border: 80, 
+      borderColor: 'finish.border', 
+      borderRadius: 10, 
+      fontWeight: 'bold', 
+      fontSize: 40,  
+      height: '80%', 
+      width: '70%', 
+      fontFamily: 'Raleway', 
+      color: 'finish.text', 
+      display: 'flex', 
+      textAlign: 'center', 
+      alignItems: 'center', 
+     flexDirection: 'column', 
+    }}> 
+      <h1 className="header-styling" style={{marginBottom: '-5%'}}>R³ Solutions</h1>
+        <h2 className='header-styling' style={{marginBottom: '-3%'}}><em>shipping container optimizer</em><br/></h2>
+        <h5 style={{marginBottom: '2%'}}>sign in below to get started.</h5>
       <form id='login-form' onSubmit={handleSubmit}>
-        <label htmlFor='username'>Name:   </label>
+        <div>Name: </div><br/>
         <input
-          type='text'
+          type='text' 
           id='username'
           name='username'
           autoComplete='off'
@@ -70,9 +82,10 @@ function Login ({ cachedState, setCachedState }) {
           onChange={handleChange}
           className='input-text'
         ></input><br/>
-        <button type='submit' className='primary-submit-btn'>Login</button>
+        <div onClick={handleSubmit} className='button-styling' style={{maxWidth: '100%', fontSize: '0.5em', padding: '0.3em', border: '5px solid #0A9396'}}>Login</div>
       </form>
-      </div> 
+      
+    </Div> 
     </div>
   ); 
 }

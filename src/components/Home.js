@@ -6,7 +6,8 @@ import { Alert, Button } from "@mui/material";
 import { manifestTxtToArray } from "./manifestParser";
 import { initializeCargoState } from "./BackendRoutes";
 import DefaultState from "./DefaultState"; 
-import "../css/Form.css";
+import Div from './Div'; 
+import '../css/Form.css'; 
 
 // cached state is passed in the event of a crash.
 // nav is used for route switching between different link paths
@@ -110,10 +111,34 @@ function Home ({ cachedState, setCachedState }) {
 
   return (
     <div>
-      <button onClick={handleLogout} className="primary-submit-btn">
+      <button onClick={handleLogout} className="button-styling" style={{
+        width: '15%',
+        marginTop: '0.5em',  
+        fontSize: '30px', 
+        fontWeight: 'bolder', 
+
+      }}>
         Logout
       </button>
-      <h1>R³ Solutions</h1>
+      <Div sx={{ bgcolor: 'finish.main', 
+      padding: '0.75%', 
+      maxHeight: 1000, 
+      margin: 'auto', 
+      marginTop: '3%', 
+      border: 25, 
+      borderColor: 'finish.border', 
+      borderRadius: 10, 
+      fontWeight: 'bold',  
+      fontSize: 20,  
+      height: '100%', 
+      width: '60%', 
+      fontFamily: 'Raleway', 
+      color: 'finish.text', 
+      display: 'flex', 
+      textAlign: 'center', 
+      alignItems: 'center', 
+     flexDirection: 'column', }}>
+      <h1 className="header-styling" style={{fontSize: '2.5em', marginBottom: '1%'}}>R³ Solutions Home</h1>
       {localStorage.getItem("inProgress") === "true" ? (
         <Alert>
           There is currently an operation in progress. would you like to
@@ -126,19 +151,32 @@ function Home ({ cachedState, setCachedState }) {
           </Button>
         </Alert>
       ) : (
-        <div className="form-wrapper">
+        <div className="form-wrapper" style={{
+          textAlign: 'center', 
+          display: 'flex',
+          flexDirection: 'column', 
+          width: '100%', 
+          height: '100%', 
+          margin: 'auto', 
+          alignContent: 'center', 
+          justifyContent: 'space-between',
+
+        }}>
           <form onSubmit={handleSubmit}>
-            <label htmlFor="upload-manifest">Upload Manifest List </label>
+            <span className="form-label">Upload Manifest List:<br/> 
             <input
               type="file"
               id="upload-manifest"
               accept=".txt"
               onChange={(e) => setTxtFile(e.target.files[0])}
               required
+              style={{
+                marginLeft: '7em'
+              }}
             />
+            </span> 
             <br />
-            <span>Please select the type of operation:</span>
-            <br />
+            <span className="form-label">Select the operation type:</span><br/> 
             <input
               type="radio"
               id="onoff"
@@ -158,12 +196,19 @@ function Home ({ cachedState, setCachedState }) {
             />
             <label htmlFor="loadbalancing">Load-Balancing</label>
             <br />
-            <button type="submit" className="primary-submit-btn">
+            <button type="submit" onClick={handleSubmit} className="button-styling" style={{
+              fontSize: '25px', 
+              fontWeight: 'bolder', 
+              margin: 'auto', 
+              width: '30%', 
+              marginTop: '0.4em'
+            }}>
               Submit
             </button>
           </form>
         </div>
       )}
+      </Div>
     </div>
   );
 }

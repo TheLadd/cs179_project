@@ -6,6 +6,7 @@ import {
   handleCustomLog,
   skipMove,
 } from "./BackendRoutes";
+import Div from './Div'; 
 import Loading from "./Loading"; 
 import Grid from "./Grid";
 import LogoutButton from "./LogoutButton";
@@ -58,11 +59,33 @@ export default function DockView ({ cachedState, setCachedState }) {
     <div> 
       <LogoutButton setCachedState={setCachedState}/> 
         {cachedState.inProgress ? (
-          <div className="dock-view-container">
+          <Div
+          sx={{
+            bgcolor: 'finish.main', 
+            maxHeight: 1000, 
+            margin: 'auto', 
+            marginTop: '1.5%', 
+            border: 50, 
+            borderColor: 'finish.border', 
+            borderRadius: 25, 
+            fontWeight: 'bold', 
+            fontSize: 25,  
+            height: 'fit-content', 
+            overflow: 'hidden', 
+            width: 'fit-content', 
+            fontFamily: 'Raleway', 
+            color: 'finish.text', 
+            display: 'flex', 
+            padding: '10px', 
+            textAlign: 'center', 
+            alignItems: 'center', 
+           flexDirection: 'column', 
+          }}
+          >
             <Grid type={SHIP} items={cachedState.manifest} id="ship-dock" />
             <Grid type={BUFFER} items={cachedState.buffer} id="buffer-dock" />
             <div className="instruction-box">
-              <h1 value={cachedState}>
+              <h1 value={cachedState} className="header-styling" style={{fontSize: '2.25em' }}>
                 Step {cachedState.currStep + 1} of {cachedState.moves.length}:
               </h1>
               <h2
@@ -72,29 +95,31 @@ export default function DockView ({ cachedState, setCachedState }) {
               >
                 {cachedState.instruction}
               </h2>
-              <div className="btn-grp">
+              <div className="btn-grp" style={{ fontSize: 40, fontWeight: "bolder" }}>
                 <button
                   onClick={() => runMove(cachedState, setCachedState)}
-                  className="primary-submit-btn"
+                  className="button-styling" style={{
+                  }}
                 >
-                  Make Move
+                  Make move
                 </button>
                 <button
                   onClick={() => {
                     skipMove(cachedState, setCachedState)}}
-                  className="primary-submit-btn"
+                  className="button-styling" style={{
+                  }}
                 >
-                  Skip Move
+                  Skip move
                 </button>
                 <button
                   onClick={handleCustomLog}
-                  className="primary-submit-btn"
+                  className="button-styling"
                 >
-                  Write a comment in the log
+                  Log comment
                 </button>
               </div>
           </div>
-          </div> 
+          </Div> 
         ) : (
           <Loading displayText={displayText} /> 
         )}

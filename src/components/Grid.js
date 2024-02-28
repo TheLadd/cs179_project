@@ -25,7 +25,6 @@ export default function Grid(props) {
     }
     items = newManifest
 
-
     // console.log(items.length); 
 
     return (
