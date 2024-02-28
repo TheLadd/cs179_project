@@ -9,13 +9,14 @@
 
 .button-styling { 
     background-color: #CA6702;
-    padding: 0.25em; 
-    width: 60%; 
+    padding: 0.3em; 
+    width: fit-content; 
     color: #E9D8A6; 
     font-family: 'Raleway';
     border: 10px solid #0A9396;
     border-radius: 20px;
     font-size: 0.6em;
+    font-weight: bolder;
     margin: 0.20em; 
 }
 

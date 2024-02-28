@@ -70,11 +70,13 @@ export default function DockView ({ cachedState, setCachedState }) {
             borderRadius: 25, 
             fontWeight: 'bold', 
             fontSize: 25,  
-            height: '80%', 
-            width: '80%', 
+            height: 'fit-content', 
+            overflow: 'hidden', 
+            width: 'fit-content', 
             fontFamily: 'Raleway', 
             color: 'finish.text', 
             display: 'flex', 
+            padding: '10px', 
             textAlign: 'center', 
             alignItems: 'center', 
            flexDirection: 'column', 
@@ -93,13 +95,13 @@ export default function DockView ({ cachedState, setCachedState }) {
               >
                 {cachedState.instruction}
               </h2>
-              <div className="btn-grp">
+              <div className="btn-grp" style={{ fontSize: 40, fontWeight: "bolder" }}>
                 <button
                   onClick={() => runMove(cachedState, setCachedState)}
                   className="button-styling" style={{
                   }}
                 >
-                  Make Move
+                  Make move
                 </button>
                 <button
                   onClick={() => {
@@ -107,14 +109,13 @@ export default function DockView ({ cachedState, setCachedState }) {
                   className="button-styling" style={{
                   }}
                 >
-                  Skip Move
+                  Skip move
                 </button>
                 <button
                   onClick={handleCustomLog}
-                  className="button-styling" style={{
-                  }}
+                  className="button-styling"
                 >
-                  Write a comment in the log
+                  Log comment
                 </button>
               </div>
           </div>

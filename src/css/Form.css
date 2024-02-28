@@ -88,7 +88,10 @@ span override {
 .btn-grp { 
   margin: 0.5em; 
   display: flex; 
+  height: fit-content;
+  width: fit-content; 
   flex-direction: row; 
+
 }
 
 .input-txt {

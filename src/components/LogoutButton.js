@@ -12,7 +12,13 @@ const LogoutButton = ({ setCachedState }) => {
     }); 
 
     return (
-        <button onClick={handleLogout} className="primary-submit-btn">Logout</button>
+        <button onClick={handleLogout} className="button-styling" style={{
+            width: '15%',
+            marginTop: '0.5em',  
+            fontSize: '30px', 
+            fontWeight: 'bolder', 
+
+          }}>Logout</button>
     )
 
 }; 
