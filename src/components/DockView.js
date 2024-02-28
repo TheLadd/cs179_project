@@ -85,7 +85,7 @@ export default function DockView ({ cachedState, setCachedState }) {
             <Grid type={SHIP} items={cachedState.manifest} id="ship-dock" />
             <Grid type={BUFFER} items={cachedState.buffer} id="buffer-dock" />
             <div className="instruction-box">
-              <h1 value={cachedState} className="header-styling" style={{fontSize: '2.25em', marginBottom: '1%'}}>
+              <h1 value={cachedState} className="header-styling" style={{fontSize: '2.25em' }}>
                 Step {cachedState.currStep + 1} of {cachedState.moves.length}:
               </h1>
               <h2
