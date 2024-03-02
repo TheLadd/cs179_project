@@ -10,7 +10,7 @@ This project was made for Mr. Keogh, our 'client' who owns a ship dock. Currentl
 3.  _making the moves:_ This is the primary function of our app, which shows a grid display of the ship and 'buffer', which is an additional place for us to store the shipping containers in the event there's no room on the ship. Users can either choose to make the suggested move, or skip it, in which case the astar algorithm is ran again with a new list of expected moves.
 4.  _uploading the transfer list:_ Users upload a 'manifest', which contains a description of the ship and buffer state, and then can input the transfer list, which contains the loading and offloading instructions for that ship. The transfer list is human-readable and very informal, hence why we need users to upload these instructions manually. 
 
-## Search Algorithm & Functionality 
+## Search Algorithm + Functionality 
 This project uses the A* algorithm and Manhattan Distance to calculate the minimum number of moves for both load-balancing and onloading/offloading. 
 
 ### For Onloading/Offloading: 
