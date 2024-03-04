@@ -231,7 +231,12 @@ function UploadTransfer({ cachedState, setCachedState }) {
           />
           <button
             type="submit"
-            className="secondary-submit-btn"
+            className="button-styling"
+            style={{
+              border: '3px solid #0A9396',
+              padding: '5px',
+              fontSize: '13px'  
+            }}
             disabled={disableSubmit}
           >
             Submit
@@ -239,7 +244,11 @@ function UploadTransfer({ cachedState, setCachedState }) {
         </form>
         <button
           onClick={handleOperationSubmission}
-          className="primary-submit-btn"
+          className="button-styling" style={{
+            fontSize: '25px',
+            padding: '10px', 
+            border: '8px solid #E9D8A6'
+          }}
         >
           Finish
         </button>
