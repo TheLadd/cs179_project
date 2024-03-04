@@ -3,17 +3,22 @@
 .table-styling { 
     width: 50%; 
     height: 100%; 
+    background-color: #94D2BD;
     margin-left: auto;
     margin-right: auto; 
+    font-weight: bolder;
     font-family: 'Raleway'; 
     text-align: center; 
-    border: 4px solid black;
+    border: 4px solid #EE9B00;
     border-radius: 5px; 
 }
 
 th {
-    color: pink; 
-    background-color: black;
+    color: #E9D8A6;  
+    padding: 3x; 
+    font-size: large;
+    text-shadow: 2px 0.5px black;
+    background-color: #9B2226; 
 }
 
 
@@ -26,5 +31,5 @@ p1 {
 }
 
 img:hover { 
-    background-color: pink; 
+    background-color: #94D2BD; 
 }
