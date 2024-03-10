@@ -37,6 +37,5 @@ Return cellsMoved as the cost
 - Flask-cors
 - and countless others.... run `npm install` to install all dependencies listed in package.json 
 
-Once all necessary packages are installed, navigate to the project directory and run the command:
-`npm run dev`
+Once all necessary packages are installed, navigate to the project directory and run `npm run dev` to get started. 
 
