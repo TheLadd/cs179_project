@@ -1,5 +1,4 @@
 # R^3 Solutions Shipping Container Optimizer
-_note: this project is still in progress! The PR's are detailed if you would like to see what's currently still being changed (mostly stuff relating to the frontend)._
 _additional documentation for this project can be found [here](https://docs.google.com/document/d/18Fr2UJx0ldRbrtTEScdsjOyBxeuJUFfjYuyB0pDtAI0/edit?usp=sharing)._
 
 ## Purpose
